@@ -1,17 +1,17 @@
-// app/api/characters/update/route.js
-import { getLatestCharacters } from "@/lib/getLatestCharacters";
+// app/api/champions/update/route.js
+import { getLatestChampions } from "@/lib/getLatestChampions";
 import { NextResponse } from "next/server";
 
 export async function POST() {
   try {
     // Şampiyonları güncelle
-    await getLatestCharacters();
+    await getLatestChampions();
 
-    return NextResponse.json({ message: "Characters updated successfully!" });
+    return NextResponse.json({ message: "Champions updated successfully!" });
   } catch (error) {
-    console.error("Error updating characters:", error);
+    console.error("Error updating champions:", error);
     return NextResponse.json(
-      { error: "An error occurred while updating characters." },
+      { error: "An error occurred while updating champions." },
       { status: 500 }
     );
   }
