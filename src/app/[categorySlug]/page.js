@@ -31,14 +31,14 @@ async function page({ params }) {
 
   device = await prisma.device.findUnique({
     where: {
-      id: deviceId,
+      id: deviceId.value,
     },
   });
 
   if (!device) {
     device = await prisma.device.create({
       data: {
-        id: deviceId,
+        id: deviceId.value,
       },
     });
   }
