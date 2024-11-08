@@ -1,4 +1,5 @@
 import Header from "@/components/Header";
+import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
 
 export const metadata = {
