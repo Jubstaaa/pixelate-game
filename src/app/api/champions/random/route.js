@@ -44,7 +44,7 @@ export async function GET(req) {
     const championImage = await prisma.characterImage.findFirst({
       where: {
         character_id: champion.id,
-        count: device.easyCount > 24 ? 24 : device.easyCount || 0,
+        count: device?.easyCount > 24 ? 24 : device?.easyCount || 0,
       },
     });
 

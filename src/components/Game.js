@@ -20,7 +20,7 @@ import { useRouter } from "next/navigation";
 
 const GuessChampionGame = ({ device, midnight }) => {
   const [deviceId] = useState(device.id);
-  const [isOk] = useState(device.easyCount === 999);
+  const [isOk] = useState(device?.easyCount === 999);
   const queryClient = useQueryClient();
   const [timeLeft, setTimeLeft] = useState("");
 

@@ -35,7 +35,7 @@ async function page({ params }) {
 
   let midnightUTC;
 
-  if (device.easyCount === 999) {
+  if (device?.easyCount === 999) {
     const now = new Date();
     midnightUTC = setHours(setMinutes(setSeconds(startOfDay(now), 0), 0), 24); // UTC gece 12
   }

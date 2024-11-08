@@ -14,22 +14,23 @@ export async function POST(req) {
         { status: 400 }
       );
     }
+    let device;
 
-    const device = await prisma.device.findUnique({
+    device = await prisma.device.findUnique({
       where: {
         id: deviceId,
       },
     });
 
     if (!device) {
-      await prisma.device.create({
+      device = await prisma.device.create({
         data: {
           id: deviceId,
         },
       });
     }
 
-    if (device.easyCount === 999) {
+    if (device?.easyCount === 999) {
       return NextResponse.json(
         { message: "Already guessed it!" },
         { status: 400 }
