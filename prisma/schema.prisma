@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model Category {
+  id         Int         @id @default(autoincrement())
+  name       String?
+  slug       String?
+  icon       String?
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  characters Character[] // Bir kategoriye ait tüm karakterler
+}
+
+model Character {
+  id              Int              @id @default(autoincrement())
+  name            String
+  categoryId      Int
+  todayActive     Boolean          @default(false)
+  category        Category         @relation(fields: [categoryId], references: [id]) // Karakter ile kategori arasındaki ilişki
+  characterImages CharacterImage[]
+}
+
+model CharacterImage {
+  count        Int
+  character_id Int
+  image        String
+  character    Character @relation(fields: [character_id], references: [id]) // Karakter ile kategori arasındaki ilişki
+
+  @@unique([count, character_id])
+}
+
+model Device {
+  id        String @id
+  easyCount Int    @default(0)
+  hardCount Int    @default(0)
+}
