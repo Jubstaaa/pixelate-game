@@ -27,11 +27,21 @@ async function page({ params }) {
   const cookieStore = await cookies();
   const deviceId = cookieStore.get("device-id");
 
-  const device = await prisma.device.findFirst({
+  let device;
+
+  device = await prisma.device.findUnique({
     where: {
-      id: deviceId.value,
+      id: deviceId,
     },
   });
+
+  if (!device) {
+    device = await prisma.device.create({
+      data: {
+        id: deviceId,
+      },
+    });
+  }
 
   let midnightUTC;
 
