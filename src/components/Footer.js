@@ -7,7 +7,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="flex w-full flex-col mt-20">
+    <footer className="flex w-full flex-col">
       <div className="md:flex md:items-center md:justify-between">
         <div className="flex flex-col items-center justify-center gap-2 md:order-2 md:items-end">
           <ThemeSwitch />
@@ -20,7 +20,7 @@ export default function Footer() {
             <Divider className="h-4" orientation="vertical" />
             <Chip
               className="border-none px-0 text-default-500"
-              color="success"
+              color="primary"
               variant="dot"
             >
               Made by{" "}

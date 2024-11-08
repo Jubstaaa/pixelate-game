@@ -1,4 +1,4 @@
-import GuessChampionGame from "@/components/Game";
+import GuessCharacterGame from "@/components/Game";
 import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import React from "react";
@@ -12,17 +12,8 @@ import {
   startOfDay,
 } from "date-fns";
 
-async function page({ params }) {
-  const categorySlug = (await params).categorySlug;
-  const category = await prisma.category.findFirst({
-    where: {
-      slug: categorySlug,
-    },
-  });
+async function page() {
 
-  if (!category) {
-    notFound();
-  }
 
   const cookieStore = await cookies();
   const deviceId = cookieStore.get("device-id");
@@ -51,13 +42,7 @@ async function page({ params }) {
   }
 
   return (
-    <>
-      <Header category={category} />
-      <GuessChampionGame
-        device={device}
-        midnight={midnightUTC?.toISOString()}
-      />
-    </>
+    <GuessCharacterGame device={device} midnight={midnightUTC?.toISOString()} />
   );
 }
 

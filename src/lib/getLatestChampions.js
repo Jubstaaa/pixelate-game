@@ -40,15 +40,15 @@ export const getLatestChampions = async () => {
         })
         .getBuffer("image/jpeg");
 
-      const existingChampion = await prisma.character.findFirst({
+      const existingChampion = await prisma.champion.findFirst({
         where: { name },
         include: {
-          characterImages: true,
+          championImages: true,
         },
       });
 
-      if (existingChampion?.characterImages?.length > 0) {
-        for (const item of existingChampion.characterImages) {
+      if (existingChampion?.championImages?.length > 0) {
+        for (const item of existingChampion.championImages) {
           await deleteImageFromVercelBlob(item.image);
         }
       }
@@ -68,41 +68,41 @@ export const getLatestChampions = async () => {
         images.push({
           count: 25 - index,
           image: uploadedImageUrl,
-          character_id: existingChampion?.id,
+          champion_id: existingChampion?.id,
         });
       }
 
       if (existingChampion) {
-        await prisma.character.update({
+        await prisma.champion.update({
           where: { id: existingChampion.id },
           data: { name, categoryId: 1 },
         });
 
         for (const img of images) {
-          await prisma.characterImage.upsert({
+          await prisma.championImage.upsert({
             where: {
-              count_character_id: {
+              count_champion_id: {
                 count: img.count,
-                character_id: existingChampion.id,
+                champion_id: existingChampion.id,
               },
             },
             update: { image: img.image },
             create: {
-              character_id: existingChampion.id,
+              champion_id: existingChampion.id,
               count: img.count,
               image: img.image,
             },
           });
         }
       } else {
-        const newChampion = await prisma.character.create({
+        const newChampion = await prisma.champion.create({
           data: { name, categoryId: 1 },
         });
 
         for (const img of images) {
-          await prisma.characterImage.create({
+          await prisma.championImage.create({
             data: {
-              character_id: newChampion.id,
+              champion_id: newChampion.id,
               count: img.count,
               image: img.image,
             },

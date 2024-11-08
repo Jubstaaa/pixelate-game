@@ -5,7 +5,7 @@ export const uploadImageToVercelBlob = async (imageBuffer, fileName) => {
     // Şampiyon görselini indir
 
     // Vercel Blob'a yükle
-    const { url } = await put(`champions/${fileName}`, imageBuffer, {
+    const { url } = await put(`characters/${fileName}`, imageBuffer, {
       access: "public", // Görünürlüğü açık yapıyoruz
     });
 

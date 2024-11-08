@@ -28,27 +28,27 @@ export async function GET(req) {
       });
     }
 
-    const champion = await prisma.character.findFirst({
+    const character = await prisma.character.findFirst({
       where: {
         todayActive: true,
       },
     });
 
-    if (!champion) {
+    if (!character) {
       return NextResponse.json(
-        { error: "No champions found." },
+        { error: "No characters found." },
         { status: 404 }
       );
     }
 
-    const championImage = await prisma.characterImage.findFirst({
+    const characterImage = await prisma.characterImage.findFirst({
       where: {
-        character_id: champion.id,
+        character_id: character.id,
         count: device?.easyCount > 24 ? 24 : device?.easyCount || 0,
       },
     });
 
-    const image = await Jimp.read(championImage.image);
+    const image = await Jimp.read(characterImage.image);
 
     const pixellatedImageBase64 = await image.getBase64("image/jpeg");
 
@@ -56,9 +56,9 @@ export async function GET(req) {
       pixellatedImage: pixellatedImageBase64,
     });
   } catch (error) {
-    console.error("Error fetching random champion:", error);
+    console.error("Error fetching random character:", error);
     return NextResponse.json(
-      { error: "An error occurred while fetching a random champion." },
+      { error: "An error occurred while fetching a random character." },
       { status: 500 }
     );
   }

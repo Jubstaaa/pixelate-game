@@ -37,20 +37,20 @@ export async function POST(req) {
       );
     }
 
-    const champion = await prisma.character.findFirst({
+    const character = await prisma.character.findFirst({
       where: {
         todayActive: true,
       },
     });
 
-    if (!champion) {
+    if (!character) {
       return NextResponse.json(
-        { error: "No champions found." },
+        { error: "No characters found." },
         { status: 404 }
       );
     }
 
-    if (champion.id == data.id) {
+    if (character.id == data.id) {
       await prisma.device.update({
         where: {
           id: device.id,
@@ -76,9 +76,9 @@ export async function POST(req) {
       );
     }
   } catch (error) {
-    console.error("Error fetching random champion:", error);
+    console.error("Error fetching random character:", error);
     return NextResponse.json(
-      { error: "An error occurred while fetching a random champion." },
+      { error: "An error occurred while fetching a random character." },
       { status: 500 }
     );
   }

@@ -2,10 +2,11 @@ import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 export async function GET(req) {
-  if (
-    req.headers.get("Authorization") !== `Bearer ${process.env.CRON_SECRET}`
-  ) {
-    return res.status(401).end("Unauthorized");
+  const authHeader = req.headers.get("authorization");
+  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    return new Response("Unauthorized", {
+      status: 401,
+    });
   }
 
   await prisma.character.updateMany({
@@ -14,8 +15,7 @@ export async function GET(req) {
     },
   });
 
-  // 2. Rastgele bir karakter seçiyoruz
-  const totalCharacters = await prisma.character.count(); // Karakterlerin toplam sayısını alıyoruz
+  const totalCharacters = await prisma.character.count();
   const randomIndex = Math.floor(Math.random() * totalCharacters); // Rastgele bir index seçiyoruz
 
   // 3. Rastgele seçilen karakteri true yapıyoruz
@@ -34,8 +34,8 @@ export async function GET(req) {
 
   await prisma.device.updateMany({
     data: {
-      easyCount: 1,
-      hardCount: 1,
+      easyCount: 0,
+      hardCount: 0,
     },
   });
 

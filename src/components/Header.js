@@ -14,16 +14,7 @@ import {
   Image,
 } from "@nextui-org/react";
 
-const menuItems = [
-  "About",
-  "Blog",
-  "Customers",
-  "Pricing",
-  "Enterprise",
-  "Changelog",
-  "Documentation",
-  "Contact Us",
-];
+const menuItems = [];
 
 export default function Header({ category }) {
   return (
@@ -71,7 +62,7 @@ export default function Header({ category }) {
       </NavbarContent>
 
       {/* Menu */}
-      <NavbarMenu
+      {/* <NavbarMenu
         className="top-[calc(var(--navbar-height)/2)] mx-auto mt-16 max-h-[40vh] max-w-[80vw] rounded-large border-small border-default-200/20 bg-background/60 py-6 shadow-medium backdrop-blur-md backdrop-saturate-150 dark:bg-default-100/50"
         motionProps={{
           initial: { opacity: 0, y: -20 },
@@ -90,7 +81,7 @@ export default function Header({ category }) {
             </Link>
           </NavbarMenuItem>
         ))}
-      </NavbarMenu>
+      </NavbarMenu> */}
     </Navbar>
   );
 }

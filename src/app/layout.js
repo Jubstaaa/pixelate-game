@@ -6,6 +6,7 @@ import ReactQueryProvider from "./providers/ReactQueryProvider";
 import { Toaster } from "react-hot-toast";
 import Footer from "@/components/Footer";
 import { ThemeProvider } from "./providers/ThemeProvider";
+import ProgressBarProvider from "./providers/ProgressBarProvider";
 
 export const metadata = {
   title: "Pixel Guess",
@@ -26,10 +27,12 @@ export default function RootLayout({ children }) {
           <DeviceIdProvider>
             <UIProvider>
               <ReactQueryProvider>
-                <main className="mx-auto flex flex-col justify-between w-full h-full max-w-4xl px-6 py-12 lg:px-8 min-h-screen">
-                  {children}
-                  <Footer />
-                </main>
+                <ProgressBarProvider>
+                  <main className="mx-auto flex flex-col justify-between w-full h-full max-w-4xl lg:px-8 lg:py-12 min-h-screen">
+                    {children}
+                    <Footer />
+                  </main>
+                </ProgressBarProvider>
               </ReactQueryProvider>
             </UIProvider>
           </DeviceIdProvider>
