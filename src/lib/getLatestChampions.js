@@ -38,6 +38,7 @@ export const getLatestChampions = async () => {
           w: image.bitmap.width - 10,
           h: image.bitmap.height - 10,
         })
+        .resize({ w: 128 })
         .getBuffer("image/jpeg");
 
       const existingChampion = await prisma.character.findFirst({
@@ -54,11 +55,11 @@ export const getLatestChampions = async () => {
       }
 
       const images = [];
-      for (let index = 25; index > 0; index--) {
+      for (let index = 7; index > 0; index--) {
         const imageClone = await Jimp.read(imageBuffer); // create a clone of the cropped image
 
         const pixellatedImageBuffer = await imageClone
-          .pixelate(index)
+          .pixelate((index - 1) * 4 + 1)
           .getBuffer("image/jpeg");
         const uploadedImageUrl = await uploadImageToVercelBlob(
           pixellatedImageBuffer,
@@ -66,18 +67,18 @@ export const getLatestChampions = async () => {
         );
 
         images.push({
-          count: 25 - index,
+          count: 7 - index,
           image: uploadedImageUrl,
           character_id: existingChampion?.id,
           level_type: 0,
         });
       }
 
-      for (let index = 25; index > 0; index--) {
+      for (let index = 7; index > 0; index--) {
         const imageClone = await Jimp.read(imageBuffer); // create a clone of the cropped image
 
         const pixellatedImageBuffer = await imageClone
-          .pixelate(index)
+          .pixelate((index - 1) * 4 + 1)
           .greyscale()
           .getBuffer("image/jpeg");
         const uploadedImageUrl = await uploadImageToVercelBlob(
@@ -86,7 +87,7 @@ export const getLatestChampions = async () => {
         );
 
         images.push({
-          count: 25 - index,
+          count: 7 - index,
           image: uploadedImageUrl,
           character_id: existingChampion?.id,
           level_type: 1,

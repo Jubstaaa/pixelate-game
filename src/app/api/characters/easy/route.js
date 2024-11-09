@@ -56,7 +56,7 @@ export async function GET(req) {
       where: {
         character_id: character.id,
         level_type: 0,
-        count: device?.count > 24 ? 24 : device?.count || 0,
+        count: device?.count > 6 ? 6 : device?.count || 0,
       },
     });
 

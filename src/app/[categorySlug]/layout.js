@@ -12,6 +12,7 @@ export default async function RootLayout({ children, params }) {
   const category = await prisma.category.findFirst({
     where: {
       slug: categorySlug,
+      isActive: true,
     },
   });
 

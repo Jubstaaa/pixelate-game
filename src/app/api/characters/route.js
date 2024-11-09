@@ -27,7 +27,7 @@ export async function GET(req) {
         id: item.id,
         name: item.name,
         image: item.characterImages.find(
-          (img) => img.count === 24 && img.level_type === 0
+          (img) => img.count === 6 && img.level_type === 0
         )?.image,
       }))
     );
