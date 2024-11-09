@@ -181,6 +181,21 @@ const GuessCharacterGame = ({ device, midnight }) => {
     if (value) {
       setInputValue("");
       mutation.mutate({ id: value, deviceId }); // Mutation'u tetikle
+
+      // Klavyeyi kapat
+      document.activeElement.blur(); // Önce aktif elementi bulanıklaştır
+
+      // Gecikmeli olarak gizli bir input'a odaklan ve bulanıklaştır
+      setTimeout(() => {
+        const hiddenInput = document.createElement("input");
+        hiddenInput.style.display = "none";
+        document.body.appendChild(hiddenInput);
+
+        hiddenInput.focus();
+        hiddenInput.blur();
+
+        document.body.removeChild(hiddenInput); // Temizlemeyi unutmayın
+      }, 100); // Küçük bir gecikme eklemek bazı cihazlarda yardımcı olabilir
     }
   };
 
