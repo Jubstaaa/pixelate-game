@@ -39,19 +39,26 @@ model CharacterImage {
   count        Int
   character_id Int
   image        String
+  level_type   Int       @default(0)
   character    Character @relation(fields: [character_id], references: [id]) // Karakter ile kategori arasındaki ilişki
 
-  @@unique([count, character_id])
+  @@unique([count, character_id, level_type])
 }
 
 model Device {
-  easyCount    Int        @default(0)
-  hardCount    Int        @default(0)
+  count        Int        @default(0)
   character_id Int?
   category_id  Int        @default(1)
+  level_type   Int        @default(0)
   device_id    String
   category     Category   @relation(fields: [category_id], references: [id])
   character    Character? @relation(fields: [character_id], references: [id])
 
-  @@unique([category_id, device_id])
+  @@unique([category_id, device_id, level_type])
+}
+
+model Feedback {
+  id       Int     @id @default(autoincrement())
+  feedback String?
+  rating   String?
 }

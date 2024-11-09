@@ -28,7 +28,7 @@ export async function GET(req) {
         category_id_device_id_level_type: {
           device_id: deviceId,
           category_id: Number(categoryId),
-          level_type: 0,
+          level_type: 1,
         },
       },
       include: {
@@ -55,7 +55,7 @@ export async function GET(req) {
     const characterImage = await prisma.characterImage.findFirst({
       where: {
         character_id: character.id,
-        level_type: 0,
+        level_type: 1,
         count: device?.count > 24 ? 24 : device?.count || 0,
       },
     });
@@ -102,7 +102,7 @@ export async function POST(req) {
         category_id_device_id_level_type: {
           device_id: deviceId,
           category_id: data.categoryId,
-          level_type: 0,
+          level_type: 1,
         },
       },
     });
@@ -131,7 +131,7 @@ export async function POST(req) {
           category_id_device_id_level_type: {
             device_id: deviceId,
             category_id: data.categoryId,
-            level_type: 0,
+            level_type: 1,
           },
         },
         data: {
@@ -147,7 +147,7 @@ export async function POST(req) {
           category_id_device_id_level_type: {
             device_id: deviceId,
             category_id: data.categoryId,
-            level_type: 0,
+            level_type: 1,
           },
         },
         data: {

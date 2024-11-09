@@ -3,33 +3,29 @@ import { uploadImageToVercelBlob } from "@/lib/blob"; // Vercel Blob fonksiyonu
 import { Jimp } from "jimp"; // Jimp kütüphanesi
 import { deleteImageFromVercelBlob } from "@/lib/blob"; // Eski resmi silmek için fonksiyon
 
-const getLatestVersion = async () => {
-  const response = await fetch(
-    "https://ddragon.leagueoflegends.com/api/versions.json"
-  );
-  const versions = await response.json();
-  return versions[0];
+// Valorant karakterleri API'si
+const getValorantCharacters = async () => {
+  const response = await fetch("https://valorant-api.com/v1/agents");
+
+  if (!response.ok) {
+    throw new Error(
+      `Error fetching Valorant characters: ${response.statusText}`
+    );
+  }
+
+  const data = await response.json();
+  return data.data; // Karakterlerin listesini döndürüyoruz
 };
 
-export const getLatestChampions = async () => {
+export const getLatestValorantCharacters = async () => {
   try {
-    const latestVersion = await getLatestVersion();
-    const response = await fetch(
-      `https://ddragon.leagueoflegends.com/cdn/${latestVersion}/data/en_US/champion.json`
-    );
+    const agents = await getValorantCharacters();
 
-    if (!response.ok) {
-      throw new Error(`Error fetching champions: ${response.statusText}`);
-    }
+    for (const agent of agents) {
+      const { id, displayName, displayIcon } = agent;
 
-    const { data } = await response.json();
-
-    for (const champ of Object.values(data)) {
-      const { id, key, name } = champ;
-
-      const championImageUrl = `https://cdn.communitydragon.org/latest/champion/${key}/square`;
-
-      const image = await Jimp.read(championImageUrl);
+      // Karakterin resmi
+      const image = await Jimp.read(displayIcon);
 
       const imageBuffer = await image
         .crop({
@@ -40,15 +36,16 @@ export const getLatestChampions = async () => {
         })
         .getBuffer("image/jpeg");
 
-      const existingChampion = await prisma.character.findFirst({
-        where: { name },
+      const existingAgent = await prisma.character.findFirst({
+        where: { name: displayName },
         include: {
           characterImages: true,
         },
       });
 
-      if (existingChampion?.championImages?.length > 0) {
-        for (const item of existingChampion.championImages) {
+      // Eski görselleri sil
+      if (existingAgent?.characterImages?.length > 0) {
+        for (const item of existingAgent.characterImages) {
           await deleteImageFromVercelBlob(item.image);
         }
       }
@@ -62,17 +59,18 @@ export const getLatestChampions = async () => {
           .getBuffer("image/jpeg");
         const uploadedImageUrl = await uploadImageToVercelBlob(
           pixellatedImageBuffer,
-          `${key}-${index}.webp`
+          `${id}-${index}.webp`
         );
 
         images.push({
           count: 25 - index,
           image: uploadedImageUrl,
-          character_id: existingChampion?.id,
-          level_type: 0,
+          character_id: existingAgent?.id,
+          level_type: 0, // Kolay
         });
       }
 
+      // Greyscale versiyonları
       for (let index = 25; index > 0; index--) {
         const imageClone = await Jimp.read(imageBuffer); // create a clone of the cropped image
 
@@ -82,21 +80,22 @@ export const getLatestChampions = async () => {
           .getBuffer("image/jpeg");
         const uploadedImageUrl = await uploadImageToVercelBlob(
           pixellatedImageBuffer,
-          `${key}-${index}.webp`
+          `${id}-${index}.webp`
         );
 
         images.push({
           count: 25 - index,
           image: uploadedImageUrl,
-          character_id: existingChampion?.id,
-          level_type: 1,
+          character_id: existingAgent?.id,
+          level_type: 1, // Zor
         });
       }
 
-      if (existingChampion) {
+      if (existingAgent) {
+        // Eğer karakter mevcutsa güncelle
         await prisma.character.update({
-          where: { id: existingChampion.id },
-          data: { name, categoryId: 1 },
+          where: { id: existingAgent.id },
+          data: { name: displayName, categoryId: 2 },
         });
 
         for (const img of images) {
@@ -104,13 +103,13 @@ export const getLatestChampions = async () => {
             where: {
               count_character_id_level_type: {
                 count: img.count,
-                character_id: existingChampion.id,
+                character_id: existingAgent.id,
                 level_type: img.level_type,
               },
             },
             update: { image: img.image },
             create: {
-              character_id: existingChampion.id,
+              character_id: existingAgent.id,
               count: img.count,
               image: img.image,
               level_type: img.level_type,
@@ -118,14 +117,15 @@ export const getLatestChampions = async () => {
           });
         }
       } else {
-        const newChampion = await prisma.character.create({
-          data: { name, categoryId: 1 },
+        // Eğer karakter bulunmazsa yeni oluştur
+        const newAgent = await prisma.character.create({
+          data: { name: displayName, categoryId: 2 },
         });
 
         for (const img of images) {
           await prisma.characterImage.create({
             data: {
-              character_id: newChampion.id,
+              character_id: newAgent.id,
               count: img.count,
               image: img.image,
               level_type: img.level_type,
@@ -135,8 +135,11 @@ export const getLatestChampions = async () => {
       }
     }
 
-    console.log("Champions updated successfully!");
+    console.log("Valorant characters updated successfully!");
   } catch (error) {
-    console.error("An error occurred while updating champions:", error);
+    console.error(
+      "An error occurred while updating Valorant characters:",
+      error
+    );
   }
 };

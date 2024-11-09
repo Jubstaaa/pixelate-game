@@ -19,29 +19,30 @@ import {
 } from "date-fns";
 import { useRouter } from "next/navigation";
 
-const GuessCharacterGame = ({ device, midnight, categoryId }) => {
+const GuessCharacterGame = ({ device, midnight, categoryId, level_type }) => {
   const [deviceId] = useState(device.device_id);
-  const queryClient = useQueryClient();
-  const [timeLeft, setTimeLeft] = useState("");
   const [character, setCharacter] = useState();
 
   const [inputValue, setInputValue] = useState("");
   // Şampiyonları aramak için kullanılan fonksiyon
   const fetchCharacters = async () => {
-    const res = await fetch(`/api/characters`);
+    const res = await fetch(`/api/characters?categoryId=${categoryId}`);
     const data = await res.json();
     return data;
   };
 
   const fetchRandomCharacter = async () => {
     try {
-      const res = await fetch(`/api/characters/easy?categoryId=${categoryId}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Device-Id": deviceId,
-        },
-      });
+      const res = await fetch(
+        `/api/characters/${level_type}?categoryId=${categoryId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Device-Id": deviceId,
+          },
+        }
+      );
       const data = await res.json();
       setCharacter(data);
     } catch (err) {
@@ -60,34 +61,6 @@ const GuessCharacterGame = ({ device, midnight, categoryId }) => {
       }, 3000);
     }
   }, [character?.image]);
-
-  useEffect(() => {
-    if (!midnight) return;
-
-    const interval = setInterval(() => {
-      const now = new Date();
-      const remainingTime = new Date(midnight) - now; // Kalan süreyi hesaplıyoruz
-
-      if (remainingTime <= 0) {
-        clearInterval(interval); // Eğer süre bitti ise interval'ı durduruyoruz
-        setTimeLeft("00:00:00");
-      } else {
-        const hours = Math.floor(remainingTime / 1000 / 60 / 60);
-        const minutes = Math.floor((remainingTime / 1000 / 60) % 60);
-        const seconds = Math.floor((remainingTime / 1000) % 60);
-
-        // Formatlayıp zamanı güncelliyoruz
-        setTimeLeft(
-          `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
-            2,
-            "0"
-          )}:${String(seconds).padStart(2, "0")}`
-        );
-      }
-    }, 1000); // Her saniye güncelleme
-
-    return () => clearInterval(interval); // Component unmount olduğunda interval'ı temizliyoruz
-  }, []);
 
   const [characters, setCharacters] = useState();
   const [isAnimating, setIsAnimating] = useState(false);
@@ -132,7 +105,7 @@ const GuessCharacterGame = ({ device, midnight, categoryId }) => {
   const selectCharacter = async (values) => {
     const toastId = toast.loading("Guessing...");
     try {
-      const res = await fetch("/api/characters/easy", {
+      const res = await fetch(`/api/characters/${level_type}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

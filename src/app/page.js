@@ -2,6 +2,12 @@ import CategoryCard from "@/components/CategoryCard";
 import prisma from "@/lib/prisma";
 import { Spacer } from "@nextui-org/react";
 
+export const metadata = {
+  title: "Pixel Guess: Guess Hidden Images by Pixel | Fun Image Guessing Game",
+  description:
+    "Join Pixel Guess and challenge yourself to guess hidden images, pixel by pixel. Choose your favorite category and start guessing today. Fun and addictive image guessing game for all ages.",
+};
+
 export default async function Home() {
   const categories = await prisma.category.findMany();
 
