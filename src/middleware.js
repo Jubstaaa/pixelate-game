@@ -3,7 +3,6 @@ import { v4 as uuidv4 } from "uuid";
 
 export function middleware(req) {
   const deviceIdCookie = req.cookies.get("device-id");
-
   // Eğer 'device-id' cookie yoksa yeni bir tane oluştur
   if (!deviceIdCookie) {
     const newDeviceId = uuidv4(); // Yeni bir unique ID oluştur
@@ -26,5 +25,5 @@ export function middleware(req) {
 
 // Middleware'in hangi yollar için geçerli olacağını belirleyin
 export const config = {
-  matcher: ["/"], // Ana sayfa ve alt sayfalar için middleware'i çalıştır
+  matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
 };

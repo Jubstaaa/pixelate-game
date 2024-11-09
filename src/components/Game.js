@@ -6,6 +6,7 @@ import {
   AutocompleteItem,
   Avatar,
   Image,
+  Spacer,
 } from "@nextui-org/react";
 import toast from "react-hot-toast";
 import confetti from "canvas-confetti";
@@ -222,7 +223,7 @@ const GuessCharacterGame = ({ device, midnight }) => {
         inputValue={inputValue}
         onInputChange={(e) => setInputValue(e)}
         onSelectionChange={handleSelectionChange}
-        className="max-w-xs"
+        className="max-w-xs !text-foreground"
         isLoading={isLoading || isRandomLoading || mutation.isLoading}
         label={
           isOk ? `Next Character in ${timeLeft}` : "Search for a character"
@@ -237,6 +238,7 @@ const GuessCharacterGame = ({ device, midnight }) => {
             textValue={item.label}
             isSelected={false}
             hideSelectedIcon={true}
+            classNames={{ title: "!text-foreground" }}
           >
             <div className="flex gap-2 items-center">
               <Avatar
