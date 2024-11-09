@@ -13,11 +13,8 @@ import {
 } from "date-fns";
 
 async function page() {
-
-
   const cookieStore = await cookies();
   const deviceId = cookieStore.get("device-id");
-
   let device;
 
   device = await prisma.device.findUnique({

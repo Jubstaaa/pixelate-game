@@ -11,22 +11,9 @@ export function DeviceIdProvider({ children }) {
   useEffect(() => {
     if (typeof window !== "undefined") {
       // Önce localStorage'dan alalım
-      let storedDeviceId = localStorage.getItem("deviceId");
-
-      if (!storedDeviceId) {
-        // Eğer yoksa, yeni bir deviceId oluştur
-        storedDeviceId = uuidv4();
-        localStorage.setItem("deviceId", storedDeviceId);
-      }
+      let storedDeviceId = Cookies.get("deviceId");
 
       setDeviceId(storedDeviceId);
-
-      // Ayrıca, deviceId'yi cookie'ye set edelim
-      Cookies.set("device-id", storedDeviceId, {
-        path: "/", // Cookie'nin geçerli olduğu yol
-        secure: true, // HTTPS üzerinden gönderilmeli
-        expires: 365, // 1 yıl boyunca geçerli olacak
-      });
     }
   }, []);
 
