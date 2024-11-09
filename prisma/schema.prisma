@@ -22,6 +22,7 @@ model Category {
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
   characters Character[] // Bir kategoriye ait tüm karakterler
+  Device     Device[]
 }
 
 model Character {
@@ -31,6 +32,7 @@ model Character {
   todayActive     Boolean          @default(false)
   category        Category         @relation(fields: [categoryId], references: [id]) // Karakter ile kategori arasındaki ilişki
   characterImages CharacterImage[]
+  Device          Device[]
 }
 
 model CharacterImage {
@@ -43,7 +45,13 @@ model CharacterImage {
 }
 
 model Device {
-  id        String @id
-  easyCount Int    @default(0)
-  hardCount Int    @default(0)
+  easyCount    Int        @default(0)
+  hardCount    Int        @default(0)
+  character_id Int?
+  category_id  Int        @default(1)
+  device_id    String
+  category     Category   @relation(fields: [category_id], references: [id])
+  character    Character? @relation(fields: [character_id], references: [id])
+
+  @@unique([category_id, device_id])
 }

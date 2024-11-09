@@ -19,11 +19,11 @@ import {
 } from "date-fns";
 import { useRouter } from "next/navigation";
 
-const GuessCharacterGame = ({ device, midnight }) => {
-  const [deviceId] = useState(device.id);
-  const [isOk] = useState(device?.easyCount === 999);
+const GuessCharacterGame = ({ device, midnight, categoryId }) => {
+  const [deviceId] = useState(device.device_id);
   const queryClient = useQueryClient();
   const [timeLeft, setTimeLeft] = useState("");
+  const [character, setCharacter] = useState();
 
   const [inputValue, setInputValue] = useState("");
   // Şampiyonları aramak için kullanılan fonksiyon
@@ -32,6 +32,34 @@ const GuessCharacterGame = ({ device, midnight }) => {
     const data = await res.json();
     return data;
   };
+
+  const fetchRandomCharacter = async () => {
+    try {
+      const res = await fetch(`/api/characters/easy?categoryId=${categoryId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Device-Id": deviceId,
+        },
+      });
+      const data = await res.json();
+      setCharacter(data);
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  useEffect(() => {
+    fetchRandomCharacter();
+  }, []);
+
+  useEffect(() => {
+    if (character?.image) {
+      setTimeout(() => {
+        fetchRandomCharacter();
+      }, 3000);
+    }
+  }, [character?.image]);
 
   useEffect(() => {
     if (!midnight) return;
@@ -81,8 +109,6 @@ const GuessCharacterGame = ({ device, midnight }) => {
       if (timeLeft <= 0) {
         clearInterval(interval); // Stop the animation when time is up
         setIsAnimating(false); // Stop the animation state
-
-        window.location.reload();
       }
 
       const particleCount = 50 * (timeLeft / duration);
@@ -102,23 +128,8 @@ const GuessCharacterGame = ({ device, midnight }) => {
   };
 
   // Rastgele şampiyon almak için kullanılan fonksiyon
-  const fetchRandomCharacter = async () => {
-    try {
-      const res = await fetch("/api/characters/random", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Device-Id": deviceId,
-        },
-      });
-      const data = await res.json();
-      return data;
-    } catch (err) {
-      throw err;
-    }
-  };
 
-  const selectCharacter = async ({ id, deviceId }) => {
+  const selectCharacter = async (values) => {
     const toastId = toast.loading("Guessing...");
     try {
       const res = await fetch("/api/characters/easy", {
@@ -127,7 +138,7 @@ const GuessCharacterGame = ({ device, midnight }) => {
           "Content-Type": "application/json",
           "Device-Id": deviceId,
         },
-        body: JSON.stringify({ id }),
+        body: JSON.stringify(values),
       });
 
       if (!res.ok) {
@@ -142,11 +153,14 @@ const GuessCharacterGame = ({ device, midnight }) => {
         id: toastId, // Mevcut toast'ı güncelle
       });
 
+      setCharacter(characters.find((item) => item.value === Number(values.id)));
+
       return data;
     } catch (err) {
       toast.error(err.message, {
         id: toastId, // Mevcut toast'ı güncelle
       });
+      fetchRandomCharacter();
 
       throw err;
     }
@@ -160,27 +174,13 @@ const GuessCharacterGame = ({ device, midnight }) => {
     keepPreviousData: true, // Veri yüklenirken önceki veriyi tut
   });
 
-  const { data: character, isLoading: isRandomLoading } = useQuery({
-    queryKey: ["character"], // Query key
-    queryFn: () => fetchRandomCharacter(), // Query fonksiyonu
-    enabled: deviceId ? true : false, // Arama terimi boş değilse çalıştır
-    keepPreviousData: true, // Veri yüklenirken önceki veriyi tut
-  });
-
   const mutation = useMutation({
     mutationFn: selectCharacter,
-    onSuccess: (res) => {
-      queryClient.invalidateQueries("character");
-    },
-    onError: (res) => {
-      queryClient.invalidateQueries("character");
-    },
   });
 
   const handleSelectionChange = async (value) => {
     if (value) {
-      setInputValue("");
-      mutation.mutate({ id: value, deviceId }); // Mutation'u tetikle
+      mutation.mutate({ id: value, categoryId }); // Mutation'u tetikle
 
       // Klavyeyi kapat
       document.activeElement.blur(); // Önce aktif elementi bulanıklaştır
@@ -196,6 +196,7 @@ const GuessCharacterGame = ({ device, midnight }) => {
 
         document.body.removeChild(hiddenInput); // Temizlemeyi unutmayın
       }, 100); // Küçük bir gecikme eklemek bazı cihazlarda yardımcı olabilir
+      setInputValue("");
     }
   };
 
@@ -229,7 +230,7 @@ const GuessCharacterGame = ({ device, midnight }) => {
   return (
     <div className="w-full flex flex-col items-center justify-center gap-10">
       <Image
-        src={character?.pixellatedImage} // Base64 formatındaki pixelleştirilmiş görsel
+        src={character?.pixellatedImage || character?.image} // Base64 formatındaki pixelleştirilmiş görsel
         className="w-96 max-w-xs h-auto aspect-square"
         alt="Pixellated Character"
       />
@@ -239,13 +240,10 @@ const GuessCharacterGame = ({ device, midnight }) => {
         onInputChange={(e) => setInputValue(e)}
         onSelectionChange={handleSelectionChange}
         className="max-w-xs !text-foreground"
-        isLoading={isLoading || isRandomLoading || mutation.isLoading}
-        label={
-          isOk ? `Next Character in ${timeLeft}` : "Search for a character"
-        }
-        placeholder={!isOk && "Type to search..."}
+        isLoading={isLoading || mutation.isLoading}
+        label={"Search for a character"}
+        placeholder={"Type to search..."}
         variant="bordered"
-        isDisabled={isOk}
       >
         {(item) => (
           <AutocompleteItem

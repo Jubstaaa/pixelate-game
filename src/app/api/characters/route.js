@@ -20,7 +20,7 @@ export async function GET(req) {
       characters.map((item) => ({
         id: item.id,
         name: item.name,
-        image: item.characterImages.find((img) => img.count === 24).image,
+        image: item.characterImages.find((img) => img.count === 24)?.image,
       }))
     );
   } catch (error) {

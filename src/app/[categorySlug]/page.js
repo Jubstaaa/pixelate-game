@@ -12,35 +12,50 @@ import {
   startOfDay,
 } from "date-fns";
 
-async function page() {
+async function page({ params }) {
+  const categorySlug = (await params).categorySlug;
+
+  const category = await prisma.category.findFirst({
+    where: {
+      slug: categorySlug,
+    },
+  });
+
   const cookieStore = await cookies();
   const deviceId = cookieStore.get("device-id");
   let device;
 
   device = await prisma.device.findUnique({
     where: {
-      id: deviceId.value,
+      category_id_device_id: {
+        device_id: deviceId.value,
+        category_id: category.id,
+      },
     },
   });
 
   if (!device) {
+    const totalCharacters = await prisma.character.findMany({
+      where: {
+        categoryId: category.id,
+      },
+      select: {
+        id: true,
+      },
+    });
+    const randomIndex = Math.floor(Math.random() * totalCharacters.length); // Rastgele bir index seçiyoruz
+    const character = totalCharacters[randomIndex];
+
     device = await prisma.device.create({
       data: {
-        id: deviceId.value,
+        device_id: deviceId.value,
+        category_id: category.id,
+        character_id: character.id,
       },
     });
   }
 
-  let midnightUTC;
-
-  if (device?.easyCount === 999) {
-    const now = new Date();
-    midnightUTC = setHours(setMinutes(setSeconds(startOfDay(now), 0), 0), 24); // UTC gece 12
-  }
-
-  return (
-    <GuessCharacterGame device={device} midnight={midnightUTC?.toISOString()} />
-  );
+  return <GuessCharacterGame device={device} categoryId={category.id} />;
 }
 
 export default page;

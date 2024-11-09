@@ -40,10 +40,10 @@ export const getLatestChampions = async () => {
         })
         .getBuffer("image/jpeg");
 
-      const existingChampion = await prisma.champion.findFirst({
+      const existingChampion = await prisma.character.findFirst({
         where: { name },
         include: {
-          championImages: true,
+          characterImages: true,
         },
       });
 
@@ -68,41 +68,41 @@ export const getLatestChampions = async () => {
         images.push({
           count: 25 - index,
           image: uploadedImageUrl,
-          champion_id: existingChampion?.id,
+          character_id: existingChampion?.id,
         });
       }
 
       if (existingChampion) {
-        await prisma.champion.update({
+        await prisma.character.update({
           where: { id: existingChampion.id },
           data: { name, categoryId: 1 },
         });
 
         for (const img of images) {
-          await prisma.championImage.upsert({
+          await prisma.characterImage.upsert({
             where: {
-              count_champion_id: {
+              count_character_id: {
                 count: img.count,
-                champion_id: existingChampion.id,
+                character_id: existingChampion.id,
               },
             },
             update: { image: img.image },
             create: {
-              champion_id: existingChampion.id,
+              character_id: existingChampion.id,
               count: img.count,
               image: img.image,
             },
           });
         }
       } else {
-        const newChampion = await prisma.champion.create({
+        const newChampion = await prisma.character.create({
           data: { name, categoryId: 1 },
         });
 
         for (const img of images) {
-          await prisma.championImage.create({
+          await prisma.characterImage.create({
             data: {
-              champion_id: newChampion.id,
+              character_id: newChampion.id,
               count: img.count,
               image: img.image,
             },
