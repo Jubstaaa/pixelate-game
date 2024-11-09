@@ -60,7 +60,7 @@ export const getLatestValorantCharacters = async () => {
           .getBuffer("image/jpeg");
         const uploadedImageUrl = await uploadImageToVercelBlob(
           pixellatedImageBuffer,
-          `${id}-${index}.webp`
+          `${displayName}.webp`
         );
 
         images.push({
@@ -81,7 +81,7 @@ export const getLatestValorantCharacters = async () => {
           .getBuffer("image/jpeg");
         const uploadedImageUrl = await uploadImageToVercelBlob(
           pixellatedImageBuffer,
-          `${id}-${index}.webp`
+          `${displayName}.webp`
         );
 
         images.push({

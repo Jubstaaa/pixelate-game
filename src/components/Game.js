@@ -168,6 +168,7 @@ const GuessCharacterGame = ({ device, midnight, categoryId, level_type }) => {
         hiddenInput.blur();
 
         document.body.removeChild(hiddenInput); // Temizlemeyi unutmayın
+        setInputValue("");
       }, 100); // Küçük bir gecikme eklemek bazı cihazlarda yardımcı olabilir
       setInputValue("");
     }

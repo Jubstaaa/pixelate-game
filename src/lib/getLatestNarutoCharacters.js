@@ -31,7 +31,8 @@ export const getLatestNarutoCharacters = async () => {
         !character.family ||
         !character.jutsu ||
         !character.rank ||
-        !character.personal
+        !character.personal ||
+        !character.images.length > 0
       ) {
         continue;
       }
@@ -78,7 +79,7 @@ export const getLatestNarutoCharacters = async () => {
 
         const uploadedImageUrl = await uploadImageToVercelBlob(
           pixellatedImageBuffer,
-          `${id}-${index}.webp`
+          `${name}.webp`
         );
 
         images.push({
@@ -100,7 +101,7 @@ export const getLatestNarutoCharacters = async () => {
 
         const uploadedImageUrl = await uploadImageToVercelBlob(
           pixellatedImageBuffer,
-          `${id}-${index}.webp`
+          `${name}.webp`
         );
 
         images.push({

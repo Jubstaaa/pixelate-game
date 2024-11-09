@@ -63,7 +63,7 @@ export const getLatestChampions = async () => {
           .getBuffer("image/jpeg");
         const uploadedImageUrl = await uploadImageToVercelBlob(
           pixellatedImageBuffer,
-          `${key}-${index}.webp`
+          `${name}.webp`
         );
 
         images.push({
@@ -83,7 +83,7 @@ export const getLatestChampions = async () => {
           .getBuffer("image/jpeg");
         const uploadedImageUrl = await uploadImageToVercelBlob(
           pixellatedImageBuffer,
-          `${key}-${index}.webp`
+          `${name}.webp`
         );
 
         images.push({
