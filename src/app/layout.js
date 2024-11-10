@@ -8,6 +8,8 @@ import Footer from "@/components/Footer";
 import { ThemeProvider } from "./providers/ThemeProvider";
 import ProgressBarProvider from "./providers/ProgressBarProvider";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/react";
 
 export const viewport = {
   width: "device-width",
@@ -41,6 +43,8 @@ export default function RootLayout({ children }) {
             </UIProvider>
           </DeviceIdProvider>
         </ThemeProvider>
+        <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );
