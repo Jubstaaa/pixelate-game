@@ -4,9 +4,9 @@ export default async function sitemap() {
   const now = new Date();
   const formattedDate = now.toISOString();
   const categories = await prisma.category.findMany({
-    where:{
-      isActive:true,
-    }
+    where: {
+      isActive: true,
+    },
     select: {
       slug: true,
     },
