@@ -1,6 +1,8 @@
 import CategoryCard from "@/components/CategoryCard";
+import { getCategories } from "@/lib/category";
 import prisma from "@/lib/prisma";
 import { Spacer } from "@nextui-org/react";
+import { unstable_cache } from "next/cache";
 
 export const metadata = {
   title: "Pixel Guess: Guess Hidden Images by Pixel | Fun Image Guessing Game",
@@ -9,7 +11,7 @@ export const metadata = {
 };
 
 export default async function Home() {
-  const categories = await prisma.category.findMany();
+  const categories = await getCategories();
 
   return (
     <div className="flex flex-col gap-8 items-center">

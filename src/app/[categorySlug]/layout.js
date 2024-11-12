@@ -1,4 +1,5 @@
 import Header from "@/components/Header";
+import { getCategoryBySlug } from "@/lib/category";
 import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
 
@@ -9,12 +10,7 @@ export const metadata = {
 
 export default async function RootLayout({ children, params }) {
   const categorySlug = (await params).categorySlug;
-  const category = await prisma.category.findFirst({
-    where: {
-      slug: categorySlug,
-      isActive: true,
-    },
-  });
+  const category = await getCategoryBySlug(categorySlug);
 
   if (!category) {
     notFound();

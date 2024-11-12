@@ -1,9 +1,10 @@
+import { getCategories } from "@/lib/category";
 import prisma from "@/lib/prisma";
 
 export default async function sitemap() {
   const now = new Date();
   const formattedDate = now.toISOString();
-  const categories = await prisma.category.findMany({
+  const categories = await getCategories({
     where: {
       isActive: true,
     },
@@ -11,8 +12,6 @@ export default async function sitemap() {
       slug: true,
     },
   });
-
-  console.log(categories);
 
   return [
     {

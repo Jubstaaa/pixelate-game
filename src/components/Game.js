@@ -5,7 +5,6 @@ import {
   Autocomplete,
   AutocompleteItem,
   Avatar,
-  Image,
   Spacer,
 } from "@nextui-org/react";
 import toast from "react-hot-toast";
@@ -18,51 +17,22 @@ import {
   startOfDay,
 } from "date-fns";
 import { useRouter } from "next/navigation";
+import { guess } from "@/lib/guess";
+import Image from "next/image";
 
-const GuessCharacterGame = ({ device, midnight, categoryId, level_type }) => {
-  const [deviceId] = useState(device.device_id);
+const GuessCharacterGame = ({
+  categoryId,
+  pixellatedImageBase64,
+  categoryCharacters,
+  level_type,
+}) => {
   const [character, setCharacter] = useState();
+  const router = useRouter();
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [characters, setCharacters] = useState(categoryCharacters);
   const [inputValue, setInputValue] = useState("");
-  // Şampiyonları aramak için kullanılan fonksiyon
-  const fetchCharacters = async () => {
-    const res = await fetch(`/api/characters?categoryId=${categoryId}`);
-    const data = await res.json();
-    return data;
-  };
 
-  const fetchRandomCharacter = async () => {
-    try {
-      const res = await fetch(
-        `/api/characters/${level_type}?categoryId=${categoryId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "Device-Id": deviceId,
-          },
-        }
-      );
-      const data = await res.json();
-      setCharacter(data);
-    } catch (err) {
-      throw err;
-    }
-  };
-
-  useEffect(() => {
-    fetchRandomCharacter();
-  }, []);
-
-  useEffect(() => {
-    if (character?.image) {
-      setTimeout(() => {
-        fetchRandomCharacter();
-      }, 3000);
-    }
-  }, [character?.image]);
-
-  const [characters, setCharacters] = useState();
   const [isAnimating, setIsAnimating] = useState(false);
 
   const triggerConfetti = () => {
@@ -104,57 +74,34 @@ const GuessCharacterGame = ({ device, midnight, categoryId, level_type }) => {
 
   const selectCharacter = async (values) => {
     const toastId = toast.loading("Guessing...");
-    try {
-      const res = await fetch(`/api/characters/${level_type}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Device-Id": deviceId,
-        },
-        body: JSON.stringify(values),
+    setIsLoading(true);
+    const res = await guess(values);
+
+    if (res.error) {
+      toast.error(res.error, {
+        id: toastId, // Mevcut toast'ı güncelle
       });
-
-      if (!res.ok) {
-        throw await res.json();
-      }
-
+      router.refresh();
+    } else {
       triggerConfetti();
 
-      const data = await res.json();
-
-      toast.success(data.message, {
+      toast.success(res.message, {
         id: toastId, // Mevcut toast'ı güncelle
       });
 
       setCharacter(characters.find((item) => item.value === Number(values.id)));
+      router.refresh();
 
-      return data;
-    } catch (err) {
-      toast.error(err.message, {
-        id: toastId, // Mevcut toast'ı güncelle
-      });
-      fetchRandomCharacter();
-
-      throw err;
+      setTimeout(() => {
+        setCharacter();
+      }, 3000);
     }
+    setIsLoading(false);
   };
-
-  // Autocomplete için React Query kullanımı
-  const { data, isLoading } = useQuery({
-    queryKey: ["characters"], // Query key
-    queryFn: () => fetchCharacters(), // Query fonksiyonu
-    enabled: !characters, // Arama terimi boş değilse çalıştır
-    keepPreviousData: true, // Veri yüklenirken önceki veriyi tut
-  });
-
-  const mutation = useMutation({
-    mutationFn: selectCharacter,
-  });
 
   const handleSelectionChange = async (value) => {
     if (value) {
-      mutation.mutate({ id: value, categoryId }); // Mutation'u tetikle
-
+      selectCharacter({ id: value, categoryId, level_type: level_type });
       // Klavyeyi kapat
       document.activeElement.blur(); // Önce aktif elementi bulanıklaştır
 
@@ -175,9 +122,9 @@ const GuessCharacterGame = ({ device, midnight, categoryId, level_type }) => {
   };
 
   useEffect(() => {
-    if (inputValue && data) {
+    if (inputValue && categoryCharacters) {
       setCharacters(
-        data
+        categoryCharacters
           .filter((item) =>
             item.name.toLowerCase().includes(inputValue.toLowerCase())
           )
@@ -188,9 +135,9 @@ const GuessCharacterGame = ({ device, midnight, categoryId, level_type }) => {
             image: item.image,
           }))
       );
-    } else if (data) {
+    } else if (categoryCharacters) {
       setCharacters(
-        data.slice(0, 5).map((item) => ({
+        categoryCharacters.slice(0, 5).map((item) => ({
           value: item.id,
           label: item.name,
           image: item.image,
@@ -199,12 +146,14 @@ const GuessCharacterGame = ({ device, midnight, categoryId, level_type }) => {
     } else {
       setCharacters([]);
     }
-  }, [inputValue, data]);
+  }, [inputValue, categoryCharacters]);
 
   return (
     <div className="w-full flex flex-col items-center justify-center gap-10">
       <Image
-        src={character?.pixellatedImage || character?.image} // Base64 formatındaki pixelleştirilmiş görsel
+        width={400}
+        height={400}
+        src={character?.image || pixellatedImageBase64}
         className="w-96 max-w-xs h-auto aspect-square"
         alt="Pixellated Character"
       />
@@ -213,8 +162,9 @@ const GuessCharacterGame = ({ device, midnight, categoryId, level_type }) => {
         inputValue={inputValue}
         onInputChange={(e) => setInputValue(e)}
         onSelectionChange={handleSelectionChange}
+        isDisabled={isLoading}
+        isLoading={isLoading}
         className="max-w-xs !text-foreground"
-        isLoading={isLoading || mutation.isLoading}
         label={"Search for a character"}
         placeholder={"Type to search..."}
         variant="bordered"

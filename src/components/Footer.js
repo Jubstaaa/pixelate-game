@@ -16,36 +16,21 @@ import { Icon } from "@iconify/react";
 import FeedbackRating from "./FeedbackRating";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
+import { submitFeedback } from "@/lib/feedback";
 
 export default function Footer() {
   const sendFeedback = async (values) => {
     const toastId = toast.loading("Sending...");
-    try {
-      const res = await fetch(`/api/feedback`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
+    const res = await submitFeedback(values);
 
-      if (!res.ok) {
-        throw await res.json();
-      }
-
-      const data = await res.json();
-
-      toast.success(data.message, {
+    if (res.error) {
+      toast.error(res.error, {
         id: toastId, // Mevcut toast'ı güncelle
       });
-
-      return data;
-    } catch (err) {
-      toast.error(err.message, {
+    } else {
+      toast.success(res.message, {
         id: toastId, // Mevcut toast'ı güncelle
       });
-
-      throw err;
     }
   };
 
