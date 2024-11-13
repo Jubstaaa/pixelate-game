@@ -66,7 +66,7 @@ async function page({ params }) {
       level_type={level_type}
       categoryId={category.id}
       pixellatedImageBase64={pixellatedImageBase64}
-      categoryCharacters={totalCharacters.map((item) => ({
+      characters={totalCharacters.map((item) => ({
         id: item.id,
         name: item.name,
         image: item.characterImages.find(

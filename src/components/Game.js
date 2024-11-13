@@ -19,18 +19,29 @@ import {
 import { useRouter } from "next/navigation";
 import { guess } from "@/lib/guess";
 import Image from "next/image";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+  CommandShortcut,
+} from "@/components/ui/command";
+import { ScrollArea } from "./ui/scroll-area";
+import { cn } from "@/lib/utils";
 
 const GuessCharacterGame = ({
   categoryId,
   pixellatedImageBase64,
-  categoryCharacters,
+  characters,
   level_type,
 }) => {
   const [character, setCharacter] = useState();
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [characters, setCharacters] = useState(categoryCharacters);
   const [inputValue, setInputValue] = useState("");
 
   const [isAnimating, setIsAnimating] = useState(false);
@@ -121,33 +132,6 @@ const GuessCharacterGame = ({
     }
   };
 
-  useEffect(() => {
-    if (inputValue && categoryCharacters) {
-      setCharacters(
-        categoryCharacters
-          .filter((item) =>
-            item.name.toLowerCase().includes(inputValue.toLowerCase())
-          )
-          .slice(0, 5)
-          .map((item) => ({
-            value: item.id,
-            label: item.name,
-            image: item.image,
-          }))
-      );
-    } else if (categoryCharacters) {
-      setCharacters(
-        categoryCharacters.slice(0, 5).map((item) => ({
-          value: item.id,
-          label: item.name,
-          image: item.image,
-        }))
-      );
-    } else {
-      setCharacters([]);
-    }
-  }, [inputValue, categoryCharacters]);
-
   return (
     <div className="w-full flex flex-col items-center justify-center gap-10">
       <Image
@@ -157,40 +141,39 @@ const GuessCharacterGame = ({
         className="w-96 max-w-xs h-auto aspect-square"
         alt="Pixellated Character"
       />
-      <Autocomplete
-        items={characters || []}
-        inputValue={inputValue}
-        onInputChange={(e) => setInputValue(e)}
-        onSelectionChange={handleSelectionChange}
-        isDisabled={isLoading}
-        isLoading={isLoading}
-        className="max-w-xs !text-foreground"
-        label={"Search for a character"}
-        placeholder={"Type to search..."}
-        variant="bordered"
-      >
-        {(item) => (
-          <AutocompleteItem
-            key={item.value}
-            textValue={item.label}
-            isSelected={false}
-            hideSelectedIcon={true}
-            classNames={{ title: "!text-foreground" }}
+      <Command className="rounded-lg border shadow-md max-w-[320px]">
+        <CommandInput
+          disabled={isLoading}
+          value={inputValue}
+          onValueChange={(e) => setInputValue(e)}
+          placeholder="Type to search..."
+        />
+        <CommandList limit={5}>
+          <CommandEmpty>No results found.</CommandEmpty>
+          <CommandGroup
+            className={cn("hidden", {
+              "!block": inputValue,
+            })}
           >
-            <div className="flex gap-2 items-center">
-              <Avatar
-                alt={item.label}
-                className="flex-shrink-0"
-                size="sm"
-                src={item.image}
-              />
-              <div className="flex flex-col">
-                <span className="text-small">{item.label}</span>
-              </div>
+            <div className="max-h-56 overflow-hidden">
+              {characters.map((item) => (
+                <CommandItem
+                  key={item.id}
+                  onSelect={() => handleSelectionChange(item.id)}
+                >
+                  <Avatar
+                    alt={item.name}
+                    className="flex-shrink-0"
+                    size="sm"
+                    src={item.image}
+                  />
+                  <span>{item.name}</span>
+                </CommandItem>
+              ))}
             </div>
-          </AutocompleteItem>
-        )}
-      </Autocomplete>
+          </CommandGroup>
+        </CommandList>
+      </Command>
     </div>
   );
 };

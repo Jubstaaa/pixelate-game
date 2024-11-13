@@ -1,28 +1,40 @@
 "use client";
 
-import React from "react";
-import {
-  Button,
-  Chip,
-  Divider,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-  Textarea,
-} from "@nextui-org/react";
+import React, { useState } from "react";
 import ThemeSwitch from "./ThemeSwitch";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
-import FeedbackRating from "./FeedbackRating";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import { submitFeedback } from "@/lib/feedback";
 
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { MessageSquare, Frown, Meh, Smile, ThumbsUp } from "lucide-react";
+import { Chip, Divider } from "@nextui-org/react";
 export default function Footer() {
+  const [open, setOpen] = useState(false);
+  const [feedback, setFeedback] = useState("");
+  const [selectedRating, setSelectedRating] = useState(null > null);
+
+  const ratings = [
+    { icon: Frown, label: "Poor" },
+    { icon: Meh, label: "Okay" },
+    { icon: Smile, label: "Good" },
+    { icon: ThumbsUp, label: "Great" },
+  ];
+
   const sendFeedback = async (values) => {
     const toastId = toast.loading("Sending...");
+    console.log(values);
     const res = await submitFeedback(values);
-
+    console.log(res);
     if (res.error) {
       toast.error(res.error, {
         id: toastId, // Mevcut toast'ı güncelle
@@ -49,47 +61,61 @@ export default function Footer() {
               ease: "easeInOut", // Hareketin yumuşaklığı
             }}
           >
-            <Popover shouldBlockScroll={false}>
-              <PopoverTrigger>
-                <Button size="sm" variant="bordered">
+            <Dialog open={open} onOpenChange={setOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="gap-2">
+                  <MessageSquare className="h-4 w-4" />
                   Feedback
                 </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-[340px] p-3">
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
                 <form
-                  className="flex w-full flex-col gap-2"
-                  onSubmit={(e) => {
+                  onSubmit={async (e) => {
                     e.preventDefault();
-                    const form = e.target;
-                    const formData = new FormData(form);
 
-                    // Form verilerini konsola yazdır
-                    const data = {};
-                    formData.forEach((value, key) => {
-                      data[key] = value;
-                    });
-                    sendFeedback(data);
+                    await sendFeedback({ feedback, rating: selectedRating });
+
+                    setOpen(false);
                   }}
                 >
-                  <Textarea
-                    aria-label="Feedback"
-                    name="feedback"
-                    placeholder="Ideas or suggestions to improve our product"
-                    variant="faded"
-                  />
-
-                  <Divider className="my-2" />
-
-                  <div className="flex w-full items-center justify-between">
-                    <FeedbackRating name="rating" />
-                    <Button color="primary" size="sm" type="submit">
-                      Submit
-                    </Button>
+                  <div className="grid gap-4 py-4">
+                    <Textarea
+                      id="feedback"
+                      value={feedback}
+                      onChange={(e) => setFeedback(e.target.value)}
+                      placeholder="Ideas or suggestions to improve our product"
+                      className="col-span-3"
+                      rows={5}
+                      required
+                    />
                   </div>
+                  <DialogFooter className="justify-between !flex-row">
+                    <div className="flex gap-2">
+                      {ratings.map((rating, index) => (
+                        <Button
+                          key={index}
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => setSelectedRating(rating.label)}
+                          className={
+                            selectedRating === index
+                              ? "text-primary"
+                              : "text-muted-foreground"
+                          }
+                        >
+                          <rating.icon className="h-4 w-4" />
+                          <span className="sr-only">{rating.label}</span>
+                        </Button>
+                      ))}
+                    </div>
+                    <Button type="submit">Submit</Button>
+                  </DialogFooter>
                 </form>
-              </PopoverContent>
-            </Popover>
+              </DialogContent>
+            </Dialog>
           </motion.div>
+
           <ThemeSwitch />
         </div>
 
