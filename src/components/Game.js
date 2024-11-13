@@ -158,6 +158,7 @@ const GuessCharacterGame = ({
             <div className="max-h-56 overflow-hidden">
               {characters.map((item) => (
                 <CommandItem
+                  className="cursor-pointer"
                   key={item.id}
                   onSelect={() => handleSelectionChange(item.id)}
                 >

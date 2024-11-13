@@ -47,7 +47,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="flex w-full flex-col">
+    <footer className="flex w-full flex-col mt-20">
       <div className="md:flex md:items-center md:justify-between">
         <div className="flex items-center justify-center gap-2 md:order-2 md:items-end">
           <motion.div
@@ -89,7 +89,7 @@ export default function Footer() {
                       required
                     />
                   </div>
-                  <DialogFooter className="justify-between !flex-row">
+                  <DialogFooter className="!justify-between !flex-row">
                     <div className="flex gap-2">
                       {ratings.map((rating, index) => (
                         <Button
