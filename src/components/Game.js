@@ -100,7 +100,7 @@ const GuessCharacterGame = ({
         id: toastId, // Mevcut toast'ı güncelle
       });
 
-      setCharacter(characters.find((item) => item.value === Number(values.id)));
+      setCharacter(characters.find((item) => item.id === Number(values.id)));
       router.refresh();
 
       setTimeout(() => {
