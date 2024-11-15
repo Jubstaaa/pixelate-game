@@ -1,8 +1,6 @@
-import CategoryCard from "@/components/CategoryCard";
 import { getCategories } from "@/lib/category";
-import prisma from "@/lib/prisma";
-import { Spacer } from "@nextui-org/react";
-import { unstable_cache } from "next/cache";
+import CategoryCard from "@/components/CategoryCard";
+import { Badge } from "@/components/ui/badge";
 
 export const metadata = {
   title: "Pixel Guess: Guess Hidden Images by Pixel | Fun Image Guessing Game",
@@ -14,19 +12,21 @@ export default async function Home() {
   const categories = await getCategories();
 
   return (
-    <div className="flex flex-col gap-8 items-center">
-      <div className="flex max-w-xl flex-col text-center">
-        <h2 className="font-medium text-primary">Open Beta!</h2>
-        <h1 className="text-4xl font-medium tracking-tight">Pixel Guess</h1>
-        <Spacer y={4} />
-        <h2 className="text-large text-default-500">
-          Pick your favorite category and try to guess the hidden image pixel by
-          pixel!
-        </h2>
-        <Spacer y={4} />
+    <div className="container mx-auto px-4 py-12">
+      <div className="text-center mb-16">
+        <Badge variant="outline" className="mb-4">
+          Open Beta!
+        </Badge>
+        <h1 className="text-5xl font-bold tracking-tight mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+          Pixel Guess
+        </h1>
+        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          Challenge yourself! Pick a category and guess the hidden image pixel
+          by pixel.
+        </p>
       </div>
 
-      <div className="w-full grid grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {categories.map((item) => (
           <CategoryCard key={item.id} item={item} />
         ))}

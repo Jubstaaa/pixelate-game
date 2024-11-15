@@ -6,7 +6,7 @@ const ProgressBarProvider = ({ children }) => {
   return (
     <>
       {children}
-      <ProgressBar color="#006FEE" />
+      <ProgressBar color="#18181b" />
     </>
   );
 };

@@ -1,12 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
-import ThemeSwitch from "./ThemeSwitch";
 import Link from "next/link";
-import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
-import toast from "react-hot-toast";
-import { submitFeedback } from "@/lib/feedback";
+import { useTheme } from "next-themes";
+import {
+  MessageSquare,
+  Frown,
+  Meh,
+  Smile,
+  ThumbsUp,
+  Sun,
+  Moon,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -16,12 +22,22 @@ import {
   DialogFooter,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { MessageSquare, Frown, Meh, Smile, ThumbsUp } from "lucide-react";
-import { Chip, Divider } from "@nextui-org/react";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
+
+// Assume this function exists in your project
+import { submitFeedback } from "@/lib/feedback";
+import { toast } from "sonner";
+
 export default function Footer() {
+  const { theme, setTheme } = useTheme();
   const [open, setOpen] = useState(false);
   const [feedback, setFeedback] = useState("");
-  const [selectedRating, setSelectedRating] = useState(null > null);
+  const [selectedRating, setSelectedRating] = useState(null);
+
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
 
   const ratings = [
     { icon: Frown, label: "Poor" },
@@ -31,34 +47,47 @@ export default function Footer() {
   ];
 
   const sendFeedback = async (values) => {
-    const toastId = toast.loading("Sending...");
-    console.log(values);
+    const toastId = toast.loading("Sending feedback...");
+
     const res = await submitFeedback(values);
-    console.log(res);
     if (res.error) {
-      toast.error(res.error, {
-        id: toastId, // Mevcut toast'ı güncelle
-      });
+      toast.error(res.error, { id: toastId });
     } else {
-      toast.success(res.message, {
-        id: toastId, // Mevcut toast'ı güncelle
-      });
+      toast.success(res.message, { id: toastId });
     }
   };
 
   return (
-    <footer className="flex w-full flex-col mt-20">
-      <div className="md:flex md:items-center md:justify-between">
-        <div className="flex items-center justify-center gap-2 md:order-2 md:items-end">
+    <footer className="mt-20 w-full">
+      <div className="container flex flex-col items-center justify-between gap-4 md:flex-row">
+        <div className="flex flex-col items-center gap-2 md:items-start">
+          <div className="flex items-center gap-2">
+            <span className="text-lg font-semibold">PIXEL GUESS</span>
+            <Separator orientation="vertical" className="h-4" />
+            <Badge variant="secondary" className="text-xs gap-0.5">
+              Made by
+              <Link
+                href="https://ilkerbalcilar.com"
+                target="_blank"
+                className="underline"
+              >
+                Jubstaa
+              </Link>
+            </Badge>
+          </div>
+          <p className="text-center text-sm text-muted-foreground md:text-start">
+            &copy; 2024 Pixel Guess Inc. All rights reserved.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2">
           <motion.div
-            animate={{
-              y: [0, -10, 0], // Başlangıçta, -10px yukarı, sonra tekrar aşağı
-            }}
+            animate={{ y: [0, -10, 0] }}
             transition={{
-              duration: 4, // Her dönüş hareketinin süresi
-              repeat: Infinity, // Sonsuz döngü
-              repeatType: "loop", // Döngü tipi
-              ease: "easeInOut", // Hareketin yumuşaklığı
+              duration: 4,
+              repeat: Infinity,
+              repeatType: "loop",
+              ease: "easeInOut",
             }}
           >
             <Dialog open={open} onOpenChange={setOpen}>
@@ -72,9 +101,7 @@ export default function Footer() {
                 <form
                   onSubmit={async (e) => {
                     e.preventDefault();
-
                     await sendFeedback({ feedback, rating: selectedRating });
-
                     setOpen(false);
                   }}
                 >
@@ -89,7 +116,7 @@ export default function Footer() {
                       required
                     />
                   </div>
-                  <DialogFooter className="!justify-between !flex-row">
+                  <DialogFooter className="flex-row justify-between">
                     <div className="flex gap-2">
                       {ratings.map((rating, index) => (
                         <Button
@@ -99,7 +126,7 @@ export default function Footer() {
                           size="icon"
                           onClick={() => setSelectedRating(rating.label)}
                           className={
-                            selectedRating === index
+                            selectedRating === rating.label
                               ? "text-primary"
                               : "text-muted-foreground"
                           }
@@ -116,29 +143,14 @@ export default function Footer() {
             </Dialog>
           </motion.div>
 
-          <ThemeSwitch />
-        </div>
-
-        <div className="mt-4 md:order-1 md:mt-0">
-          <div className="flex items-center justify-center gap-3 md:justify-start">
-            <div className="flex items-center">
-              <span className="text-small font-medium">PIXEL GUESS</span>
-            </div>
-            <Divider className="h-4" orientation="vertical" />
-            <Chip
-              className="border-none px-0 text-default-500"
-              color="primary"
-              variant="dot"
-            >
-              Made by{" "}
-              <Link target="_blank" href="https://ilkerbalcilar.com">
-                Jubstaa
-              </Link>{" "}
-            </Chip>
-          </div>
-          <p className="text-center text-tiny text-default-400 md:text-start">
-            &copy; 2024 Pixel Guess Inc. All rights reserved.
-          </p>
+          <Button variant="outline" size="icon" onClick={toggleTheme}>
+            {theme === "light" ? (
+              <Sun className="h-[1.2rem] w-[1.2rem]" />
+            ) : (
+              <Moon className="h-[1.2rem] w-[1.2rem]" />
+            )}
+            <span className="sr-only">Change Theme</span>
+          </Button>
         </div>
       </div>
     </footer>

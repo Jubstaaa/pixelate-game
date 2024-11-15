@@ -1,12 +1,12 @@
-import { Spinner } from "@nextui-org/react";
 import React from "react";
+import { Loader2 } from "lucide-react";
 
-function loading() {
+function Loading() {
   return (
     <div className="w-full h-64 flex items-center justify-center">
-      <Spinner classNames={{ wrapper: "w-20 h-20" }} />
+      <Loader2 className="w-20 h-20 animate-spin text-primary" />
     </div>
   );
 }
 
-export default loading;
+export default Loading;

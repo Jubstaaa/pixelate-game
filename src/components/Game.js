@@ -1,13 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  Autocomplete,
-  AutocompleteItem,
-  Avatar,
-  Spacer,
-} from "@nextui-org/react";
-import toast from "react-hot-toast";
+
 import confetti from "canvas-confetti";
 import {
   formatDistanceToNow,
@@ -26,11 +20,18 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
-  CommandShortcut,
 } from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { ScrollArea } from "./ui/scroll-area";
 import { cn } from "@/lib/utils";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { Button } from "./ui/button";
+import { toast } from "sonner";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 const GuessCharacterGame = ({
   categoryId,
@@ -40,6 +41,8 @@ const GuessCharacterGame = ({
 }) => {
   const [character, setCharacter] = useState();
   const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState("");
 
   const [isLoading, setIsLoading] = useState(false);
   const [inputValue, setInputValue] = useState("");
@@ -85,22 +88,18 @@ const GuessCharacterGame = ({
 
   const selectCharacter = async (values) => {
     const toastId = toast.loading("Guessing...");
+
     setIsLoading(true);
     const res = await guess(values);
 
     if (res.error) {
-      toast.error(res.error, {
-        id: toastId, // Mevcut toast'ı güncelle
-      });
+      toast.error(res.error, { id: toastId });
       router.refresh();
     } else {
       triggerConfetti();
+      toast.success(res.message, { id: toastId });
 
-      toast.success(res.message, {
-        id: toastId, // Mevcut toast'ı güncelle
-      });
-
-      setCharacter(characters.find((item) => item.value === Number(values.id)));
+      setCharacter(characters.find((item) => item.id === Number(values.id)));
       router.refresh();
 
       setTimeout(() => {
@@ -141,7 +140,7 @@ const GuessCharacterGame = ({
         className="w-96 max-w-xs h-auto aspect-square"
         alt="Pixellated Character"
       />
-      <Command className="rounded-lg border shadow-md max-w-[320px]">
+      {/* <Command className="rounded-lg border shadow-md max-w-[320px]">
         <CommandInput
           disabled={isLoading}
           value={inputValue}
@@ -149,13 +148,13 @@ const GuessCharacterGame = ({
           placeholder="Type to search..."
         />
         <CommandList limit={5}>
-          <CommandEmpty>No results found.</CommandEmpty>
           <CommandGroup
             className={cn("hidden", {
               "!block": inputValue,
             })}
           >
-            <div className="max-h-56 overflow-hidden">
+            <CommandEmpty>No results found.</CommandEmpty>
+            <div className="h-56 overflow-hidden">
               {characters.map((item) => (
                 <CommandItem
                   className="cursor-pointer"
@@ -174,7 +173,55 @@ const GuessCharacterGame = ({
             </div>
           </CommandGroup>
         </CommandList>
-      </Command>
+      </Command> */}
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            className="w-[320px] justify-between"
+          >
+            {value
+              ? characters.find((character) => character.id === value)?.name
+              : "Select character..."}
+            <ChevronsUpDown className="opacity-50" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[320px] p-0">
+          <Command className="max-w-[320px]">
+            <CommandInput placeholder="Search character..." />
+            <CommandList>
+              <CommandEmpty>No character found.</CommandEmpty>
+              <CommandGroup>
+                <div className="max-h-56 overflow-hidden">
+                  {characters.map((character) => (
+                    <CommandItem
+                      className="cursor-pointer"
+                      key={character.id}
+                      onSelect={() => {
+                        handleSelectionChange(character.id);
+                        setOpen(false);
+                      }}
+                    >
+                      <Avatar className="h-8 w-8 flex-shrink-0">
+                        <AvatarImage
+                          src={character.image}
+                          alt={character.name}
+                        />
+                        <AvatarFallback>
+                          {character.name.charAt(0)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <span>{character.name}</span>
+                    </CommandItem>
+                  ))}
+                </div>
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
     </div>
   );
 };

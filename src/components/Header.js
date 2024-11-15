@@ -1,87 +1,35 @@
 "use client";
 
 import React from "react";
-import {
-  Navbar,
-  NavbarBrand,
-  NavbarContent,
-  NavbarItem,
-  NavbarMenu,
-  NavbarMenuItem,
-  NavbarMenuToggle,
-  Link,
-  Button,
-  Image,
-} from "@nextui-org/react";
-
-const menuItems = [];
+import Link from "next/link";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
 export default function Header({ category }) {
   return (
-    <Navbar
-      classNames={{
-        base: "py-4 backdrop-filter-none bg-transparent",
-        wrapper: "px-0 w-full justify-center bg-transparent",
-        item: "hidden md:flex",
-      }}
-      height="54px"
-    >
-      <NavbarContent
-        className="gap-4 rounded-full border-small border-default-200/20 bg-background/60 px-2 shadow-medium backdrop-blur-md backdrop-saturate-150 dark:bg-default-100/50"
-        justify="center"
-      >
-        {/* Toggle */}
-        <NavbarMenuToggle className="ml-2 text-default-400 md:hidden" />
-
-        {/* Logo */}
-        <NavbarBrand className="mr-2 w-[40vw] md:w-auto md:max-w-fit">
-          <div className="rounded-full bg-foreground text-background">
-            <Image
-              alt="Woman listing to music"
-              width={34}
-              height={34}
-              className="object-contain p-1"
-              src={category.icon}
-            />
-            {/* <AcmeIcon size={34} /> */}
+    <header className="w-full py-4">
+      <Card className="mx-auto max-w-xl bg-background/60 backdrop-blur-md backdrop-saturate-150 shadow-sm">
+        <nav className="flex items-center justify-between px-4 py-2">
+          <div className="flex items-center space-x-4">
+            <div className="rounded-full bg-primary p-1">
+              <Image
+                alt={`${category.name} Logo`}
+                width={34}
+                height={34}
+                className="object-contain"
+                src={category.icon}
+              />
+            </div>
+            <span className="text-sm font-medium text-muted-foreground hidden md:inline-block">
+              Pixel Guess: {category.name}
+            </span>
           </div>
-        </NavbarBrand>
-
-        {/* Items */}
-        <NavbarItem className="hidden md:flex">
-          <Link className="text-default-500" size="sm">
-            Pixel Guess: {category.name}
-          </Link>
-        </NavbarItem>
-
-        <NavbarItem className="ml-2 !flex">
-          <Button as={Link} href="/" radius="full" variant="flat">
-            All Categories
+          <Button asChild variant="outline" size="sm">
+            <Link href="/">All Categories</Link>
           </Button>
-        </NavbarItem>
-      </NavbarContent>
-
-      {/* Menu */}
-      {/* <NavbarMenu
-        className="top-[calc(var(--navbar-height)/2)] mx-auto mt-16 max-h-[40vh] max-w-[80vw] rounded-large border-small border-default-200/20 bg-background/60 py-6 shadow-medium backdrop-blur-md backdrop-saturate-150 dark:bg-default-100/50"
-        motionProps={{
-          initial: { opacity: 0, y: -20 },
-          animate: { opacity: 1, y: 0 },
-          exit: { opacity: 0, y: -20 },
-          transition: {
-            ease: "easeInOut",
-            duration: 0.2,
-          },
-        }}
-      >
-        {menuItems.map((item, index) => (
-          <NavbarMenuItem key={`${item}-${index}`}>
-            <Link className="w-full text-default-500" href="#" size="md">
-              {item}
-            </Link>
-          </NavbarMenuItem>
-        ))}
-      </NavbarMenu> */}
-    </Navbar>
+        </nav>
+      </Card>
+    </header>
   );
 }
