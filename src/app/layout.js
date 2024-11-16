@@ -62,6 +62,35 @@ export const viewport = {
   userScalable: false,
 };
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "VideoGame",
+  name: "Pixel Guess",
+  genre: "Puzzle", // Oyun türü
+  url: "https://pixelguessgame.com",
+  description:
+    "Join Pixel Guess and challenge yourself to guess hidden images, pixel by pixel. Fun and addictive image guessing game for all ages.",
+  image: "https://pixelguessgame.com/images/pixel_guess_logo.webp",
+  publisher: {
+    "@type": "Organization",
+    name: "Pixel Guess",
+    logo: {
+      "@type": "ImageObject",
+      url: "https://pixelguessgame.com/images/pixel_guess_logo.webp",
+      width: 521,
+      height: 521,
+    },
+  },
+  mainEntityOfPage: "https://pixelguessgame.com",
+  gamePlatform: "Web", // Platform
+  offers: {
+    "@type": "Offer",
+    priceCurrency: "USD",
+    price: "0.00", // Ücretsiz olduğunu belirtiyoruz
+    url: "https://pixelguessgame.com", // Oyun linki
+  },
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
@@ -91,6 +120,10 @@ export default function RootLayout({ children }) {
         </ThemeProvider>
         <SpeedInsights />
         <Analytics />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
       </body>
     </html>
   );
