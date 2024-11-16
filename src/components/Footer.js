@@ -28,6 +28,7 @@ import { Badge } from "@/components/ui/badge";
 // Assume this function exists in your project
 import { submitFeedback } from "@/lib/feedback";
 import { toast } from "sonner";
+import Image from "next/image";
 
 export default function Footer() {
   const { theme, setTheme } = useTheme();
@@ -62,6 +63,13 @@ export default function Footer() {
       <div className="container flex flex-col items-center justify-between gap-4 md:flex-row">
         <div className="flex flex-col items-center gap-2 md:items-start">
           <div className="flex items-center gap-2">
+            <Image
+              src="/images/pixel_guess_logo.webp"
+              width={200}
+              height={200}
+              className="w-7 h-7 rounded-md"
+              alt="Pixel Guess Logo"
+            />
             <span className="text-lg font-semibold">PIXEL GUESS</span>
             <Separator orientation="vertical" className="h-4" />
             <Badge variant="secondary" className="text-xs gap-0.5">
@@ -116,7 +124,7 @@ export default function Footer() {
                       required
                     />
                   </div>
-                  <DialogFooter className="flex-row justify-between">
+                  <DialogFooter className="flex-row sm:justify-between">
                     <div className="flex gap-2">
                       {ratings.map((rating, index) => (
                         <Button

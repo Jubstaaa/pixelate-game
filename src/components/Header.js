@@ -12,12 +12,12 @@ export default function Header({ category }) {
       <Card className="mx-auto max-w-xl bg-background/60 backdrop-blur-md backdrop-saturate-150 shadow-sm">
         <nav className="flex items-center justify-between px-4 py-2">
           <div className="flex items-center space-x-4">
-            <div className="rounded-full bg-primary p-1">
+            <div className="rounded-full bg-primary p-2">
               <Image
                 alt={`${category.name} Logo`}
-                width={34}
-                height={34}
-                className="object-contain"
+                width={50}
+                height={50}
+                className="object-contain w-7 h-7"
                 src={category.icon}
               />
             </div>

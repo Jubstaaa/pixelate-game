@@ -138,7 +138,7 @@ const GuessCharacterGame = ({
         height={400}
         src={character?.image || pixellatedImageBase64}
         className="w-96 max-w-xs h-auto aspect-square"
-        alt="Pixellated Character"
+        alt="Pixellated Image"
       />
       {/* <Command className="rounded-lg border shadow-md max-w-[320px]">
         <CommandInput

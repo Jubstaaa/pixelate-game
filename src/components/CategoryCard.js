@@ -10,15 +10,19 @@ import Image from "next/image";
 const CategoryCard = ({ item }) => {
   return (
     <motion.div
-      whileHover={{ scale: 1.05 }}
+      whileHover={{ scale: item.isActive && 1.05 }}
       transition={{ type: "spring", stiffness: 300 }}
     >
-      <Card className={`overflow-hidden ${!item.isActive && "opacity-40"}`}>
+      <Card
+        className={`overflow-hidden ${
+          !item.isActive && "opacity-40 cursor-not-allowed"
+        }`}
+      >
         <CardContent className="p-6 flex flex-col items-center">
           <div className="relative w-24 h-24 mb-4">
             <Image
               src={item.icon}
-              alt={item.name}
+              alt={`${item.name} Logo`}
               width={300}
               height={300}
               className="w-full h-full object-contain"
