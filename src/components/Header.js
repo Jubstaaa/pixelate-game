@@ -21,9 +21,9 @@ export default function Header({ category }) {
                 src={category.icon}
               />
             </div>
-            <span className="text-sm font-medium text-muted-foreground hidden md:inline-block">
+            <h1 className="text-sm font-medium text-muted-foreground hidden md:inline-block">
               Pixel Guess: {category.name}
-            </span>
+            </h1>
           </div>
           <Button asChild variant="outline" size="sm">
             <Link href="/">All Categories</Link>

@@ -11,6 +11,50 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
 import { Toaster } from "sonner";
 
+export const metadata = {
+  title: "Pixel Guess: Guess Hidden Images by Pixel | Fun Image Guessing Game",
+  description:
+    "Join Pixel Guess and challenge yourself to guess hidden images, pixel by pixel. Choose your favorite category and start guessing today. Fun and addictive image guessing game for all ages.",
+  author: "Pixel Guess",
+  metadataBase: new URL("https://pixelguessgame.com"),
+  openGraph: {
+    title:
+      "Pixel Guess: Guess Hidden Images by Pixel | Fun Image Guessing Game",
+    description:
+      "Join Pixel Guess and challenge yourself to guess hidden images, pixel by pixel. Choose your favorite category and start guessing today. Fun and addictive image guessing game for all ages.",
+    url: "https://pixelguessgame.com",
+    siteName: "Pixel Guess",
+    images: [
+      {
+        url: "https://pixelguessgame.com/images/pixel_guess_logo.webp",
+        width: 521,
+        height: 521,
+        alt: "Pixel Guess: Fun Image Guessing Game",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title:
+      "Pixel Guess: Guess Hidden Images by Pixel | Fun Image Guessing Game",
+    description:
+      "Join Pixel Guess and challenge yourself to guess hidden images, pixel by pixel. Fun and addictive image guessing game for all ages.",
+    images: ["https://pixelguessgame.com/images/pixel_guess_logo.webp"],
+  },
+  robots: "index, follow", // Alternatif: "noindex, nofollow"
+  icons: {
+    icon: "/android-chrome-192x192.png", // Android 192x192 iconu
+    apple: "/apple-touch-icon.png", // iOS için ikon
+    android: "/android-chrome-192x192.png", // Android için ikonu belirleyin
+    "favicon-16x16": "/favicon-16x16.png", // 16x16 Favicon
+    "favicon-32x32": "/favicon-32x32.png", // 32x32 Favicon
+    "favicon.ico": "/favicon.ico", // .ico Favicon
+  },
+  manifest: "/site.webmanifest", // Web uygulama manifest dosyası
+};
+
 export const viewport = {
   width: "device-width",
   initialScale: 1,

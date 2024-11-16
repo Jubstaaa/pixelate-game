@@ -15,8 +15,30 @@ export async function generateMetadata({ params }) {
   const category = await getCategoryBySlug(categorySlug);
 
   return {
-    title: `Pixel Guess: ${category.name} Category | Hard Mode`,
-    description: `${category.name} Category: Test your skills in guessing hidden images pixel by pixel in the ${category.name} category. Choose your challenge and start guessing!`,
+    title: `Pixel Guess: ${category.name} Category | Hard Mode`, // Dinamik başlık
+    description: `${category.name} Category: Test your skills in guessing hidden images pixel by pixel in the ${category.name} category. Choose your challenge and start guessing!`, // Dinamik açıklama
+    openGraph: {
+      title: `Pixel Guess: ${category.name} Category | Fun Image Guessing Game`,
+      description: `${category.name} Category: Test your skills in guessing hidden images pixel by pixel in the ${category.name} category.`,
+      url: `https://pixelguessgame.com/${categorySlug}/hard`,
+      siteName: "Pixel Guess",
+      images: [
+        {
+          url: category.icon, // Kategoriye özel resim
+          width: 200,
+          height: 200,
+          alt: `${category.name} Category: Fun Image Guessing Game`,
+        },
+      ],
+      locale: "en_US",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image", // Twitter için geniş özet kartı
+      title: `Pixel Guess: ${category.name} Category | Fun Image Guessing Game`,
+      description: `${category.name} Category: Guess hidden images in the ${category.name} category. Challenge yourself!`,
+      images: [category.icon], // Kategoriye özel resim
+    },
   };
 }
 
