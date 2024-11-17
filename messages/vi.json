@@ -1,0 +1,54 @@
+{
+  "Locale": {
+    "en": "Tiếng Anh",
+    "tr": "Tiếng Thổ Nhĩ Kỳ"
+  },
+  "Hero": {
+    "SubTitle": "Phiên bản Beta Mở!",
+    "Description": "Thử thách bản thân! Chọn một danh mục và đoán hình ảnh ẩn dần từng pixel."
+  },
+  "Footer": {
+    "Rights": "Tất cả quyền được bảo lưu.",
+    "MadeBy": "Được tạo bởi <person></person>",
+    "Feedback": {
+      "Title": "Phản hồi",
+      "Placeholder": "Ý tưởng hoặc đề xuất để cải thiện sản phẩm của chúng tôi",
+      "ButtonText": "Gửi",
+      "SubmitMessage": "Đang gửi phản hồi...",
+      "ResponseMessage": "Cảm ơn bạn đã phản hồi"
+    }
+  },
+  "Guess": {
+    "ResponseMessage": "Đúng rồi! Tiếp tục đi",
+    "ErrorMessage": "Cố lên! Thử lại đi!"
+  },
+  "PatchNotes": {
+    "Title": "Ghi chú bản vá",
+    "Description": "Cập nhật và thay đổi gần đây của Pixel Guess",
+    "VersionNumber": "Phiên bản {number}",
+    "1": [
+      "Phát hành ban đầu của Pixel Guess",
+      "Các danh mục bao gồm: League of Legends, Valorant"
+    ],
+    "2": [
+      "Sửa lỗi nhỏ",
+      "Cập nhật UI để cải thiện tính phản hồi trên thiết bị di động"
+    ],
+    "3": [
+      "Thêm hỗ trợ đa ngôn ngữ",
+      "Các ngôn ngữ hỗ trợ: Tiếng Anh, Tiếng Thổ Nhĩ Kỳ, Tiếng Tây Ban Nha, Tiếng Bồ Đào Nha, Tiếng Pháp, Tiếng Đức, Tiếng Nga, Tiếng Hàn, Tiếng Trung, Tiếng Nhật, Tiếng Ả Rập, Tiếng Việt"
+    ],
+    "4": [
+      "Sửa lỗi nhỏ",
+      "Đã sửa lỗi khiến các nhân vật có tên ngắn (ví dụ: \"Vi\") không xuất hiện trong bộ lọc tìm kiếm."
+    ]
+  },
+  "Easy": "Dễ",
+  "Hard": "Khó",
+  "All Categories": "Tất cả danh mục",
+  "Coming Soon": "Sắp ra mắt",
+  "Select character": "Chọn nhân vật...",
+  "Search character": "Tìm kiếm nhân vật...",
+  "No character found": "Không tìm thấy nhân vật.",
+  "Guessing": "Đang đoán..."
+}

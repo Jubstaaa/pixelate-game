@@ -1,27 +1,35 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { locales, defaultLocale } from "@/i18n/config";
+import { defaultLocale } from "@/i18n/config";
+import { getLanguages } from "./language";
 
-// In this example the locale is read from a cookie.
-// If the locale is not found, it will use the defaultLocale.
-
+// Cookie adı
 const COOKIE_NAME = "NEXT_LOCALE";
 
+// Kullanıcının dilini almak için fonksiyon
 export async function getUserLocale() {
   // cookies() fonksiyonunu await ile kullanarak, doğru şekilde senkronize et
   const cookie = await cookies();
   const locale = cookie.get(COOKIE_NAME);
+  const locales = await getLanguages();
+  // Eğer cookie'de geçerli bir locale kodu varsa, locale'yi döndür
+  // locale kodu 'code' özelliği üzerinden doğrulanır
+  const userLocale = locales.find((l) => l.code === locale?.value);
 
-  // Eğer cookie'de geçerli bir locale yoksa, defaultLocale kullan
-  return locales.includes(locale?.value) ? locale.value : defaultLocale;
+  // Eğer geçerli bir locale bulunamazsa, defaultLocale kullan
+  return userLocale ? userLocale.code : defaultLocale;
 }
 
+// Kullanıcının dilini değiştirmek için fonksiyon
 export async function setUserLocale(locale) {
   const cookie = await cookies();
+  const locales = await getLanguages();
 
-  // Eğer gelen locale, desteklenen diller arasında değilse, defaultLocale'u kullan
-  const validLocale = locales.includes(locale) ? locale : defaultLocale;
+  // Eğer gelen locale, geçerli locale listesinde değilse, defaultLocale'u kullan
+  const validLocale = locales.find((l) => l.code === locale)
+    ? locale
+    : defaultLocale;
 
   // cookies() fonksiyonunu await ile kullanarak, doğru şekilde senkronize et
   cookie.set(COOKIE_NAME, validLocale);

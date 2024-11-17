@@ -1,0 +1,54 @@
+{
+  "Locale": {
+    "en": "Anglais",
+    "tr": "Turc"
+  },
+  "Hero": {
+    "SubTitle": "Beta Ouverte !",
+    "Description": "Défiez-vous ! Choisissez une catégorie et devinez l'image cachée pixel par pixel."
+  },
+  "Footer": {
+    "Rights": "Tous droits réservés.",
+    "MadeBy": "Créé par <person></person>",
+    "Feedback": {
+      "Title": "Retour",
+      "Placeholder": "Idées ou suggestions pour améliorer notre produit",
+      "ButtonText": "Envoyer",
+      "SubmitMessage": "Envoi du retour...",
+      "ResponseMessage": "Merci pour votre retour"
+    }
+  },
+  "Guess": {
+    "ResponseMessage": "Correct ! Continuons",
+    "ErrorMessage": "Allez ! Réessayez !"
+  },
+  "PatchNotes": {
+    "Title": "Notes de Mise à Jour",
+    "Description": "Mises à jour et changements récents de Pixel Guess",
+    "VersionNumber": "Version {number}",
+    "1": [
+      "Première version de Pixel Guess",
+      "Catégories incluses : League of Legends, Valorant"
+    ],
+    "2": [
+      "Corrections de bugs mineurs",
+      "Interface mise à jour pour une meilleure réactivité mobile"
+    ],
+    "3": [
+      "Support multilingue ajouté",
+      "Langues supportées : Anglais, Turc, Espagnol, Portugais, Français, Allemand, Russe, Coréen, Chinois, Japonais, Arabe, Vietnamien"
+    ],
+    "4": [
+      "Corrections de bugs mineurs",
+      "Correction d'un problème où les personnages avec des noms courts (par ex. \"Vi\") n'apparaissaient pas dans le filtre de recherche."
+    ]
+  },
+  "Easy": "Facile",
+  "Hard": "Difficile",
+  "All Categories": "Toutes les Catégories",
+  "Coming Soon": "Bientôt Disponible",
+  "Select character": "Sélectionner un personnage...",
+  "Search character": "Rechercher un personnage...",
+  "No character found": "Aucun personnage trouvé.",
+  "Guessing": "En train de deviner..."
+}

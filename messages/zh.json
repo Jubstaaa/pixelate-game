@@ -1,0 +1,48 @@
+{
+  "Locale": {
+    "en": "英语",
+    "tr": "土耳其语"
+  },
+  "Hero": {
+    "SubTitle": "开放测试版！",
+    "Description": "挑战自己！选择一个类别，并逐像素猜测隐藏的图像。"
+  },
+  "Footer": {
+    "Rights": "版权所有。",
+    "MadeBy": "制作人 <person></person>",
+    "Feedback": {
+      "Title": "反馈",
+      "Placeholder": "改进我们产品的想法或建议",
+      "ButtonText": "提交",
+      "SubmitMessage": "正在发送反馈...",
+      "ResponseMessage": "感谢您的反馈"
+    }
+  },
+  "Guess": {
+    "ResponseMessage": "正确！继续",
+    "ErrorMessage": "再试一次！"
+  },
+  "PatchNotes": {
+    "Title": "补丁说明",
+    "Description": "Pixel Guess 的最新更新和更改",
+    "VersionNumber": "版本 {number}",
+    "1": ["Pixel Guess 初始发布", "包括的类别：英雄联盟，Valorant"],
+    "2": ["小错误修复", "更新了UI以改善移动设备上的响应性"],
+    "3": [
+      "添加了多语言支持",
+      "支持的语言：英语、土耳其语、西班牙语、葡萄牙语、法语、德语、俄语、韩语、中文、日语、阿拉伯语、越南语"
+    ],
+    "4": [
+      "小错误修复",
+      "修复了短名称的角色（例如 \"Vi\"）未出现在搜索筛选器中的问题。"
+    ]
+  },
+  "Easy": "简单",
+  "Hard": "困难",
+  "All Categories": "所有类别",
+  "Coming Soon": "敬请期待",
+  "Select character": "选择角色...",
+  "Search character": "搜索角色...",
+  "No character found": "未找到角色。",
+  "Guessing": "猜测中..."
+}

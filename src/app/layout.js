@@ -12,6 +12,8 @@ import { Analytics } from "@vercel/analytics/react";
 import { Toaster } from "sonner";
 import { getLocale, getMessages } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
+import { getLanguages } from "@/lib/language";
+import { getPatchNotes } from "@/lib/patchNote";
 
 export const metadata = {
   title: "Pixel Guess: Guess Hidden Images by Pixel | Fun Image Guessing Game",
@@ -99,6 +101,8 @@ export default async function RootLayout({ children }) {
   // Providing all messages to the client
   // side is the easiest way to get started
   const messages = await getMessages();
+  const locales = await getLanguages();
+  const patchNotes = await getPatchNotes(locale);
 
   return (
     <html lang={locale}>
@@ -116,7 +120,7 @@ export default async function RootLayout({ children }) {
                 <ProgressBarProvider>
                   <main className="mx-auto flex flex-col justify-between w-full h-full max-w-4xl px-4 py-4 lg:px-8 lg:py-12 min-h-dvh !text-foreground">
                     {children}
-                    <Footer />
+                    <Footer locales={locales} patchNotes={patchNotes} />
                   </main>
                   <Toaster
                     position="top-center"

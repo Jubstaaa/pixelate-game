@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import confetti from "canvas-confetti";
@@ -43,10 +43,7 @@ const GuessCharacterGame = ({
   const [character, setCharacter] = useState();
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("");
   const t = useTranslations();
-  const [isLoading, setIsLoading] = useState(false);
-  const [inputValue, setInputValue] = useState("");
 
   const [isAnimating, setIsAnimating] = useState(false);
 
@@ -90,7 +87,6 @@ const GuessCharacterGame = ({
   const selectCharacter = async (values) => {
     const toastId = toast.loading(t("Guessing"));
 
-    setIsLoading(true);
     const res = await guess(values);
 
     if (res.error) {
@@ -107,30 +103,58 @@ const GuessCharacterGame = ({
         setCharacter();
       }, 3000);
     }
-    setIsLoading(false);
   };
 
   const handleSelectionChange = async (value) => {
-    if (value) {
-      selectCharacter({ id: value, categoryId, level_type: level_type });
-      // Klavyeyi kapat
-      document.activeElement.blur(); // Önce aktif elementi bulanıklaştır
+    selectCharacter({ id: value, categoryId, level_type: level_type });
+    // Klavyeyi kapat
+    document.activeElement.blur(); // Önce aktif elementi bulanıklaştır
 
-      // Gecikmeli olarak gizli bir input'a odaklan ve bulanıklaştır
-      setTimeout(() => {
-        const hiddenInput = document.createElement("input");
-        hiddenInput.style.display = "none";
-        document.body.appendChild(hiddenInput);
+    // Gecikmeli olarak gizli bir input'a odaklan ve bulanıklaştır
+    setTimeout(() => {
+      const hiddenInput = document.createElement("input");
+      hiddenInput.style.display = "none";
+      document.body.appendChild(hiddenInput);
 
-        hiddenInput.focus();
-        hiddenInput.blur();
+      hiddenInput.focus();
+      hiddenInput.blur();
 
-        document.body.removeChild(hiddenInput); // Temizlemeyi unutmayın
-        setInputValue("");
-      }, 100); // Küçük bir gecikme eklemek bazı cihazlarda yardımcı olabilir
-      setInputValue("");
-    }
+      document.body.removeChild(hiddenInput); // Temizlemeyi unutmayın
+    }, 100); // Küçük bir gecikme eklemek bazı cihazlarda yardımcı olabilir
   };
+
+  const filteredCharacters = useMemo(() => {
+    const normalize = (str) => {
+      return str
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]/g, "");
+    };
+
+    return (value, search) => {
+      const normalizedValue = normalize(value);
+      const normalizedSearch = normalize(search);
+
+      // Exact match
+      if (normalizedValue === normalizedSearch) {
+        return 1;
+      }
+
+      // Starts with match
+      if (normalizedValue.startsWith(normalizedSearch)) {
+        return 1 - normalizedSearch.length / normalizedValue.length;
+      }
+
+      // Includes match
+      if (normalizedValue.includes(normalizedSearch)) {
+        return 0.5 - normalizedSearch.length / normalizedValue.length;
+      }
+
+      // No match
+      return 0;
+    };
+  }, []);
 
   return (
     <div className="w-full flex flex-col items-center justify-center gap-10">
@@ -149,14 +173,12 @@ const GuessCharacterGame = ({
             aria-expanded={open}
             className="w-[320px] justify-between"
           >
-            {value
-              ? characters.find((character) => character.id === value)?.name
-              : t("Select character")}
+            {t("Select character")}
             <ChevronsUpDown className="opacity-50" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-[320px] p-0">
-          <Command className="max-w-[320px]">
+          <Command className="max-w-[320px]" filter={filteredCharacters}>
             <CommandInput placeholder={t("Search character")} />
             <CommandList>
               <CommandEmpty>{t("No character found")}</CommandEmpty>
@@ -166,6 +188,7 @@ const GuessCharacterGame = ({
                     <CommandItem
                       className="cursor-pointer"
                       key={character.id}
+                      value={character.name}
                       onSelect={() => {
                         handleSelectionChange(character.id);
                         setOpen(false);

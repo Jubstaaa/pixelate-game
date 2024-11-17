@@ -1,0 +1,54 @@
+{
+  "Locale": {
+    "en": "Englisch",
+    "tr": "Türkisch"
+  },
+  "Hero": {
+    "SubTitle": "Offene Beta!",
+    "Description": "Fordere dich heraus! Wähle eine Kategorie und errate das verborgene Bild Pixel für Pixel."
+  },
+  "Footer": {
+    "Rights": "Alle Rechte vorbehalten.",
+    "MadeBy": "Erstellt von <person></person>",
+    "Feedback": {
+      "Title": "Feedback",
+      "Placeholder": "Ideen oder Vorschläge zur Verbesserung unseres Produkts",
+      "ButtonText": "Senden",
+      "SubmitMessage": "Feedback wird gesendet...",
+      "ResponseMessage": "Danke für dein Feedback"
+    }
+  },
+  "Guess": {
+    "ResponseMessage": "Richtig! Weiter so",
+    "ErrorMessage": "Komm schon! Versuch es nochmal!"
+  },
+  "PatchNotes": {
+    "Title": "Patchnotes",
+    "Description": "Neueste Updates und Änderungen bei Pixel Guess",
+    "VersionNumber": "Version {number}",
+    "1": [
+      "Erstveröffentlichung von Pixel Guess",
+      "Eingeschlossene Kategorien: League of Legends, Valorant"
+    ],
+    "2": [
+      "Kleine Fehlerbehebungen",
+      "UI für bessere mobile Reaktionsfähigkeit aktualisiert"
+    ],
+    "3": [
+      "Mehrsprachige Unterstützung hinzugefügt",
+      "Unterstützte Sprachen: Englisch, Türkisch, Spanisch, Portugiesisch, Französisch, Deutsch, Russisch, Koreanisch, Chinesisch, Japanisch, Arabisch, Vietnamesisch"
+    ],
+    "4": [
+      "Kleine Fehlerbehebungen",
+      "Ein Problem wurde behoben, bei dem kurz benannte Charaktere (z. B. \"Vi\") nicht im Suchfilter angezeigt wurden."
+    ]
+  },
+  "Easy": "Einfach",
+  "Hard": "Schwierig",
+  "All Categories": "Alle Kategorien",
+  "Coming Soon": "Kommt bald",
+  "Select character": "Charakter auswählen...",
+  "Search character": "Charakter suchen...",
+  "No character found": "Kein Charakter gefunden.",
+  "Guessing": "Rät..."
+}

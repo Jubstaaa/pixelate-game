@@ -1,0 +1,51 @@
+{
+  "Locale": {
+    "en": "英語",
+    "tr": "トルコ語"
+  },
+  "Hero": {
+    "SubTitle": "オープンベータ！",
+    "Description": "自分に挑戦しよう！カテゴリを選んで、ピクセルごとに隠れた画像を推測しよう。"
+  },
+  "Footer": {
+    "Rights": "すべての権利を保有。",
+    "MadeBy": "<person></person> 作成",
+    "Feedback": {
+      "Title": "フィードバック",
+      "Placeholder": "製品を改善するためのアイデアや提案",
+      "ButtonText": "送信",
+      "SubmitMessage": "フィードバックを送信中...",
+      "ResponseMessage": "フィードバックありがとうございます"
+    }
+  },
+  "Guess": {
+    "ResponseMessage": "正解！進んでいこう",
+    "ErrorMessage": "もう一度挑戦してみて！"
+  },
+  "PatchNotes": {
+    "Title": "パッチノート",
+    "Description": "Pixel Guess の最新の更新と変更",
+    "VersionNumber": "バージョン {number}",
+    "1": [
+      "Pixel Guess の初期リリース",
+      "含まれているカテゴリー：League of Legends, Valorant"
+    ],
+    "2": ["軽微なバグ修正", "モバイル対応のためのUI更新"],
+    "3": [
+      "多言語サポートが追加されました",
+      "サポートされている言語：英語、トルコ語、スペイン語、ポルトガル語、フランス語、ドイツ語、ロシア語、韓国語、中国語、日本語、アラビア語、ベトナム語"
+    ],
+    "4": [
+      "軽微なバグ修正",
+      "短縮名のキャラクター（例：\"Vi\"）が検索フィルタに表示されない問題を修正しました。"
+    ]
+  },
+  "Easy": "簡単",
+  "Hard": "難しい",
+  "All Categories": "すべてのカテゴリー",
+  "Coming Soon": "近日公開",
+  "Select character": "キャラクターを選択...",
+  "Search character": "キャラクターを検索...",
+  "No character found": "キャラクターが見つかりません。",
+  "Guessing": "推測中..."
+}

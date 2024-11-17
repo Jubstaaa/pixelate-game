@@ -5,22 +5,43 @@
   },
   "Hero": {
     "SubTitle": "Açık Beta!",
-    "Description": "Kendini zorla! Bir kategori seç ve gizli resmi pixel pixel tahmin et."
+    "Description": "Kendine meydan oku! Bir kategori seç ve gizli resmi piksel piksel tahmin et."
   },
   "Footer": {
     "Rights": "Tüm hakları saklıdır.",
-    "MadeBy": "<person></person> tarafından yapıldı.",
+    "MadeBy": "<person></person> tarafından yapıldı",
     "Feedback": {
-      "Title": "Geribildirim",
-      "Placeholder": "Ürünümüzü geliştirmek için fikirler veya öneriler",
+      "Title": "Geri Bildirim",
+      "Placeholder": "Ürünümüzü geliştirmek için fikir veya öneriler",
       "ButtonText": "Gönder",
       "SubmitMessage": "Geri bildirim gönderiliyor...",
       "ResponseMessage": "Geri bildiriminiz için teşekkürler"
     }
   },
   "Guess": {
-    "ResponseMessage": "Doğru! Hadi devam edelim",
-    "ErrorMessage": "Hadi! Tekrar deneyin!"
+    "ResponseMessage": "Doğru! Hadi devam edelim.",
+    "ErrorMessage": "Hadi! Tekrar dene!"
+  },
+  "PatchNotes": {
+    "Title": "Güncelleme Notları",
+    "Description": "Pixel Guess ile ilgili son güncellemeler ve değişiklikler",
+    "VersionNumber": "Sürüm {number}",
+    "1": [
+      "Pixel Guess ilk sürümü",
+      "Eklenen kategoriler: League of Legends, Valorant"
+    ],
+    "2": [
+      "Küçük hata düzeltmeleri",
+      "Daha iyi mobil uyumluluk için güncellenen arayüz"
+    ],
+    "3": [
+      "Çoklu dil desteği eklendi",
+      "Desteklenen diller: İngilizce, Türkçe, İspanyolca, Portekizce, Fransızca, Almanca, Rusça, Korece, Çince, Japonca, Arapça, Vietnamca"
+    ],
+    "4": [
+      "Küçük hata düzeltmeleri",
+      "Kısa isimli karakterlerin (ör. \"Vi\") arama filtresinde çıkmama sorunu düzeltildi."
+    ]
   },
   "Easy": "Kolay",
   "Hard": "Zor",

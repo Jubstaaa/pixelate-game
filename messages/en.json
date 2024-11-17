@@ -22,6 +22,24 @@
     "ResponseMessage": "Correct! Let's go",
     "ErrorMessage": "Come on! Try again!"
   },
+  "PatchNotes": {
+    "Title": "Patch Notes",
+    "Description": "Recent updates and changes to Pixel Guess",
+    "VersionNumber": "Version {number}",
+    "1": [
+      "Initial release of Pixel Guess",
+      "Included categories: League of Legends, Valorant"
+    ],
+    "2": ["Minor bug fixes", "Updated UI for better mobile responsiveness"],
+    "3": [
+      "Multi-language support added",
+      "Supported languages: English, Turkish, Spanish, Portuguese, French, German, Russian, Korean, Chinese, Japanese, Arabic, Vietnamese"
+    ],
+    "4": [
+      "Minor bug fixes",
+      "Fixed an issue where short-named characters (e.g., \"Vi\") did not appear in the search filter."
+    ]
+  },
   "Easy": "Easy",
   "Hard": "Hard",
   "All Categories": "All Categories",

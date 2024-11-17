@@ -13,6 +13,8 @@ import {
   Sun,
   Moon,
   Globe,
+  Mail,
+  Copy,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -35,18 +37,25 @@ import {
 import { submitFeedback } from "@/lib/feedback";
 import { toast } from "sonner";
 import Image from "next/image";
-import { locales } from "@/i18n/config";
 import { setUserLocale } from "@/lib/locale";
 import { useLocale, useTranslations } from "next-intl";
+import { PatchNotesModal } from "./PatchNotesModal";
+import { useRouter } from "next/navigation";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
-export default function Footer() {
+export default function Footer({ locales, patchNotes }) {
   const { theme, setTheme } = useTheme();
   const [open, setOpen] = useState(false);
   const [feedback, setFeedback] = useState("");
   const [selectedRating, setSelectedRating] = useState(null);
   const locale = useLocale();
-  const l = useTranslations("Locale");
   const f = useTranslations("Footer");
+  const router = useRouter();
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
@@ -68,6 +77,11 @@ export default function Footer() {
     } else {
       toast.success(res.message, { id: toastId });
     }
+  };
+
+  const copyEmailToClipboard = () => {
+    navigator.clipboard.writeText("ilkerbalcilartr@gmail.com");
+    toast.success("Email copied to clipboard!");
   };
 
   return (
@@ -103,7 +117,7 @@ export default function Footer() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <motion.div
             animate={{ y: [0, -10, 0] }}
             transition={{
@@ -165,6 +179,7 @@ export default function Footer() {
               </DialogContent>
             </Dialog>
           </motion.div>
+          <PatchNotesModal patchNotes={patchNotes} />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="icon">
@@ -175,14 +190,19 @@ export default function Footer() {
             <DropdownMenuContent align="end">
               {locales.map((lang) => (
                 <DropdownMenuItem
-                  disabled={lang === locale}
-                  onClick={() => lang !== locale && setUserLocale(lang)}
+                  disabled={lang.code === locale}
+                  onClick={() => {
+                    lang.code !== locale && setUserLocale(lang.code);
+                    router.refresh();
+                  }}
                   className={
-                    lang === locale ? "font-bold bg-muted" : "cursor-pointer"
+                    lang.code === locale
+                      ? "font-bold bg-muted"
+                      : "cursor-pointer"
                   }
-                  key={lang}
+                  key={lang.code}
                 >
-                  {l(lang)}
+                  {lang.name}
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>
@@ -195,6 +215,29 @@ export default function Footer() {
             )}
             <span className="sr-only">Change Theme</span>
           </Button>
+          <TooltipProvider delayDuration={200}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="outline" size="icon" asChild>
+                  <Link href="mailto:ilkerbalcilartr@gmail.com">
+                    <Mail className="h-[1.2rem] w-[1.2rem]" />
+                    <span className="sr-only">Contact Email</span>
+                  </Link>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="top" className="flex items-center gap-2">
+                <p>ilkerbalcilartr@gmail.com</p>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={copyEmailToClipboard}
+                  className="h-4 w-4 p-0"
+                >
+                  <Copy className="h-4 w-4" />
+                </Button>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
     </footer>
