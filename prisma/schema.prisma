@@ -15,15 +15,15 @@ datasource db {
 }
 
 model Category {
-  id         Int         @id @default(autoincrement())
-  name       String?
-  slug       String?
-  icon       String?
-  isActive   Boolean     @default(true)
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-  characters Character[] // Bir kategoriye ait tüm karakterler
-  Device     Device[]
+  id          Int           @id @default(autoincrement())
+  name        String?
+  slug        String?
+  icon        String?
+  isActive    Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  characters  Character[] // Bir kategoriye ait tüm karakterler
+  DeviceScore DeviceScore[]
 }
 
 model Character {
@@ -33,7 +33,7 @@ model Character {
   todayActive     Boolean          @default(false)
   category        Category         @relation(fields: [categoryId], references: [id]) // Karakter ile kategori arasındaki ilişki
   characterImages CharacterImage[]
-  Device          Device[]
+  DeviceScore     DeviceScore[]
 }
 
 model CharacterImage {
@@ -47,13 +47,22 @@ model CharacterImage {
 }
 
 model Device {
+  device_id   String        @unique
+  username    String?       @unique
+  DeviceScore DeviceScore[]
+
+  @@index([device_id])
+}
+
+model DeviceScore {
+  device_id    String
   count        Int        @default(0)
   character_id Int?
   category_id  Int        @default(1)
   level_type   Int        @default(0)
-  device_id    String
   streak       Int        @default(0)
   maxStreak    Int        @default(0)
+  device       Device?    @relation(fields: [device_id], references: [device_id])
   category     Category   @relation(fields: [category_id], references: [id])
   character    Character? @relation(fields: [character_id], references: [id])
 

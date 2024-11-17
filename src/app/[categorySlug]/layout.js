@@ -1,7 +1,9 @@
 import Header from "@/components/Header";
 import { getCategoryBySlug } from "@/lib/category";
+import { getDevice } from "@/lib/device";
 import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
+import { cookies } from "next/headers";
 
 export const metadata = {
   title: "Pixel Guess",
@@ -15,10 +17,25 @@ export default async function RootLayout({ children, params }) {
   if (!category) {
     notFound();
   }
+  const cookieStore = await cookies();
+
+  const deviceId = cookieStore.get("device-id");
+
+  let device;
+
+  device = await getDevice(deviceId.value);
+
+  if (!device) {
+    device = await prisma.device.create({
+      data: {
+        device_id: deviceId.value,
+      },
+    });
+  }
 
   return (
     <>
-      <Header category={category} />
+      <Header category={category} username={device.username} />
       {children}
     </>
   );

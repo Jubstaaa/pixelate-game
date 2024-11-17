@@ -47,5 +47,27 @@
   "Select character": "Select character...",
   "Search character": "Search character...",
   "No character found": "No character found.",
-  "Guessing": "Guessing..."
+  "Guessing": "Guessing...",
+  "Ranking": {
+    "Join": "Join Ranking",
+    "Joining": "Joining...",
+    "JoinTitle": "Join the Ranking",
+    "JoinDescription": "Enter your username to join the leaderboard.",
+    "Username": "Username",
+    "Submit": "Join",
+    "JoinSuccess": "Welcome to the ranking, {username}!",
+    "UsernameRequired": "Please enter a username."
+  },
+  "Leaderboard": {
+    "Rank": "Rank",
+    "Title": "Leaderboard",
+    "User": "User",
+    "Score": "Score",
+    "JoinTitle": "Join the Ranking",
+    "JoinDescription": "Enter your username to join the leaderboard.",
+    "Username": "Username",
+    "Submit": "Join",
+    "JoinSuccess": "Welcome to the ranking, {username}!",
+    "UsernameRequired": "Please enter a username."
+  }
 }

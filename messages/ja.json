@@ -47,5 +47,21 @@
   "Select character": "キャラクターを選択...",
   "Search character": "キャラクターを検索...",
   "No character found": "キャラクターが見つかりません。",
-  "Guessing": "推測中..."
+  "Guessing": "推測中...",
+  "Ranking": {
+    "Join": "ランキングに参加",
+    "Joining": "参加中...",
+    "JoinTitle": "ランキングに参加",
+    "JoinDescription": "リーダーボードに参加するにはユーザー名を入力してください。",
+    "Username": "ユーザー名",
+    "Submit": "参加",
+    "JoinSuccess": "ランキングへようこそ、{username}!",
+    "UsernameRequired": "ユーザー名を入力してください。"
+  },
+  "Leaderboard": {
+    "Rank": "ランク",
+    "Title": "リーダーボード",
+    "User": "ユーザー",
+    "Score": "スコア"
+  }
 }

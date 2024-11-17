@@ -47,5 +47,21 @@
   "Select character": "캐릭터 선택...",
   "Search character": "캐릭터 검색...",
   "No character found": "캐릭터를 찾을 수 없습니다.",
-  "Guessing": "추측 중..."
+  "Guessing": "추측 중...",
+  "Ranking": {
+    "Join": "랭킹 참여",
+    "Joining": "참여 중...",
+    "JoinTitle": "랭킹에 참여하기",
+    "JoinDescription": "리더보드에 참여하려면 사용자 이름을 입력하세요.",
+    "Username": "사용자 이름",
+    "Submit": "참여하기",
+    "JoinSuccess": "랭킹에 오신 것을 환영합니다, {username}!",
+    "UsernameRequired": "사용자 이름을 입력해 주세요."
+  },
+  "Leaderboard": {
+    "Rank": "순위",
+    "Title": "리더보드",
+    "User": "사용자",
+    "Score": "점수"
+  }
 }

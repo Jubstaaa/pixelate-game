@@ -1,9 +1,10 @@
 "use server";
 import { cookies } from "next/headers";
 import prisma from "./prisma";
-import { getDevice } from "./device";
 import { getTotalCharacters } from "./character";
 import { getTranslations } from "next-intl/server";
+import { getDeviceScore } from "./deviceScore";
+import { getDevice } from "./device";
 
 export const guess = async (values) => {
   const g = await getTranslations("Guess");
@@ -28,7 +29,9 @@ export const guess = async (values) => {
       options = JSON.parse(cookieStore.get("options").value);
     }
 
-    device = await getDevice(
+    device = await getDevice(deviceId.value);
+
+    device = await getDeviceScore(
       deviceId.value,
       values.categoryId,
       values.level_type,
@@ -91,7 +94,7 @@ export const guess = async (values) => {
       );
       const character = availableCharacters[randomIndex];
 
-      await prisma.device.update({
+      await prisma.deviceScore.update({
         where: {
           category_id_device_id_level_type: {
             device_id: deviceId.value,
@@ -125,7 +128,7 @@ export const guess = async (values) => {
 
       return { message: g("ResponseMessage") };
     } else {
-      await prisma.device.update({
+      await prisma.deviceScore.update({
         where: {
           category_id_device_id_level_type: {
             device_id: deviceId.value,

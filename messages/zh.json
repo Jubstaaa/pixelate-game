@@ -44,5 +44,21 @@
   "Select character": "选择角色...",
   "Search character": "搜索角色...",
   "No character found": "未找到角色。",
-  "Guessing": "猜测中..."
+  "Guessing": "猜测中...",
+  "Ranking": {
+    "Join": "加入排行榜",
+    "Joining": "加入中...",
+    "JoinTitle": "加入排行榜",
+    "JoinDescription": "请输入用户名以加入排行榜。",
+    "Username": "用户名",
+    "Submit": "加入",
+    "JoinSuccess": "欢迎加入排行榜, {username}!",
+    "UsernameRequired": "请输入用户名。"
+  },
+  "Leaderboard": {
+    "Rank": "排名",
+    "Title": "排行榜",
+    "User": "用户",
+    "Score": "得分"
+  }
 }

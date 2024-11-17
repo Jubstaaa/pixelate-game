@@ -50,5 +50,21 @@
   "Select character": "Chọn nhân vật...",
   "Search character": "Tìm kiếm nhân vật...",
   "No character found": "Không tìm thấy nhân vật.",
-  "Guessing": "Đang đoán..."
+  "Guessing": "Đang đoán...",
+  "Ranking": {
+    "Join": "Tham gia Bảng xếp hạng",
+    "Joining": "Đang tham gia...",
+    "JoinTitle": "Tham gia Bảng xếp hạng",
+    "JoinDescription": "Nhập tên người dùng của bạn để tham gia bảng xếp hạng.",
+    "Username": "Tên người dùng",
+    "Submit": "Tham gia",
+    "JoinSuccess": "Chào mừng bạn đến với bảng xếp hạng, {username}!",
+    "UsernameRequired": "Vui lòng nhập tên người dùng."
+  },
+  "Leaderboard": {
+    "Rank": "Hạng",
+    "Title": "Bảng xếp hạng",
+    "User": "Người dùng",
+    "Score": "Điểm số"
+  }
 }

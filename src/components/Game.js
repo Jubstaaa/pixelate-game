@@ -28,13 +28,14 @@ import {
 } from "@/components/ui/popover";
 import { ScrollArea } from "./ui/scroll-area";
 import { cn } from "@/lib/utils";
-import { Check, ChevronsUpDown, Flame, Trophy } from "lucide-react";
+import { BarChart2, Check, ChevronsUpDown, Flame, Trophy } from "lucide-react";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useTranslations } from "next-intl";
 import { Card, CardContent } from "./ui/card";
 import { AnimatePresence, motion } from "framer-motion";
+import { Leaderboard } from "./Leaderboard";
 
 const GuessCharacterGame = ({
   categoryId,
@@ -43,6 +44,7 @@ const GuessCharacterGame = ({
   level_type,
   currentStreak,
   highStreak,
+  leaderboard,
 }) => {
   const [character, setCharacter] = useState();
   const router = useRouter();
@@ -212,53 +214,56 @@ const GuessCharacterGame = ({
           </motion.div>
         </AnimatePresence>
       </motion.div>
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className="w-[320px] justify-between"
-          >
-            {t("Select character")}
-            <ChevronsUpDown className="opacity-50" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[320px] p-0">
-          <Command className="max-w-[320px]" filter={filteredCharacters}>
-            <CommandInput placeholder={t("Search character")} />
-            <CommandList>
-              <CommandEmpty>{t("No character found")}</CommandEmpty>
-              <CommandGroup>
-                <div className="max-h-56 overflow-hidden">
-                  {characters.map((character) => (
-                    <CommandItem
-                      className="cursor-pointer"
-                      key={character.id}
-                      value={character.name}
-                      onSelect={() => {
-                        handleSelectionChange(character.id);
-                        setOpen(false);
-                      }}
-                    >
-                      <Avatar className="h-8 w-8 flex-shrink-0">
-                        <AvatarImage
-                          src={character.image}
-                          alt={character.name}
-                        />
-                        <AvatarFallback>
-                          {character.name.charAt(0)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <span>{character.name}</span>
-                    </CommandItem>
-                  ))}
-                </div>
-              </CommandGroup>
-            </CommandList>
-          </Command>
-        </PopoverContent>
-      </Popover>
+      <div className="flex gap-2 w-[320px]">
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={open}
+              className="w-full justify-between"
+            >
+              {t("Select character")}
+              <ChevronsUpDown className="opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="start" className="w-[320px] p-0">
+            <Command className="w-full" filter={filteredCharacters}>
+              <CommandInput placeholder={t("Search character")} />
+              <CommandList>
+                <CommandEmpty>{t("No character found")}</CommandEmpty>
+                <CommandGroup>
+                  <div className="max-h-56 overflow-hidden">
+                    {characters.map((character) => (
+                      <CommandItem
+                        className="cursor-pointer"
+                        key={character.id}
+                        value={character.name}
+                        onSelect={() => {
+                          handleSelectionChange(character.id);
+                          setOpen(false);
+                        }}
+                      >
+                        <Avatar className="h-8 w-8 flex-shrink-0">
+                          <AvatarImage
+                            src={character.image}
+                            alt={character.name}
+                          />
+                          <AvatarFallback>
+                            {character.name.charAt(0)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span>{character.name}</span>
+                      </CommandItem>
+                    ))}
+                  </div>
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
+        <Leaderboard data={leaderboard} />
+      </div>
     </div>
   );
 };

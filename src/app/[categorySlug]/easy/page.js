@@ -7,7 +7,9 @@ import { cookies } from "next/headers";
 import { getCategoryBySlug } from "@/lib/category";
 import { getTotalCharacters } from "@/lib/character";
 import { getCharacterImage } from "@/lib/characterImage";
+import { getDeviceScore } from "@/lib/deviceScore";
 import { getDevice } from "@/lib/device";
+import { getLeaderboard } from "@/lib/leaderboard";
 
 export async function generateMetadata({ params }) {
   const categorySlug = (await params).categorySlug;
@@ -50,23 +52,22 @@ async function page({ params }) {
 
   const cookieStore = await cookies();
   const deviceId = cookieStore.get("device-id");
-  let device;
-
+  let deviceScore;
   let options;
 
   if (cookieStore.get("options")) {
     options = JSON.parse(cookieStore.get("options").value);
   }
 
-  device = await getDevice(deviceId.value, category.id, level_type);
+  deviceScore = await getDeviceScore(deviceId.value, category.id, level_type);
 
   const totalCharacters = await getTotalCharacters(category.id);
 
-  if (!device) {
+  if (!deviceScore) {
     const randomIndex = Math.floor(Math.random() * totalCharacters.length); // Rastgele bir index seçiyoruz
     const character = totalCharacters[randomIndex];
 
-    device = await prisma.device.create({
+    deviceScore = await prisma.deviceScore.create({
       data: {
         device_id: deviceId.value,
         category_id: category.id,
@@ -77,11 +78,13 @@ async function page({ params }) {
   }
 
   const pixellatedImageBase64 = await getCharacterImage(
-    device.character_id,
-    device?.count,
+    deviceScore.character_id,
+    deviceScore?.count,
     level_type,
     options
   );
+
+  const leaderboard = await getLeaderboard(category.id, level_type);
 
   return (
     <GuessCharacterGame
@@ -95,8 +98,9 @@ async function page({ params }) {
           (img) => img.count === 6 && img.level_type === 0
         )?.image,
       }))}
-      currentStreak={device.streak}
-      highStreak={device.maxStreak}
+      currentStreak={deviceScore.streak}
+      highStreak={deviceScore.maxStreak}
+      leaderboard={leaderboard}
     />
   );
 }

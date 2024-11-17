@@ -50,5 +50,21 @@
   "Select character": "اختر الشخصية...",
   "Search character": "ابحث عن الشخصية...",
   "No character found": "لم يتم العثور على شخصية.",
-  "Guessing": "جاري التخمين..."
+  "Guessing": "جاري التخمين...",
+  "Ranking": {
+    "Join": "انضم إلى الترتيب",
+    "Joining": "جاري الانضمام...",
+    "JoinTitle": "انضم إلى الترتيب",
+    "JoinDescription": "أدخل اسم المستخدم الخاص بك للانضمام إلى لوحة الصدارة.",
+    "Username": "اسم المستخدم",
+    "Submit": "انضم",
+    "JoinSuccess": "مرحبًا بك في الترتيب، {username}!",
+    "UsernameRequired": "يرجى إدخال اسم المستخدم."
+  },
+  "Leaderboard": {
+    "Rank": "الترتيب",
+    "Title": "لوحة الصدارة",
+    "User": "المستخدم",
+    "Score": "النتيجة"
+  }
 }

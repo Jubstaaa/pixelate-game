@@ -50,5 +50,21 @@
   "Select character": "Charakter auswählen...",
   "Search character": "Charakter suchen...",
   "No character found": "Kein Charakter gefunden.",
-  "Guessing": "Rät..."
+  "Guessing": "Rät...",
+  "Ranking": {
+    "Join": "Rangliste Beitreten",
+    "Joining": "Beitreten...",
+    "JoinTitle": "Der Rangliste Beitreten",
+    "JoinDescription": "Geben Sie Ihren Benutzernamen ein, um der Rangliste beizutreten.",
+    "Username": "Benutzername",
+    "Submit": "Beitreten",
+    "JoinSuccess": "Willkommen in der Rangliste, {username}!",
+    "UsernameRequired": "Bitte geben Sie einen Benutzernamen ein."
+  },
+  "Leaderboard": {
+    "Rank": "Rang",
+    "Title": "Bestenliste",
+    "User": "Benutzer",
+    "Score": "Punktzahl"
+  }
 }

@@ -6,8 +6,9 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useTranslations } from "next-intl";
+import LeaderboardForm from "./LeaderboardForm";
 
-export default function Header({ category }) {
+export default function Header({ category, username }) {
   const t = useTranslations();
 
   return (
@@ -28,9 +29,17 @@ export default function Header({ category }) {
               Pixel Guess: {category.name}
             </h1>
           </div>
-          <Button asChild variant="outline" size="sm">
-            <Link href="/">{t("All Categories")}</Link>
-          </Button>
+          <div className="flex items-center gap-3">
+            {username ? (
+              <Button size="sm">{username}</Button>
+            ) : (
+              <LeaderboardForm />
+            )}
+
+            <Button asChild variant="outline" size="sm">
+              <Link href="/">{t("All Categories")}</Link>
+            </Button>
+          </div>
         </nav>
       </Card>
     </header>

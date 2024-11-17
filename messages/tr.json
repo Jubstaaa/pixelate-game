@@ -50,5 +50,21 @@
   "Select character": "Karakter seç...",
   "Search character": "Karakter ara...",
   "No character found": "Karakter bulunamadı.",
-  "Guessing": "Tahmin ediliyor..."
+  "Guessing": "Tahmin ediliyor...",
+  "Ranking": {
+    "Join": "Sıralamaya Katıl",
+    "Joining": "Katılıyor...",
+    "JoinTitle": "Sıralamaya Katıl",
+    "JoinDescription": "Liderlik tablosuna katılmak için kullanıcı adınızı girin.",
+    "Username": "Kullanıcı Adı",
+    "Submit": "Katıl",
+    "JoinSuccess": "Sıralamaya hoş geldiniz, {username}!",
+    "UsernameRequired": "Lütfen bir kullanıcı adı girin."
+  },
+  "Leaderboard": {
+    "Rank": "Sıralama",
+    "Title": "Liderlik Tablosu",
+    "User": "Kullanıcı",
+    "Score": "Puan"
+  }
 }
