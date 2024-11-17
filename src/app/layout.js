@@ -103,6 +103,11 @@ export default async function RootLayout({ children }) {
   const messages = await getMessages();
   const locales = await getLanguages();
   const patchNotes = await getPatchNotes(locale);
+  <script
+    async
+    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2149079899242374"
+    crossorigin="anonymous"
+  ></script>;
 
   return (
     <html lang={locale}>
@@ -139,6 +144,14 @@ export default async function RootLayout({ children }) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        {process.env.NODE_ENV === "production" && (
+          <script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2149079899242374`}
+            crossOrigin="anonymous"
+            strategy="afterInteractive"
+          />
+        )}
       </body>
     </html>
   );
