@@ -11,10 +11,10 @@ const COOKIE_NAME = "NEXT_LOCALE";
 export async function getUserLocale() {
   // cookies() fonksiyonunu await ile kullanarak, doğru şekilde senkronize et
   const cookie = await cookies();
-  const locale = cookie.get(COOKIE_NAME).value;
+  const locale = cookie.get(COOKIE_NAME);
 
   // Eğer cookie'de geçerli bir locale yoksa, defaultLocale kullan
-  return locales.includes(locale) ? locale : defaultLocale;
+  return locales.includes(locale?.value) ? locale.value : defaultLocale;
 }
 
 export async function setUserLocale(locale) {
