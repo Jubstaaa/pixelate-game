@@ -6,8 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 const CategoryCard = ({ item }) => {
+  const t = useTranslations();
+
   return (
     <motion.div
       whileHover={{ scale: item.isActive && 1.05 }}
@@ -35,12 +38,12 @@ const CategoryCard = ({ item }) => {
             <>
               <Button asChild size="sm" variant="outline">
                 <Link href={`/${item.slug}/easy`}>
-                  <span className="flex items-center">Easy</span>
+                  <span className="flex items-center">{t("Easy")}</span>
                 </Link>
               </Button>
               <Button asChild size="sm" variant="outline">
                 <Link href={`/${item.slug}/hard`}>
-                  <span className="flex items-center">Hard</span>
+                  <span className="flex items-center">{t("Hard")}</span>
                 </Link>
               </Button>
             </>
@@ -48,7 +51,7 @@ const CategoryCard = ({ item }) => {
 
           {!item.isActive && (
             <Badge variant="outline" className="mb-2">
-              Coming Soon
+              {t("Coming Soon")}
             </Badge>
           )}
         </CardFooter>

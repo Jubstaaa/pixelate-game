@@ -1,6 +1,7 @@
 import { getCategories } from "@/lib/category";
 import CategoryCard from "@/components/CategoryCard";
 import { Badge } from "@/components/ui/badge";
+import { getTranslations } from "next-intl/server";
 
 export const metadata = {
   title: "Pixel Guess: Guess Hidden Images by Pixel | Fun Image Guessing Game",
@@ -10,19 +11,19 @@ export const metadata = {
 
 export default async function Home() {
   const categories = await getCategories();
+  const h = await getTranslations("Hero");
 
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="text-center mb-16">
         <Badge variant="outline" className="mb-4">
-          Open Beta!
+          {h("SubTitle")}
         </Badge>
         <h1 className="text-5xl font-bold tracking-tight mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
           Pixel Guess
         </h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-          Challenge yourself! Pick a category and guess the hidden image pixel
-          by pixel.
+          {h("Description")}
         </p>
       </div>
 

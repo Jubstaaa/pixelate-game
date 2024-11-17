@@ -10,6 +10,8 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
 import { Toaster } from "sonner";
+import { getLocale, getMessages } from "next-intl/server";
+import { NextIntlClientProvider } from "next-intl";
 
 export const metadata = {
   title: "Pixel Guess: Guess Hidden Images by Pixel | Fun Image Guessing Game",
@@ -91,33 +93,42 @@ const jsonLd = {
   },
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const locale = await getLocale();
+
+  // Providing all messages to the client
+  // side is the easiest way to get started
+  const messages = await getMessages();
+
   return (
-    <html lang="en">
+    <html lang={locale}>
       <GoogleAnalytics gaId="G-DP3HV72CNV" />
       <body className="bg-background">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          enableColorScheme
-        >
-          <DeviceIdProvider>
-            <ReactQueryProvider>
-              <ProgressBarProvider>
-                <main className="mx-auto flex flex-col justify-between w-full h-full max-w-4xl px-4 py-4 lg:px-8 lg:py-12 min-h-dvh !text-foreground">
-                  {children}
-                  <Footer />
-                </main>
-                <Toaster
-                  position="top-center"
-                  richColors
-                  toastOptions={{ duration: 2000 }}
-                />
-              </ProgressBarProvider>
-            </ReactQueryProvider>
-          </DeviceIdProvider>
-        </ThemeProvider>
+        <NextIntlClientProvider messages={messages}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            enableColorScheme
+          >
+            <DeviceIdProvider>
+              <ReactQueryProvider>
+                <ProgressBarProvider>
+                  <main className="mx-auto flex flex-col justify-between w-full h-full max-w-4xl px-4 py-4 lg:px-8 lg:py-12 min-h-dvh !text-foreground">
+                    {children}
+                    <Footer />
+                  </main>
+                  <Toaster
+                    position="top-center"
+                    richColors
+                    toastOptions={{ duration: 2000 }}
+                  />
+                </ProgressBarProvider>
+              </ReactQueryProvider>
+            </DeviceIdProvider>
+          </ThemeProvider>
+        </NextIntlClientProvider>
+
         <SpeedInsights />
         <Analytics />
         <script

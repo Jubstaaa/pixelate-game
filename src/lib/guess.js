@@ -3,8 +3,11 @@ import { cookies } from "next/headers";
 import prisma from "./prisma";
 import { getDevice } from "./device";
 import { getTotalCharacters } from "./character";
+import { getTranslations } from "next-intl/server";
 
 export const guess = async (values) => {
+  const g = await getTranslations("Guess");
+
   try {
     const cookieStore = await cookies();
 
@@ -69,7 +72,7 @@ export const guess = async (values) => {
         })
       );
 
-      return { message: "Correct! Let's go" };
+      return { message: g("ResponseMessage") };
     } else {
       await prisma.device.update({
         where: {
@@ -98,7 +101,7 @@ export const guess = async (values) => {
         })
       );
 
-      throw "Come on! Try again!";
+      throw g("ErrorMessage");
     }
   } catch (error) {
     console.log(error);

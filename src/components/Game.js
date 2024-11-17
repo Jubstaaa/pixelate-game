@@ -32,6 +32,7 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { useTranslations } from "next-intl";
 
 const GuessCharacterGame = ({
   categoryId,
@@ -43,7 +44,7 @@ const GuessCharacterGame = ({
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
-
+  const t = useTranslations();
   const [isLoading, setIsLoading] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
@@ -87,7 +88,7 @@ const GuessCharacterGame = ({
   // Rastgele şampiyon almak için kullanılan fonksiyon
 
   const selectCharacter = async (values) => {
-    const toastId = toast.loading("Guessing...");
+    const toastId = toast.loading(t("Guessing"));
 
     setIsLoading(true);
     const res = await guess(values);
@@ -140,40 +141,6 @@ const GuessCharacterGame = ({
         className="w-96 max-w-xs h-auto aspect-square"
         alt="Pixellated Image"
       />
-      {/* <Command className="rounded-lg border shadow-md max-w-[320px]">
-        <CommandInput
-          disabled={isLoading}
-          value={inputValue}
-          onValueChange={(e) => setInputValue(e)}
-          placeholder="Type to search..."
-        />
-        <CommandList limit={5}>
-          <CommandGroup
-            className={cn("hidden", {
-              "!block": inputValue,
-            })}
-          >
-            <CommandEmpty>No results found.</CommandEmpty>
-            <div className="h-56 overflow-hidden">
-              {characters.map((item) => (
-                <CommandItem
-                  className="cursor-pointer"
-                  key={item.id}
-                  onSelect={() => handleSelectionChange(item.id)}
-                >
-                  <Avatar
-                    alt={item.name}
-                    className="flex-shrink-0"
-                    size="sm"
-                    src={item.image}
-                  />
-                  <span>{item.name}</span>
-                </CommandItem>
-              ))}
-            </div>
-          </CommandGroup>
-        </CommandList>
-      </Command> */}
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
@@ -184,15 +151,15 @@ const GuessCharacterGame = ({
           >
             {value
               ? characters.find((character) => character.id === value)?.name
-              : "Select character..."}
+              : t("Select character")}
             <ChevronsUpDown className="opacity-50" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-[320px] p-0">
           <Command className="max-w-[320px]">
-            <CommandInput placeholder="Search character..." />
+            <CommandInput placeholder={t("Search character")} />
             <CommandList>
-              <CommandEmpty>No character found.</CommandEmpty>
+              <CommandEmpty>{t("No character found")}</CommandEmpty>
               <CommandGroup>
                 <div className="max-h-56 overflow-hidden">
                   {characters.map((character) => (

@@ -12,6 +12,7 @@ import {
   ThumbsUp,
   Sun,
   Moon,
+  Globe,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -24,17 +25,28 @@ import {
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 // Assume this function exists in your project
 import { submitFeedback } from "@/lib/feedback";
 import { toast } from "sonner";
 import Image from "next/image";
+import { locales } from "@/i18n/config";
+import { setUserLocale } from "@/lib/locale";
+import { useLocale, useTranslations } from "next-intl";
 
 export default function Footer() {
   const { theme, setTheme } = useTheme();
   const [open, setOpen] = useState(false);
   const [feedback, setFeedback] = useState("");
   const [selectedRating, setSelectedRating] = useState(null);
+  const locale = useLocale();
+  const l = useTranslations("Locale");
+  const f = useTranslations("Footer");
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
@@ -48,7 +60,7 @@ export default function Footer() {
   ];
 
   const sendFeedback = async (values) => {
-    const toastId = toast.loading("Sending feedback...");
+    const toastId = toast.loading(f("Feedback.SubmitMessage"));
 
     const res = await submitFeedback(values);
     if (res.error) {
@@ -73,18 +85,21 @@ export default function Footer() {
             <span className="text-lg font-semibold">PIXEL GUESS</span>
             <Separator orientation="vertical" className="h-4" />
             <Badge variant="secondary" className="text-xs gap-0.5">
-              Made by
-              <Link
-                href="https://ilkerbalcilar.com"
-                target="_blank"
-                className="underline"
-              >
-                Jubstaa
-              </Link>
+              {f.rich("MadeBy", {
+                person: () => (
+                  <Link
+                    href="https://ilkerbalcilar.com"
+                    target="_blank"
+                    className="underline"
+                  >
+                    Jubstaa
+                  </Link>
+                ),
+              })}
             </Badge>
           </div>
           <p className="text-center text-sm text-muted-foreground md:text-start">
-            &copy; 2024 Pixel Guess Inc. All rights reserved.
+            &copy; 2024 Pixel Guess Inc. {f("Rights")}
           </p>
         </div>
 
@@ -102,7 +117,7 @@ export default function Footer() {
               <DialogTrigger asChild>
                 <Button variant="outline" className="gap-2">
                   <MessageSquare className="h-4 w-4" />
-                  Feedback
+                  {f("Feedback.Title")}
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
@@ -118,7 +133,7 @@ export default function Footer() {
                       id="feedback"
                       value={feedback}
                       onChange={(e) => setFeedback(e.target.value)}
-                      placeholder="Ideas or suggestions to improve our product"
+                      placeholder={f("Feedback.Placeholder")}
                       className="col-span-3"
                       rows={5}
                       required
@@ -144,13 +159,34 @@ export default function Footer() {
                         </Button>
                       ))}
                     </div>
-                    <Button type="submit">Submit</Button>
+                    <Button type="submit">{f("Feedback.ButtonText")}</Button>
                   </DialogFooter>
                 </form>
               </DialogContent>
             </Dialog>
           </motion.div>
-
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="icon">
+                <Globe className="h-[1.2rem] w-[1.2rem]" />
+                <span className="sr-only">Change Language</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {locales.map((lang) => (
+                <DropdownMenuItem
+                  disabled={lang === locale}
+                  onClick={() => lang !== locale && setUserLocale(lang)}
+                  className={
+                    lang === locale ? "font-bold bg-muted" : "cursor-pointer"
+                  }
+                  key={lang}
+                >
+                  {l(lang)}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Button variant="outline" size="icon" onClick={toggleTheme}>
             {theme === "light" ? (
               <Sun className="h-[1.2rem] w-[1.2rem]" />

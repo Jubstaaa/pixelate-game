@@ -1,0 +1,33 @@
+{
+  "Locale": {
+    "en": "English",
+    "tr": "Turkish"
+  },
+  "Hero": {
+    "SubTitle": "Open Beta!",
+    "Description": "Challenge yourself! Pick a category and guess the hidden image pixel by pixel."
+  },
+  "Footer": {
+    "Rights": "All rights reserved.",
+    "MadeBy": "Made by <person></person>",
+    "Feedback": {
+      "Title": "Feedback",
+      "Placeholder": "Ideas or suggestions to improve our product",
+      "ButtonText": "Submit",
+      "SubmitMessage": "Sending feedback...",
+      "ResponseMessage": "Thanks for your feedback"
+    }
+  },
+  "Guess": {
+    "ResponseMessage": "Correct! Let's go",
+    "ErrorMessage": "Come on! Try again!"
+  },
+  "Easy": "Easy",
+  "Hard": "Hard",
+  "All Categories": "All Categories",
+  "Coming Soon": "Coming Soon",
+  "Select character": "Select character...",
+  "Search character": "Search character...",
+  "No character found": "No character found.",
+  "Guessing": "Guessing..."
+}

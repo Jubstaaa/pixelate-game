@@ -1,0 +1,33 @@
+{
+  "Locale": {
+    "en": "İngilizce",
+    "tr": "Türkçe"
+  },
+  "Hero": {
+    "SubTitle": "Açık Beta!",
+    "Description": "Kendini zorla! Bir kategori seç ve gizli resmi pixel pixel tahmin et."
+  },
+  "Footer": {
+    "Rights": "Tüm hakları saklıdır.",
+    "MadeBy": "<person></person> tarafından yapıldı.",
+    "Feedback": {
+      "Title": "Geribildirim",
+      "Placeholder": "Ürünümüzü geliştirmek için fikirler veya öneriler",
+      "ButtonText": "Gönder",
+      "SubmitMessage": "Geri bildirim gönderiliyor...",
+      "ResponseMessage": "Geri bildiriminiz için teşekkürler"
+    }
+  },
+  "Guess": {
+    "ResponseMessage": "Doğru! Hadi devam edelim",
+    "ErrorMessage": "Hadi! Tekrar deneyin!"
+  },
+  "Easy": "Kolay",
+  "Hard": "Zor",
+  "All Categories": "Tüm Kategoriler",
+  "Coming Soon": "Çok Yakında",
+  "Select character": "Karakter seç...",
+  "Search character": "Karakter ara...",
+  "No character found": "Karakter bulunamadı.",
+  "Guessing": "Tahmin ediliyor..."
+}

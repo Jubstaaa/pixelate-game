@@ -5,8 +5,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useTranslations } from "next-intl";
 
 export default function Header({ category }) {
+  const t = useTranslations();
+
   return (
     <header className="w-full py-4">
       <Card className="mx-auto max-w-xl bg-background/60 backdrop-blur-md backdrop-saturate-150 shadow-sm">
@@ -26,7 +29,7 @@ export default function Header({ category }) {
             </h1>
           </div>
           <Button asChild variant="outline" size="sm">
-            <Link href="/">All Categories</Link>
+            <Link href="/">{t("All Categories")}</Link>
           </Button>
         </nav>
       </Card>
