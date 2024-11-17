@@ -28,17 +28,21 @@ import {
 } from "@/components/ui/popover";
 import { ScrollArea } from "./ui/scroll-area";
 import { cn } from "@/lib/utils";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, Flame, Trophy } from "lucide-react";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useTranslations } from "next-intl";
+import { Card, CardContent } from "./ui/card";
+import { AnimatePresence, motion } from "framer-motion";
 
 const GuessCharacterGame = ({
   categoryId,
   pixellatedImageBase64,
   characters,
   level_type,
+  currentStreak,
+  highStreak,
 }) => {
   const [character, setCharacter] = useState();
   const router = useRouter();
@@ -157,14 +161,57 @@ const GuessCharacterGame = ({
   }, []);
 
   return (
-    <div className="w-full flex flex-col items-center justify-center gap-10">
-      <Image
-        width={400}
-        height={400}
-        src={character?.image || pixellatedImageBase64}
-        className="w-96 max-w-xs h-auto aspect-square"
-        alt="Pixellated Image"
-      />
+    <div className="w-full flex flex-col items-center justify-center gap-5">
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={character?.image || pixellatedImageBase64}
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.8 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Image
+            width={400}
+            height={400}
+            src={character?.image || pixellatedImageBase64}
+            className="w-96 max-w-xs h-auto aspect-square"
+            alt="Character Image"
+          />
+        </motion.div>
+      </AnimatePresence>
+      <motion.div
+        className="flex justify-center items-center gap-4 w-full max-w-[320px]"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentStreak}
+            className="flex items-center gap-2 bg-muted px-3 py-2 rounded-md"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+          >
+            <Flame className="w-5 h-5 text-orange-500" />
+            <span className="text-sm font-semibold">{currentStreak}</span>
+          </motion.div>
+        </AnimatePresence>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={highStreak}
+            className="flex items-center gap-2 bg-muted px-3 py-2 rounded-md"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+          >
+            <Trophy className="w-5 h-5 text-yellow-500" />
+            <span className="text-sm font-semibold">{highStreak}</span>
+          </motion.div>
+        </AnimatePresence>
+      </motion.div>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button

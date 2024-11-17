@@ -52,6 +52,8 @@ model Device {
   category_id  Int        @default(1)
   level_type   Int        @default(0)
   device_id    String
+  streak       Int        @default(0)
+  maxStreak    Int        @default(0)
   category     Category   @relation(fields: [category_id], references: [id])
   character    Character? @relation(fields: [character_id], references: [id])
 

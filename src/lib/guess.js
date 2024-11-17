@@ -39,10 +39,57 @@ export const guess = async (values) => {
       throw "No Device Found";
     }
 
+    const guessedCharactersCookie = cookieStore.get("guessed-characters");
+    let guessedCharacters = guessedCharactersCookie
+      ? JSON.parse(guessedCharactersCookie.value)
+      : {};
+
+    // Geçerli kategori ve zorluk için tahmin edilen karakterler
+    const currentGuessedCharacters =
+      guessedCharacters[values.categoryId]?.[values.level_type] || [];
+
     if (device.character_id == values.id) {
+      // Geçerli karakteri tahmin edilenlere ekle
+      const updatedGuessedCharacters = {
+        ...guessedCharacters,
+        [values.categoryId]: {
+          ...guessedCharacters[values.categoryId],
+          [values.level_type]: [
+            ...currentGuessedCharacters,
+            device.character_id,
+          ],
+        },
+      };
+
+      cookieStore.set(
+        "guessed-characters",
+        JSON.stringify(updatedGuessedCharacters)
+      );
+
       const totalCharacters = await getTotalCharacters(values.categoryId);
-      const randomIndex = Math.floor(Math.random() * totalCharacters.length); // Rastgele bir index seçiyoruz
-      const character = totalCharacters[randomIndex];
+
+      // Zaten seçilen karakterleri filtreliyoruz
+      let availableCharacters = totalCharacters.filter(
+        (character) =>
+          !updatedGuessedCharacters[values.categoryId]?.[
+            values.level_type
+          ]?.includes(character.id)
+      );
+
+      // Eğer seçilecek karakter kalmadıysa tahmin edilenleri sıfırlıyoruz
+      if (availableCharacters.length === 0) {
+        updatedGuessedCharacters[values.categoryId][values.level_type] = [];
+        availableCharacters = totalCharacters;
+        cookieStore.set(
+          "guessed-characters",
+          JSON.stringify(updatedGuessedCharacters)
+        );
+      }
+
+      const randomIndex = Math.floor(
+        Math.random() * availableCharacters.length
+      );
+      const character = availableCharacters[randomIndex];
 
       await prisma.device.update({
         where: {
@@ -54,6 +101,10 @@ export const guess = async (values) => {
         },
         data: {
           count: 0,
+          streak: device.streak + 1,
+          ...(device.streak + 1 > device.maxStreak && {
+            maxStreak: device.streak + 1,
+          }),
           character_id: character.id,
         },
       });
@@ -84,6 +135,8 @@ export const guess = async (values) => {
         },
         data: {
           count: device.count + 1,
+          streak: 0,
+          ...(device.streak > device.maxStreak && { maxStreak: device.streak }),
         },
       });
 

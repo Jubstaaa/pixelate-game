@@ -95,6 +95,8 @@ async function page({ params }) {
           (img) => img.count === 6 && img.level_type === 0
         )?.image,
       }))}
+      currentStreak={device.streak}
+      highStreak={device.maxStreak}
     />
   );
 }
