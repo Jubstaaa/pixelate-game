@@ -22,6 +22,7 @@ export const getPatchNotes = unstable_cache(
       select: {
         id: true,
         date: true,
+        version: true,
         patch_note_localizations: {
           where: {
             language: {
