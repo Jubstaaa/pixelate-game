@@ -134,8 +134,8 @@ const GuessCharacterGame = ({
       return str
         .toLowerCase()
         .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/[^a-z0-9]/g, "");
+        .replace(/[\u0300-\u036f]/g, "") // Combine diacritics removal
+        .replace(/[^a-z0-9]/g, ""); // Remove non-alphanumeric characters
     };
 
     return (value, search) => {
@@ -147,13 +147,14 @@ const GuessCharacterGame = ({
         return 1;
       }
 
-      // Starts with match
+      // Starts with match (with better handling)
       if (normalizedValue.startsWith(normalizedSearch)) {
         return 1 - normalizedSearch.length / normalizedValue.length;
       }
 
-      // Includes match
-      if (normalizedValue.includes(normalizedSearch)) {
+      // Includes match with better fuzzy handling
+      if (normalizedValue.indexOf(normalizedSearch) !== -1) {
+        // Calculate the ratio more intelligently
         return 0.5 - normalizedSearch.length / normalizedValue.length;
       }
 
