@@ -32,7 +32,7 @@ model Character {
   categoryId      Int
   todayActive     Boolean          @default(false)
   category        Category         @relation(fields: [categoryId], references: [id]) // Karakter ile kategori arasındaki ilişki
-  characterImages CharacterImage[]
+  characterImages CharacterImage[] // Burada onDelete: Cascade eklemiyoruz
   DeviceScore     DeviceScore[]
 }
 
@@ -41,7 +41,7 @@ model CharacterImage {
   character_id Int
   image        String
   level_type   Int       @default(0)
-  character    Character @relation(fields: [character_id], references: [id]) // Karakter ile kategori arasındaki ilişki
+  character    Character @relation(fields: [character_id], references: [id], onDelete: Cascade) // Karakter silindiğinde, bu resimler de silinsin
 
   @@unique([count, character_id, level_type])
 }
@@ -64,7 +64,7 @@ model DeviceScore {
   maxStreak    Int        @default(0)
   device       Device?    @relation(fields: [device_id], references: [device_id])
   category     Category   @relation(fields: [category_id], references: [id])
-  character    Character? @relation(fields: [character_id], references: [id])
+  character    Character? @relation(fields: [character_id], references: [id], onDelete: Cascade)
 
   @@unique([category_id, device_id, level_type])
 }

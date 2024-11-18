@@ -27,7 +27,13 @@ export const getLatestDemonSlayerCharacters = async () => {
       const { name, image: characterImage } = character;
 
       // Take the first image for processing
-      const imageUrl = characterImage; // Assuming first image in the array is the one to use
+      const imageUrl = characterImage.split("/revision/")[0]; // Assuming first image in the array is the one to use
+
+      console.log(imageUrl);
+
+      if (!imageUrl.includes("Anime")) {
+        continue;
+      }
 
       // Read the image using Jimp
       const image = await Jimp.read(imageUrl);
@@ -39,7 +45,7 @@ export const getLatestDemonSlayerCharacters = async () => {
           w: image.bitmap.width - 10,
           h: image.bitmap.height - 10,
         })
-        .resize({ w: 128 })
+        .resize({ w: 512 })
         .getBuffer("image/jpeg");
 
       const existingCharacter = await prisma.character.findFirst({
@@ -63,7 +69,7 @@ export const getLatestDemonSlayerCharacters = async () => {
         const imageClone = await Jimp.read(imageBuffer); // Create a clone of the cropped image
 
         const pixellatedImageBuffer = await imageClone
-          .pixelate((index - 1) * 4 + 1)
+          .pixelate((index - 1) * 16 + 1)
           .getBuffer("image/jpeg");
 
         const uploadedImageUrl = await uploadImageToVercelBlob(
@@ -84,7 +90,7 @@ export const getLatestDemonSlayerCharacters = async () => {
         const imageClone = await Jimp.read(imageBuffer); // Create a clone of the cropped image
 
         const pixellatedImageBuffer = await imageClone
-          .pixelate((index - 1) * 4 + 1)
+          .pixelate((index - 1) * 16 + 1)
           .greyscale()
           .getBuffer("image/jpeg");
 
