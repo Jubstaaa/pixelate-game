@@ -6,6 +6,7 @@ export const getCategoryBySlug = unstable_cache(
     const category = await prisma.category.findFirst({
       where: {
         slug: categorySlug,
+        isActive: true,
       },
     });
     return category;
