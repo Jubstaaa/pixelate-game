@@ -36,6 +36,9 @@ export const updateUsername = async (username) => {
 
     return { message: t("JoinSuccess", { username }) };
   } catch (error) {
+    if (error?.code === "P2002") {
+      return { error: "Already taken" };
+    }
     return {
       error,
     };
