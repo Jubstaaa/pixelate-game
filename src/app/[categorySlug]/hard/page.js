@@ -52,13 +52,9 @@ async function page({ params }) {
 
   const cookieStore = await cookies();
   const deviceId = cookieStore.get("device-id");
-  let device;
   let deviceScore;
   let options;
-
-  if (cookieStore.get("options")) {
-    options = JSON.parse(cookieStore.get("options").value);
-  }
+  let device;
 
   device = await getDevice(deviceId.value);
 
@@ -68,6 +64,10 @@ async function page({ params }) {
         device_id: deviceId.value,
       },
     });
+  }
+
+  if (cookieStore.get("options")) {
+    options = JSON.parse(cookieStore.get("options").value);
   }
 
   deviceScore = await getDeviceScore(deviceId.value, category.id, level_type);

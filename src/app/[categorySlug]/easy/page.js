@@ -54,6 +54,17 @@ async function page({ params }) {
   const deviceId = cookieStore.get("device-id");
   let deviceScore;
   let options;
+  let device;
+
+  device = await getDevice(deviceId.value);
+
+  if (!device) {
+    device = await prisma.device.create({
+      data: {
+        device_id: deviceId.value,
+      },
+    });
+  }
 
   if (cookieStore.get("options")) {
     options = JSON.parse(cookieStore.get("options").value);
@@ -69,7 +80,7 @@ async function page({ params }) {
 
     deviceScore = await prisma.deviceScore.create({
       data: {
-        device_id: deviceId.value,
+        device_id: device.device_id,
         category_id: category.id,
         level_type: level_type,
         character_id: character.id,

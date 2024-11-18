@@ -25,17 +25,9 @@ export default async function RootLayout({ children, params }) {
 
   device = await getDevice(deviceId.value);
 
-  if (!device) {
-    device = await prisma.device.create({
-      data: {
-        device_id: deviceId.value,
-      },
-    });
-  }
-
   return (
     <>
-      <Header category={category} username={device.username} />
+      <Header category={category} username={device?.username} />
       {children}
     </>
   );
