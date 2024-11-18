@@ -29,6 +29,6 @@ export const getCategories = unstable_cache(
   (args) => ["categories", args],
   {
     // Set the TTL (time to live) for cache, e.g., 3600 seconds (1 hour)
-    revalidate: 1,
+    revalidate: 3600,
   }
 );
