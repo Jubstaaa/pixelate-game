@@ -6,6 +6,9 @@ import { getLanguages } from "./lib/language";
 export function middleware(req) {
   const deviceIdCookie = req.cookies.get("device-id");
 
+  console.log(req.nextUrl.href);
+  console.log(deviceIdCookie);
+
   // Eğer 'device-id' cookie yoksa yeni bir tane oluştur
   if (!deviceIdCookie) {
     const newDeviceId = uuidv4(); // Yeni bir unique ID oluştur
@@ -13,7 +16,7 @@ export function middleware(req) {
 
     // Cookie ayarları ile 'device-id' ekle
     response.cookies.set("device-id", newDeviceId, {
-      httpOnly: false, // Tarayıcıdan erişilebilir (client-side erişim için)
+      httpOnly: true, // Tarayıcıdan erişilebilir (client-side erişim için)
       sameSite: "strict", // CSRF koruması için
       maxAge: 60 * 60 * 24 * 365, // 1 yıl boyunca geçerli olacak
       path: "/", // Tüm yollar için geçerli
@@ -51,7 +54,7 @@ export function middleware(req) {
 }
 
 // Locale tespiti yapmak için bir yardımcı fonksiyon
-async function detectLocale(acceptLanguage) {
+function detectLocale(acceptLanguage) {
   // Accept-Language başlığından dili ayıkla
   const languages = acceptLanguage
     .split(",")
@@ -64,5 +67,7 @@ async function detectLocale(acceptLanguage) {
 
 // Middleware'in hangi yollar için geçerli olacağını belirleyin
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|.*\\.png$|favicon.ico).*)"], // `favicon.ico`, görsel ve API yollarını hariç tut
+  matcher: [
+    "/((?!api|_next/static|_next/image|.*\\.png$|favicon.ico|site.webmanifest).*)",
+  ], // `favicon.ico`, görsel ve API yollarını hariç tut
 };
