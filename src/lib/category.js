@@ -20,13 +20,15 @@ export const getCategoryBySlug = unstable_cache(
 
 export const getCategories = unstable_cache(
   async (args) => {
-    const categories = await prisma.category.findMany(args);
+    const categories = await prisma.category.findMany({
+      orderBy: [{ isActive: "desc" }],
+    });
     return categories;
   },
   // Cache key function, in this case, we don't need specific parameters, so we can use a static key
   (args) => ["categories", args],
   {
     // Set the TTL (time to live) for cache, e.g., 3600 seconds (1 hour)
-    revalidate: 3600,
+    revalidate: 1,
   }
 );
