@@ -63,7 +63,7 @@ export const getLeaderboard = async (categoryId, level_type) => {
     },
     orderBy: [
       {
-        maxStreak: "asc",
+        maxStreak: "desc",
       },
     ],
   });
