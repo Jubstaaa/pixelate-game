@@ -43,34 +43,32 @@ function LeaderboardForm() {
   };
 
   return (
-    <div className="flex items-center space-x-2">
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogTrigger asChild>
-          <Button variant="default" size="sm">
-            {t("Join")}
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>{t("JoinTitle")}</DialogTitle>
-            <DialogDescription>{t("JoinDescription")}</DialogDescription>
-          </DialogHeader>
-          <form onSubmit={handleSubmit}>
-            <div className="grid w-full max-w-sm items-center gap-1.5">
-              <Label htmlFor="username">{t("Username")}</Label>
-              <div className="flex w-full max-w-sm items-center space-x-2">
-                <Input
-                  id="username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                />
-                <Button type="submit">{t("Submit")}</Button>
-              </div>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <Button variant="default" size="sm">
+          {t("Join")}
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>{t("JoinTitle")}</DialogTitle>
+          <DialogDescription>{t("JoinDescription")}</DialogDescription>
+        </DialogHeader>
+        <form onSubmit={handleSubmit}>
+          <div className="grid w-full max-w-sm items-center gap-1.5">
+            <Label htmlFor="username">{t("Username")}</Label>
+            <div className="flex w-full max-w-sm items-center space-x-2">
+              <Input
+                id="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+              <Button type="submit">{t("Submit")}</Button>
             </div>
-          </form>
-        </DialogContent>
-      </Dialog>
-    </div>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }
 

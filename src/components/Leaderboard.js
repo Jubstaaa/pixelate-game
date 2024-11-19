@@ -21,6 +21,7 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
+import LeaderboardForm from "./LeaderboardForm";
 
 const getRankColor = (index) => {
   switch (index) {
@@ -48,7 +49,7 @@ const getRankIcon = (index) => {
   }
 };
 
-export const Leaderboard = ({ data }) => {
+export const Leaderboard = ({ data, username }) => {
   const t = useTranslations("Leaderboard");
 
   return (
@@ -63,8 +64,9 @@ export const Leaderboard = ({ data }) => {
         className="inset-x-auto mt-0 h-full right-2 top-2 bottom-2 fixed outline-none w-[310px] flex flex-col"
         style={{ "--initial-transform": "calc(100% + 8px)" }}
       >
-        <DrawerHeader className="text-center">
+        <DrawerHeader className="text-center grid-cols-2 items-center">
           <DrawerTitle>{t("Title")}</DrawerTitle>
+          {!username && <LeaderboardForm />}
         </DrawerHeader>
         <ScrollArea className="flex-grow px-4">
           <Table>

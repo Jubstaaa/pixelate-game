@@ -6,9 +6,6 @@ import { getLanguages } from "./lib/language";
 export function middleware(req) {
   const deviceIdCookie = req.cookies.get("device-id");
 
-  console.log(req.nextUrl.href);
-  console.log(deviceIdCookie);
-
   // Eğer 'device-id' cookie yoksa yeni bir tane oluştur
   if (!deviceIdCookie) {
     const newDeviceId = uuidv4(); // Yeni bir unique ID oluştur

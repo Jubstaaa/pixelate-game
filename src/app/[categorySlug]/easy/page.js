@@ -112,6 +112,7 @@ async function page({ params }) {
       currentStreak={deviceScore.streak}
       highStreak={deviceScore.maxStreak}
       leaderboard={leaderboard}
+      username={device?.username}
     />
   );
 }

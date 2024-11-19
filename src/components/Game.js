@@ -45,6 +45,7 @@ const GuessCharacterGame = ({
   currentStreak,
   highStreak,
   leaderboard,
+  username,
 }) => {
   const [character, setCharacter] = useState();
   const router = useRouter();
@@ -263,7 +264,7 @@ const GuessCharacterGame = ({
             </Command>
           </PopoverContent>
         </Popover>
-        <Leaderboard data={leaderboard} />
+        <Leaderboard data={leaderboard} username={username} />
       </div>
     </div>
   );
