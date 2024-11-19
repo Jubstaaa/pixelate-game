@@ -19,7 +19,7 @@ import { useRouter } from "next/navigation";
 
 function LeaderboardForm() {
   const t = useTranslations("Ranking");
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const [username, setUsername] = useState("");
   const router = useRouter();
 
