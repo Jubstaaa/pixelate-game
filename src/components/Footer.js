@@ -15,6 +15,7 @@ import {
   Globe,
   Mail,
   Copy,
+  Coffee,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -113,8 +114,14 @@ export default function Footer({ locales, patchNotes }) {
             </Badge>
           </div>
           <p className="text-center text-sm text-muted-foreground md:text-start">
-            &copy; 2024 Pixel Guess Inc. {f("Rights")}
+            &copy; 2025 Pixel Guess Inc. {f("Rights")}
           </p>
+          <Link
+            href={"/privacy-policy"}
+            className="text-center text-xs text-muted-foreground md:text-start opacity-70"
+          >
+            {f("Privacy Policy")}
+          </Link>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
@@ -238,6 +245,12 @@ export default function Footer({ locales, patchNotes }) {
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
+          <Button variant="outline" size="icon" asChild>
+            <Link href="https://buymeacoffee.com/jubstaa" target="_blank">
+              <Coffee className="h-[1.2rem] w-[1.2rem]" />
+              <span className="sr-only">Buy me a coffee</span>
+            </Link>
+          </Button>
         </div>
       </div>
     </footer>
