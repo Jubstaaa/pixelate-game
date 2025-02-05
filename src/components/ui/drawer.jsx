@@ -39,8 +39,8 @@ const DrawerContent = React.forwardRef(
           className
         )}
         {...props}
-      >   
-        <div className="bg-background h-full rounded-t-[10px] ">
+      >
+        <div className="bg-background h-full rounded-t-[10px] overflow-auto">
           {/* <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted" /> */}
           {children}
         </div>

@@ -1,28 +1,22 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider  = "postgresql"
-  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
 model Category {
   id          Int           @id @default(autoincrement())
-  name        String?
-  slug        String?
-  icon        String?
-  isActive    Boolean       @default(true)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
-  characters  Character[] // Bir kategoriye ait tüm karakterler
+  icon        String?
+  name        String?
+  slug        String?
+  isActive    Boolean       @default(true)
+  characters  Character[]
   DeviceScore DeviceScore[]
 }
 
@@ -31,8 +25,8 @@ model Character {
   name            String
   categoryId      Int
   todayActive     Boolean          @default(false)
-  category        Category         @relation(fields: [categoryId], references: [id]) // Karakter ile kategori arasındaki ilişki
-  characterImages CharacterImage[] // Burada onDelete: Cascade eklemiyoruz
+  category        Category         @relation(fields: [categoryId], references: [id])
+  characterImages CharacterImage[]
   DeviceScore     DeviceScore[]
 }
 
@@ -41,7 +35,7 @@ model CharacterImage {
   character_id Int
   image        String
   level_type   Int       @default(0)
-  character    Character @relation(fields: [character_id], references: [id], onDelete: Cascade) // Karakter silindiğinde, bu resimler de silinsin
+  character    Character @relation(fields: [character_id], references: [id], onDelete: Cascade)
 
   @@unique([count, character_id, level_type])
 }
@@ -62,9 +56,9 @@ model DeviceScore {
   level_type   Int        @default(0)
   streak       Int        @default(0)
   maxStreak    Int        @default(0)
-  device       Device?    @relation(fields: [device_id], references: [device_id])
   category     Category   @relation(fields: [category_id], references: [id])
   character    Character? @relation(fields: [character_id], references: [id], onDelete: Cascade)
+  device       Device     @relation(fields: [device_id], references: [device_id])
 
   @@unique([category_id, device_id, level_type])
 }
@@ -93,7 +87,7 @@ model PatchNoteLocalization {
   id            Int       @id @default(autoincrement())
   change        String
   patch_note_id Int
-  patch_note    PatchNote @relation(fields: [patch_note_id], references: [id])
   language_id   Int
   language      Language  @relation(fields: [language_id], references: [id])
+  patch_note    PatchNote @relation(fields: [patch_note_id], references: [id])
 }
