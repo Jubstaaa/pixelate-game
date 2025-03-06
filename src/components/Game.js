@@ -1,17 +1,7 @@
 "use client";
-import { useState, useEffect, useMemo } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-
+import { useState, useMemo } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import confetti from "canvas-confetti";
-import {
-  formatDistanceToNow,
-  setHours,
-  setMinutes,
-  setSeconds,
-  startOfDay,
-} from "date-fns";
-import { useRouter } from "next/navigation";
-import { guess } from "@/lib/guess";
 import Image from "next/image";
 import {
   Command,
@@ -26,38 +16,73 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { ScrollArea } from "./ui/scroll-area";
-import { cn } from "@/lib/utils";
-import { BarChart2, Check, ChevronsUpDown, Flame, Trophy } from "lucide-react";
+import { ChevronsUpDown, Flame, Trophy } from "lucide-react";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useTranslations } from "next-intl";
-import { Card, CardContent } from "./ui/card";
 import { AnimatePresence, motion } from "framer-motion";
 import { Leaderboard } from "./Leaderboard";
+import Loading from "@/app/[categorySlug]/loading";
 
 const GuessCharacterGame = ({
   categoryId,
-  pixellatedImageBase64,
   characters,
   level_type,
-  currentStreak,
-  highStreak,
   leaderboard,
   username,
+  deviceId,
 }) => {
+  const {
+    data = [],
+    isLoading,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ["gameData", deviceId, categoryId, level_type],
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/game?categoryId=${categoryId}&level_type=${level_type}`
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    },
+  });
+
+  const { mutate } = useMutation({
+    mutationFn: async (params) => {
+      const response = await fetch("/api/game", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(params),
+      });
+      const res = await response.json();
+
+      if (!response.ok) {
+        throw res;
+      }
+
+      return res;
+    },
+    onSuccess: (data) => {
+      return data;
+    },
+    onError: (error) => {
+      return error;
+    },
+  });
+
   const [character, setCharacter] = useState();
-  const router = useRouter();
+  const [guessedCharacters, setGuessedCharacters] = useState([]);
   const [open, setOpen] = useState(false);
   const t = useTranslations();
 
-  const [isAnimating, setIsAnimating] = useState(false);
-
   const triggerConfetti = () => {
-    setIsAnimating(true);
-
-    const duration = 5 * 1000; // 15 seconds
+    const duration = 5 * 1000;
     const animationEnd = Date.now() + duration;
     const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
 
@@ -69,13 +94,12 @@ const GuessCharacterGame = ({
       const timeLeft = animationEnd - Date.now();
 
       if (timeLeft <= 0) {
-        clearInterval(interval); // Stop the animation when time is up
-        setIsAnimating(false); // Stop the animation state
+        clearInterval(interval);
+        setIsAnimating(false);
       }
 
       const particleCount = 50 * (timeLeft / duration);
 
-      // Emit confetti from two random origins
       confetti({
         ...defaults,
         particleCount,
@@ -89,35 +113,31 @@ const GuessCharacterGame = ({
     }, 250);
   };
 
-  // Rastgele şampiyon almak için kullanılan fonksiyon
-
   const selectCharacter = async (values) => {
     const toastId = toast.loading(t("Guessing"));
+    mutate(values, {
+      onSuccess: (data) => {
+        triggerConfetti();
+        toast.success(data.message, { id: toastId });
+        setCharacter(characters.find((item) => item.id === Number(values.id)));
+        refetch();
 
-    const res = await guess(values);
-
-    if (res.error) {
-      toast.error(res.error, { id: toastId });
-      router.refresh();
-    } else {
-      triggerConfetti();
-      toast.success(res.message, { id: toastId });
-
-      setCharacter(characters.find((item) => item.id === Number(values.id)));
-      router.refresh();
-
-      setTimeout(() => {
-        setCharacter();
-      }, 3000);
-    }
+        setTimeout(() => {
+          setCharacter();
+          setGuessedCharacters([]);
+        }, 3000);
+      },
+      onError: (error) => {
+        setGuessedCharacters((state) => [...state, values.id]);
+        toast.error(error.message, { id: toastId });
+        refetch();
+      },
+    });
   };
 
   const handleSelectionChange = async (value) => {
     selectCharacter({ id: value, categoryId, level_type: level_type });
-    // Klavyeyi kapat
-    document.activeElement.blur(); // Önce aktif elementi bulanıklaştır
-
-    // Gecikmeli olarak gizli bir input'a odaklan ve bulanıklaştır
+    document.activeElement.blur();
     setTimeout(() => {
       const hiddenInput = document.createElement("input");
       hiddenInput.style.display = "none";
@@ -126,8 +146,8 @@ const GuessCharacterGame = ({
       hiddenInput.focus();
       hiddenInput.blur();
 
-      document.body.removeChild(hiddenInput); // Temizlemeyi unutmayın
-    }, 100); // Küçük bir gecikme eklemek bazı cihazlarda yardımcı olabilir
+      document.body.removeChild(hiddenInput);
+    }, 100);
   };
 
   const filteredCharacters = useMemo(() => {
@@ -135,40 +155,39 @@ const GuessCharacterGame = ({
       return str
         .toLowerCase()
         .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "") // Combine diacritics removal
-        .replace(/[^a-z0-9]/g, ""); // Remove non-alphanumeric characters
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]/g, "");
     };
 
     return (value, search) => {
       const normalizedValue = normalize(value);
       const normalizedSearch = normalize(search);
 
-      // Exact match
       if (normalizedValue === normalizedSearch) {
         return 1;
       }
 
-      // Starts with match (with better handling)
       if (normalizedValue.startsWith(normalizedSearch)) {
         return 1 - normalizedSearch.length / normalizedValue.length;
       }
 
-      // Includes match with better fuzzy handling
       if (normalizedValue.indexOf(normalizedSearch) !== -1) {
-        // Calculate the ratio more intelligently
         return 0.5 - normalizedSearch.length / normalizedValue.length;
       }
 
-      // No match
       return 0;
     };
   }, []);
+
+  if (isLoading || error) {
+    return <Loading />;
+  }
 
   return (
     <div className="w-full flex flex-col items-center justify-center gap-5">
       <AnimatePresence mode="wait">
         <motion.div
-          key={character?.image || pixellatedImageBase64}
+          key={character?.image || data?.characterImage}
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.8 }}
@@ -177,7 +196,7 @@ const GuessCharacterGame = ({
           <Image
             width={400}
             height={400}
-            src={character?.image || pixellatedImageBase64}
+            src={character?.image || data?.characterImage}
             className="w-96 max-w-xs h-auto aspect-square"
             alt="Character Image"
           />
@@ -191,7 +210,7 @@ const GuessCharacterGame = ({
       >
         <AnimatePresence mode="wait">
           <motion.div
-            key={currentStreak}
+            key={data.streak}
             className="flex items-center gap-2 bg-muted px-3 py-2 rounded-md"
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -199,12 +218,12 @@ const GuessCharacterGame = ({
             transition={{ type: "spring", stiffness: 500, damping: 30 }}
           >
             <Flame className="w-5 h-5 text-orange-500" />
-            <span className="text-sm font-semibold">{currentStreak}</span>
+            <span className="text-sm font-semibold">{data.streak}</span>
           </motion.div>
         </AnimatePresence>
         <AnimatePresence mode="wait">
           <motion.div
-            key={highStreak}
+            key={data.highStreak}
             className="flex items-center gap-2 bg-muted px-3 py-2 rounded-md"
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -212,7 +231,7 @@ const GuessCharacterGame = ({
             transition={{ type: "spring", stiffness: 500, damping: 30 }}
           >
             <Trophy className="w-5 h-5 text-yellow-500" />
-            <span className="text-sm font-semibold">{highStreak}</span>
+            <span className="text-sm font-semibold">{data.maxStreak}</span>
           </motion.div>
         </AnimatePresence>
       </motion.div>
@@ -236,28 +255,32 @@ const GuessCharacterGame = ({
                 <CommandEmpty>{t("No character found")}</CommandEmpty>
                 <CommandGroup>
                   <div className="max-h-56 overflow-hidden">
-                    {characters.map((character) => (
-                      <CommandItem
-                        className="cursor-pointer"
-                        key={character.id}
-                        value={character.name}
-                        onSelect={() => {
-                          handleSelectionChange(character.id);
-                          setOpen(false);
-                        }}
-                      >
-                        <Avatar className="h-8 w-8 flex-shrink-0">
-                          <AvatarImage
-                            src={character.image}
-                            alt={character.name}
-                          />
-                          <AvatarFallback>
-                            {character.name.charAt(0)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <span>{character.name}</span>
-                      </CommandItem>
-                    ))}
+                    {characters
+                      .filter(
+                        (character) => !guessedCharacters.includes(character.id)
+                      )
+                      .map((character) => (
+                        <CommandItem
+                          className="cursor-pointer"
+                          key={character.id}
+                          value={character.name}
+                          onSelect={() => {
+                            handleSelectionChange(character.id);
+                            setOpen(false);
+                          }}
+                        >
+                          <Avatar className="h-8 w-8 flex-shrink-0">
+                            <AvatarImage
+                              src={character.image}
+                              alt={character.name}
+                            />
+                            <AvatarFallback>
+                              {character.name.charAt(0)}
+                            </AvatarFallback>
+                          </Avatar>
+                          <span>{character.name}</span>
+                        </CommandItem>
+                      ))}
                   </div>
                 </CommandGroup>
               </CommandList>

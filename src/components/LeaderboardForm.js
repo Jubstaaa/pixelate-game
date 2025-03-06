@@ -12,14 +12,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
-import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { updateUsername } from "@/lib/leaderboard";
 import { useRouter } from "next/navigation";
 
 function LeaderboardForm() {
   const t = useTranslations("Ranking");
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [username, setUsername] = useState("");
   const router = useRouter();
 

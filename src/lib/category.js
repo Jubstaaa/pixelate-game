@@ -11,10 +11,8 @@ export const getCategoryBySlug = unstable_cache(
     });
     return category;
   },
-  // Specify a unique cache key for this query
-  (categorySlug) => ["categoryBySlug", categorySlug], // Cache key is based on categorySlug
+  (categorySlug) => ["categoryBySlug", categorySlug],
   {
-    // Set the TTL (time to live) for cache, e.g., 3600 seconds (1 hour)
     revalidate: 3600,
   }
 );
@@ -26,10 +24,8 @@ export const getCategories = unstable_cache(
     });
     return categories;
   },
-  // Cache key function, in this case, we don't need specific parameters, so we can use a static key
   (args) => ["categories", args],
   {
-    // Set the TTL (time to live) for cache, e.g., 3600 seconds (1 hour)
     revalidate: 3600,
   }
 );

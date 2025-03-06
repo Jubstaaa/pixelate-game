@@ -1,9 +1,8 @@
 import prisma from "@/lib/prisma";
-import { uploadImageToVercelBlob } from "@/lib/blob"; // Vercel Blob fonksiyonu
-import { Jimp } from "jimp"; // Jimp kütüphanesi
-import { deleteImageFromVercelBlob } from "@/lib/blob"; // Eski resmi silmek için fonksiyon
+import { uploadImageToVercelBlob } from "@/lib/blob";
+import { Jimp } from "jimp"; 
+import { deleteImageFromVercelBlob } from "@/lib/blob"; 
 
-// Valorant karakterleri API'si
 const getValorantCharacters = async () => {
   const response = await fetch("https://valorant-api.com/v1/agents");
 
@@ -14,7 +13,7 @@ const getValorantCharacters = async () => {
   }
 
   const data = await response.json();
-  return data.data; // Karakterlerin listesini döndürüyoruz
+  return data.data; 
 };
 
 export const getLatestValorantCharacters = async () => {
@@ -24,7 +23,6 @@ export const getLatestValorantCharacters = async () => {
     for (const agent of agents) {
       const { id, displayName, displayIcon } = agent;
 
-      // Karakterin resmi
       const image = await Jimp.read(displayIcon);
 
       const imageBuffer = await image
@@ -44,7 +42,6 @@ export const getLatestValorantCharacters = async () => {
         },
       });
 
-      // Eski görselleri sil
       if (existingAgent?.characterImages?.length > 0) {
         for (const item of existingAgent.characterImages) {
           await deleteImageFromVercelBlob(item.image);
@@ -53,7 +50,7 @@ export const getLatestValorantCharacters = async () => {
 
       const images = [];
       for (let index = 7; index > 0; index--) {
-        const imageClone = await Jimp.read(imageBuffer); // create a clone of the cropped image
+        const imageClone = await Jimp.read(imageBuffer);
 
         const pixellatedImageBuffer = await imageClone
           .pixelate((index - 1) * 4 + 1)
@@ -67,13 +64,12 @@ export const getLatestValorantCharacters = async () => {
           count: 7 - index,
           image: uploadedImageUrl,
           character_id: existingAgent?.id,
-          level_type: 0, // Kolay
+          level_type: 0, 
         });
       }
 
-      // Greyscale versiyonları
       for (let index = 7; index > 0; index--) {
-        const imageClone = await Jimp.read(imageBuffer); // create a clone of the cropped image
+        const imageClone = await Jimp.read(imageBuffer);
 
         const pixellatedImageBuffer = await imageClone
           .pixelate((index - 1) * 4 + 1)
@@ -88,12 +84,11 @@ export const getLatestValorantCharacters = async () => {
           count: 7 - index,
           image: uploadedImageUrl,
           character_id: existingAgent?.id,
-          level_type: 1, // Zor
+          level_type: 1, 
         });
       }
 
       if (existingAgent) {
-        // Eğer karakter mevcutsa güncelle
         await prisma.character.update({
           where: { id: existingAgent.id },
           data: { name: displayName, categoryId: 2 },
@@ -118,7 +113,6 @@ export const getLatestValorantCharacters = async () => {
           });
         }
       } else {
-        // Eğer karakter bulunmazsa yeni oluştur
         const newAgent = await prisma.character.create({
           data: { name: displayName, categoryId: 2 },
         });

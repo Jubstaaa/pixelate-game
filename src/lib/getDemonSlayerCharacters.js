@@ -1,9 +1,8 @@
 import prisma from "@/lib/prisma";
-import { uploadImageToVercelBlob } from "@/lib/blob"; // Vercel Blob function
-import { Jimp } from "jimp"; // Jimp library
-import { deleteImageFromVercelBlob } from "@/lib/blob"; // Function to delete old images
+import { uploadImageToVercelBlob } from "@/lib/blob";
+import { Jimp } from "jimp";
+import { deleteImageFromVercelBlob } from "@/lib/blob";
 
-// Fetch DemonSlayer characters API
 const getDemonSlayerCharacters = async () => {
   const response = await fetch("https://demon-slayer-api.onrender.com/v1/", {
     headers: { accept: "application/json" },
@@ -16,7 +15,7 @@ const getDemonSlayerCharacters = async () => {
   }
 
   const data = await response.json();
-  return data; // Return the list of characters
+  return data;
 };
 
 export const getLatestDemonSlayerCharacters = async () => {
@@ -26,8 +25,7 @@ export const getLatestDemonSlayerCharacters = async () => {
     for (const character of characters) {
       const { name, image: characterImage } = character;
 
-      // Take the first image for processing
-      const imageUrl = characterImage.split("/revision/")[0]; // Assuming first image in the array is the one to use
+      const imageUrl = characterImage.split("/revision/")[0];
 
       console.log(imageUrl);
 
@@ -35,7 +33,6 @@ export const getLatestDemonSlayerCharacters = async () => {
         continue;
       }
 
-      // Read the image using Jimp
       const image = await Jimp.read(imageUrl);
 
       const imageBuffer = await image
@@ -55,7 +52,6 @@ export const getLatestDemonSlayerCharacters = async () => {
         },
       });
 
-      // Delete old images if they exist
       if (existingCharacter?.characterImages?.length > 0) {
         for (const item of existingCharacter.characterImages) {
           await deleteImageFromVercelBlob(item.image);
@@ -64,9 +60,8 @@ export const getLatestDemonSlayerCharacters = async () => {
 
       const images = [];
 
-      // Generate pixelated versions
       for (let index = 7; index > 0; index--) {
-        const imageClone = await Jimp.read(imageBuffer); // Create a clone of the cropped image
+        const imageClone = await Jimp.read(imageBuffer);
 
         const pixellatedImageBuffer = await imageClone
           .pixelate((index - 1) * 16 + 1)
@@ -81,13 +76,12 @@ export const getLatestDemonSlayerCharacters = async () => {
           count: 7 - index,
           image: uploadedImageUrl,
           character_id: existingCharacter?.id,
-          level_type: 0, // Easy level
+          level_type: 0,
         });
       }
 
-      // Generate greyscale versions
       for (let index = 7; index > 0; index--) {
-        const imageClone = await Jimp.read(imageBuffer); // Create a clone of the cropped image
+        const imageClone = await Jimp.read(imageBuffer);
 
         const pixellatedImageBuffer = await imageClone
           .pixelate((index - 1) * 16 + 1)
@@ -103,12 +97,11 @@ export const getLatestDemonSlayerCharacters = async () => {
           count: 7 - index,
           image: uploadedImageUrl,
           character_id: existingCharacter?.id,
-          level_type: 1, // Hard level
+          level_type: 1,
         });
       }
 
       if (existingCharacter) {
-        // If the character exists, update it
         await prisma.character.update({
           where: { id: existingCharacter.id },
           data: { name: name, categoryId: 6 },
@@ -133,7 +126,6 @@ export const getLatestDemonSlayerCharacters = async () => {
           });
         }
       } else {
-        // If the character doesn't exist, create a new one
         const newCharacter = await prisma.character.create({
           data: { name: name, categoryId: 6 },
         });

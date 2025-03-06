@@ -60,7 +60,8 @@
     "Username": "اسم المستخدم",
     "Submit": "انضم",
     "JoinSuccess": "مرحبًا بك في الترتيب، {username}!",
-    "UsernameRequired": "يرجى إدخال اسم المستخدم."
+    "UsernameRequired": "يرجى إدخال اسم المستخدم.",
+    "UsernameTaken": "اسم المستخدم مأخوذ بالفعل."
   },
   "Leaderboard": {
     "Rank": "الترتيب",

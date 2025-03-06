@@ -1,15 +1,12 @@
-import { put, del } from "@vercel/blob"; // Vercel Blob modülünü import edin
+import { put, del } from "@vercel/blob";
 
 export const uploadImageToVercelBlob = async (imageBuffer, fileName) => {
   try {
-    // Şampiyon görselini indir
-
-    // Vercel Blob'a yükle
     const { url } = await put(`characters/${fileName}`, imageBuffer, {
-      access: "public", // Görünürlüğü açık yapıyoruz
+      access: "public",
     });
 
-    return url; // Yüklenen resmin URL'sini döndürüyoruz
+    return url;
   } catch (error) {
     console.error(`Error uploading ${fileName} to Vercel Blob:`, error);
     return null;

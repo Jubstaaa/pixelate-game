@@ -57,7 +57,8 @@
     "Username": "Username",
     "Submit": "Join",
     "JoinSuccess": "Welcome to the ranking, {username}!",
-    "UsernameRequired": "Please enter a username."
+    "UsernameRequired": "Please enter a username.",
+    "UsernameTaken": "Username is already taken."
   },
   "Leaderboard": {
     "Rank": "Rank",

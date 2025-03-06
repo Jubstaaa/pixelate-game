@@ -59,7 +59,8 @@
     "Username": "Benutzername",
     "Submit": "Beitreten",
     "JoinSuccess": "Willkommen in der Rangliste, {username}!",
-    "UsernameRequired": "Bitte geben Sie einen Benutzernamen ein."
+    "UsernameRequired": "Bitte geben Sie einen Benutzernamen ein.",
+    "UsernameTaken": "Der Benutzername ist bereits vergeben."
   },
   "Leaderboard": {
     "Rank": "Rang",

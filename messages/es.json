@@ -16,7 +16,8 @@
       "Placeholder": "Ideas o sugerencias para mejorar nuestro producto",
       "ButtonText": "Enviar",
       "SubmitMessage": "Enviando comentarios...",
-      "ResponseMessage": "Gracias por tus comentarios"
+      "ResponseMessage": "Gracias por tus comentarios",
+      "UsernameTaken": "El nombre de usuario ya está en uso."
     }
   },
   "Guess": {

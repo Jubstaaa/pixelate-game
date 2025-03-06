@@ -54,7 +54,8 @@
     "Username": "用户名",
     "Submit": "加入",
     "JoinSuccess": "欢迎加入排行榜, {username}!",
-    "UsernameRequired": "请输入用户名。"
+    "UsernameRequired": "请输入用户名。",
+    "UsernameTaken": "用户名已被使用。"
   },
   "Leaderboard": {
     "Rank": "排名",

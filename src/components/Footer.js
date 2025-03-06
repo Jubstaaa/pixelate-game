@@ -34,7 +34,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-// Assume this function exists in your project
 import { submitFeedback } from "@/lib/feedback";
 import { toast } from "sonner";
 import Image from "next/image";

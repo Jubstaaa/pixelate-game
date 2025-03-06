@@ -57,7 +57,8 @@
     "Username": "ユーザー名",
     "Submit": "参加",
     "JoinSuccess": "ランキングへようこそ、{username}!",
-    "UsernameRequired": "ユーザー名を入力してください。"
+    "UsernameRequired": "ユーザー名を入力してください。",
+    "UsernameTaken": "ユーザー名は既に使用されています。"
   },
   "Leaderboard": {
     "Rank": "ランク",

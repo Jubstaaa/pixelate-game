@@ -57,7 +57,8 @@
     "Username": "사용자 이름",
     "Submit": "참여하기",
     "JoinSuccess": "랭킹에 오신 것을 환영합니다, {username}!",
-    "UsernameRequired": "사용자 이름을 입력해 주세요."
+    "UsernameRequired": "사용자 이름을 입력해 주세요.",
+    "UsernameTaken": "사용자 이름이 이미 사용 중입니다."
   },
   "Leaderboard": {
     "Rank": "순위",

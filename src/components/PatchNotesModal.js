@@ -14,14 +14,13 @@ import { useTranslations } from "next-intl";
 export function PatchNotesModal({ patchNotes }) {
   const p = useTranslations("PatchNotes");
 
-  // Function to format the date to YYYY-MM-DD
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Month is 0-based, so add 1
-    const day = date.getDate().toString().padStart(2, "0"); // Ensure day is always two digits
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
 
-    return `${year}-${month}-${day}`; // Format as YYYY-MM-DD
+    return `${year}-${month}-${day}`;
   };
 
   return (

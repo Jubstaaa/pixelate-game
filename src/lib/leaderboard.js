@@ -9,7 +9,6 @@ export const updateUsername = async (username) => {
 
   try {
     const deviceId = cookieStore.get("device-id");
-    // Önce cihazı kontrol ediyoruz
     const device = await prisma.device.findUnique({
       where: {
         device_id: deviceId.value,
@@ -24,7 +23,6 @@ export const updateUsername = async (username) => {
       throw "Username is already set.";
     }
 
-    // Eğer username null ise güncelle
     await prisma.device.update({
       where: {
         device_id: deviceId.value,
@@ -37,7 +35,7 @@ export const updateUsername = async (username) => {
     return { message: t("JoinSuccess", { username }) };
   } catch (error) {
     if (error?.code === "P2002") {
-      return { error: "Already taken" };
+      return { error: t("UsernameTaken") };
     }
     return {
       error,
@@ -52,7 +50,7 @@ export const getLeaderboard = async (categoryId, level_type) => {
       level_type: level_type,
       device: {
         username: {
-          not: null, // Username'i null olmayanları filtreler
+          not: null,
         },
       },
     },

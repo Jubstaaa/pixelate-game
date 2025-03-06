@@ -60,7 +60,8 @@
     "Username": "Nome de Usuário",
     "Submit": "Entrar",
     "JoinSuccess": "Bem-vindo ao ranking, {username}!",
-    "UsernameRequired": "Por favor, insira um nome de usuário."
+    "UsernameRequired": "Por favor, insira um nome de usuário.",
+    "UsernameTaken": "O nome de usuário já está em uso."
   },
   "Leaderboard": {
     "Rank": "Posição",

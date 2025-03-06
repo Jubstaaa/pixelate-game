@@ -60,7 +60,8 @@
     "Username": "Tên người dùng",
     "Submit": "Tham gia",
     "JoinSuccess": "Chào mừng bạn đến với bảng xếp hạng, {username}!",
-    "UsernameRequired": "Vui lòng nhập tên người dùng."
+    "UsernameRequired": "Vui lòng nhập tên người dùng.",
+    "UsernameTaken": "Tên người dùng đã được sử dụng."
   },
   "Leaderboard": {
     "Rank": "Hạng",

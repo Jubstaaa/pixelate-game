@@ -1,7 +1,4 @@
-import localFont from "next/font/local";
 import "./globals.css";
-import { DeviceIdProvider } from "./providers/DeviceIdProvider";
-import UIProvider from "./providers/UIProvider";
 import ReactQueryProvider from "./providers/ReactQueryProvider";
 import Footer from "@/components/Footer";
 import { ThemeProvider } from "./providers/ThemeProvider";
@@ -48,16 +45,16 @@ export const metadata = {
       "Join Pixel Guess and challenge yourself to guess hidden images, pixel by pixel. Fun and addictive image guessing game for all ages.",
     images: ["https://pixelguessgame.com/images/pixel_guess_logo.webp"],
   },
-  robots: "index, follow", // Alternatif: "noindex, nofollow"
+  robots: "index, follow",
   icons: {
-    icon: "/android-chrome-192x192.png", // Android 192x192 iconu
-    apple: "/apple-touch-icon.png", // iOS için ikon
-    android: "/android-chrome-192x192.png", // Android için ikonu belirleyin
-    "favicon-16x16": "/favicon-16x16.png", // 16x16 Favicon
-    "favicon-32x32": "/favicon-32x32.png", // 32x32 Favicon
-    "favicon.ico": "/favicon.ico", // .ico Favicon
+    icon: "/android-chrome-192x192.png",
+    apple: "/apple-touch-icon.png",
+    android: "/android-chrome-192x192.png",
+    "favicon-16x16": "/favicon-16x16.png",
+    "favicon-32x32": "/favicon-32x32.png",
+    "favicon.ico": "/favicon.ico",
   },
-  manifest: "/site.webmanifest", // Web uygulama manifest dosyası
+  manifest: "/site.webmanifest",
 };
 
 export const viewport = {
@@ -71,7 +68,7 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "VideoGame",
   name: "Pixel Guess",
-  genre: "Puzzle", // Oyun türü
+  genre: "Puzzle",
   url: "https://pixelguessgame.com",
   description:
     "Join Pixel Guess and challenge yourself to guess hidden images, pixel by pixel. Fun and addictive image guessing game for all ages.",
@@ -87,20 +84,18 @@ const jsonLd = {
     },
   },
   mainEntityOfPage: "https://pixelguessgame.com",
-  gamePlatform: "Web", // Platform
+  gamePlatform: "Web",
   offers: {
     "@type": "Offer",
     priceCurrency: "USD",
-    price: "0.00", // Ücretsiz olduğunu belirtiyoruz
-    url: "https://pixelguessgame.com", // Oyun linki
+    price: "0.00",
+    url: "https://pixelguessgame.com",
   },
 };
 
 export default async function RootLayout({ children }) {
   const locale = await getLocale();
 
-  // Providing all messages to the client
-  // side is the easiest way to get started
   const messages = await getMessages();
   const locales = await getLanguages();
   const patchNotes = await getPatchNotes(locale);
@@ -116,21 +111,19 @@ export default async function RootLayout({ children }) {
             enableSystem
             enableColorScheme
           >
-            <DeviceIdProvider>
-              <ReactQueryProvider>
-                <ProgressBarProvider>
-                  <main className="mx-auto flex flex-col justify-between w-full h-full max-w-4xl px-4 py-4 lg:px-8 lg:py-12 min-h-dvh !text-foreground">
-                    {children}
-                    <Footer locales={locales} patchNotes={patchNotes} />
-                  </main>
-                  <Toaster
-                    position="top-center"
-                    richColors
-                    toastOptions={{ duration: 2000 }}
-                  />
-                </ProgressBarProvider>
-              </ReactQueryProvider>
-            </DeviceIdProvider>
+            <ReactQueryProvider>
+              <ProgressBarProvider>
+                <main className="mx-auto flex flex-col justify-between w-full h-full max-w-4xl px-4 py-4 lg:px-8 lg:py-12 min-h-dvh !text-foreground">
+                  {children}
+                  <Footer locales={locales} patchNotes={patchNotes} />
+                </main>
+                <Toaster
+                  position="top-center"
+                  richColors
+                  toastOptions={{ duration: 2000 }}
+                />
+              </ProgressBarProvider>
+            </ReactQueryProvider>
           </ThemeProvider>
         </NextIntlClientProvider>
 

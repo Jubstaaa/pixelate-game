@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
-import { uploadImageToVercelBlob } from "@/lib/blob"; // Vercel Blob fonksiyonu
-import { Jimp } from "jimp"; // Jimp kütüphanesi
-import { deleteImageFromVercelBlob } from "@/lib/blob"; // Eski resmi silmek için fonksiyon
+import { uploadImageToVercelBlob } from "@/lib/blob";
+import { Jimp } from "jimp";
+import { deleteImageFromVercelBlob } from "@/lib/blob";
 
 const getLatestVersion = async () => {
   const response = await fetch(
@@ -56,7 +56,7 @@ export const getLatestChampions = async () => {
 
       const images = [];
       for (let index = 7; index > 0; index--) {
-        const imageClone = await Jimp.read(imageBuffer); // create a clone of the cropped image
+        const imageClone = await Jimp.read(imageBuffer);
 
         const pixellatedImageBuffer = await imageClone
           .pixelate((index - 1) * 4 + 1)
@@ -75,7 +75,7 @@ export const getLatestChampions = async () => {
       }
 
       for (let index = 7; index > 0; index--) {
-        const imageClone = await Jimp.read(imageBuffer); // create a clone of the cropped image
+        const imageClone = await Jimp.read(imageBuffer);
 
         const pixellatedImageBuffer = await imageClone
           .pixelate((index - 1) * 4 + 1)

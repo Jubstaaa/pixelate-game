@@ -60,7 +60,8 @@
     "Username": "Kullanıcı Adı",
     "Submit": "Katıl",
     "JoinSuccess": "Sıralamaya hoş geldiniz, {username}!",
-    "UsernameRequired": "Lütfen bir kullanıcı adı girin."
+    "UsernameRequired": "Lütfen bir kullanıcı adı girin.",
+    "UsernameTaken": "Kullanıcı adı zaten alınmış."
   },
   "Leaderboard": {
     "Rank": "Sıralama",
