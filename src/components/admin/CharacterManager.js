@@ -284,42 +284,6 @@ export default function CharacterManager() {
     );
   };
 
-  const importValorantAgents = async () => {
-    try {
-      const response = await fetch("/api/admin/valorant-agents", {
-        method: "POST",
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to import Valorant agents");
-      }
-
-      toast.success("Valorant agents imported successfully");
-      fetchData();
-    } catch (error) {
-      console.error("Error importing Valorant agents:", error);
-      toast.error("Failed to import Valorant agents");
-    }
-  };
-
-  const importDemonSlayerCharacters = async () => {
-    try {
-      const response = await fetch("/api/admin/demon-slayer", {
-        method: "POST",
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to import Demon Slayer characters");
-      }
-
-      toast.success("Demon Slayer characters imported successfully");
-      fetchData();
-    } catch (error) {
-      console.error("Error importing Demon Slayer characters:", error);
-      toast.error("Failed to import Demon Slayer characters");
-    }
-  };
-
   if (isLoading) {
     return <div className="text-center py-4">Loading...</div>;
   }
@@ -329,18 +293,6 @@ export default function CharacterManager() {
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Characters</h2>
         <div className="space-x-2">
-          <button
-            onClick={importDemonSlayerCharacters}
-            className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-          >
-            Import Demon Slayer
-          </button>
-          <button
-            onClick={importValorantAgents}
-            className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700"
-          >
-            Import Valorant Agents
-          </button>
           <button
             onClick={() => setIsBulkDialogOpen(true)}
             className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
