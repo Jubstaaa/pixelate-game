@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { withAuth } from "@/lib/auth";
+import prisma from "@/lib/prisma";
 
 async function handler(req, { params }) {
   const id = parseInt(params.id);

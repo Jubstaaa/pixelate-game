@@ -118,7 +118,7 @@ const GuessCharacterGame = ({
       setLocalCount(data.count);
       setLocalStreak(data.streak);
     }
-  }, [data?.count, data?.streak]);
+  }, [data]);
 
   useEffect(() => {
     if (!data?.characterImage || localCount === null) return;
