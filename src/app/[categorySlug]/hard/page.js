@@ -95,9 +95,7 @@ async function page({ params }) {
       characters={totalCharacters.map((item) => ({
         id: item.id,
         name: item.name,
-        image: item.characterImages.find(
-          (img) => img.count === 6 && img.level_type === 0
-        )?.image,
+        image: item.characterImage,
       }))}
       currentStreak={deviceScore.streak}
       highStreak={deviceScore.maxStreak}

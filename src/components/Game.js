@@ -149,7 +149,7 @@ const GuessCharacterGame = ({
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
         // Count değerine göre block size'ı hesapla
-        const maxBlockSize = 64; // Daha az pixelleştirme için 32'den 16'ya düşürdük
+        const maxBlockSize = level_type === 1 ? 32 : 64;
         const minBlockSize = 1;
 
         const blockSize = Math.max(
@@ -158,7 +158,27 @@ const GuessCharacterGame = ({
             Math.floor((localCount / 6) * (maxBlockSize - minBlockSize))
         );
 
-        if (localCount === 6) return;
+        if (localCount === 6) {
+          if (level_type === 1) {
+            const imageData = ctx.getImageData(
+              0,
+              0,
+              canvas.width,
+              canvas.height
+            );
+            const { data, width, height } = imageData;
+
+            for (let i = 0; i < data.length; i += 4) {
+              const avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+              data[i] = avg; // R
+              data[i + 1] = avg; // G
+              data[i + 2] = avg; // B
+            }
+
+            ctx.putImageData(imageData, 0, 0);
+          }
+          return;
+        }
 
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const { data, width, height } = imageData;
@@ -188,6 +208,12 @@ const GuessCharacterGame = ({
             b = Math.floor(b / count);
             a = Math.floor(a / count);
 
+            // Level type 1 ise grayscale uygula
+            if (level_type === 1) {
+              const avg = Math.floor((r + g + b) / 3);
+              r = g = b = avg;
+            }
+
             for (let dy = 0; dy < blockSize && y + dy < height; dy++) {
               for (let dx = 0; dx < blockSize && x + dx < width; dx++) {
                 const i = ((y + dy) * width + (x + dx)) * 4;
@@ -208,7 +234,7 @@ const GuessCharacterGame = ({
     };
 
     img.src = data.characterImage;
-  }, [localCount]);
+  }, [data?.characterImage, localCount, level_type]);
 
   const selectCharacter = async (values) => {
     const toastId = toast.loading(t("Guessing"));
