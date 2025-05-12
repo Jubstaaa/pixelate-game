@@ -118,7 +118,7 @@ const GuessCharacterGame = ({
       setLocalCount(data.count);
       setLocalStreak(data.streak);
     }
-  }, [data]);
+  }, [data?.count, data?.streak]);
 
   useEffect(() => {
     if (!data?.characterImage || localCount === null) return;
@@ -234,7 +234,7 @@ const GuessCharacterGame = ({
     };
 
     img.src = data.characterImage;
-  }, [data?.characterImage, localCount, level_type]);
+  }, [localCount]);
 
   const selectCharacter = async (values) => {
     const toastId = toast.loading(t("Guessing"));
@@ -243,7 +243,6 @@ const GuessCharacterGame = ({
         triggerConfetti();
         toast.success(data.message, { id: toastId });
         setLocalCount(6);
-        setLocalStreak((prev) => prev + 1);
 
         setTimeout(() => {
           refetch();
