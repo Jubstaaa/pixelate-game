@@ -12,7 +12,6 @@ export const metadata = {
 export default async function Home() {
   const categories = await getCategories();
   const h = await getTranslations("Hero");
-
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="text-center mb-16">
