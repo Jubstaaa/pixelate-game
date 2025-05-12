@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 import { uploadImageToVercelBlob } from "@/lib/blob";
-import { Jimp } from "jimp";
+import { v4 as uuidv4 } from "uuid";
 import { deleteImageFromVercelBlob } from "@/lib/blob";
 
 const getLatestVersion = async () => {
@@ -9,6 +9,12 @@ const getLatestVersion = async () => {
   );
   const versions = await response.json();
   return versions[0];
+};
+
+const downloadImage = async (url) => {
+  const response = await fetch(url);
+  const arrayBuffer = await response.arrayBuffer();
+  return Buffer.from(arrayBuffer);
 };
 
 export const getLatestChampions = async () => {
@@ -27,116 +33,37 @@ export const getLatestChampions = async () => {
     for (const champ of Object.values(data)) {
       const { id, key, name } = champ;
 
-      const championImageUrl = `https://cdn.communitydragon.org/latest/champion/${key}/square`;
+      try {
+        // Champion resmini indir
+        const championImageUrl = `https://cdn.communitydragon.org/latest/champion/${key}/square`;
+        const imageBuffer = await downloadImage(championImageUrl);
 
-      const image = await Jimp.read(championImageUrl);
+        // UUID ile benzersiz dosya adı oluştur
+        const fileName = `${uuidv4()}.webp`;
 
-      const imageBuffer = await image
-        .crop({
-          x: 5,
-          y: 5,
-          w: image.bitmap.width - 10,
-          h: image.bitmap.height - 10,
-        })
-        .resize({ w: 128 })
-        .getBuffer("image/jpeg");
+        // Resmi Vercel Blob'a yükle
+        const blobUrl = await uploadImageToVercelBlob(imageBuffer, fileName);
 
-      const existingChampion = await prisma.character.findFirst({
-        where: { name },
-        include: {
-          characterImages: true,
-        },
-      });
-
-      if (existingChampion?.championImages?.length > 0) {
-        for (const item of existingChampion.championImages) {
-          await deleteImageFromVercelBlob(item.image);
-        }
-      }
-
-      const images = [];
-      for (let index = 7; index > 0; index--) {
-        const imageClone = await Jimp.read(imageBuffer);
-
-        const pixellatedImageBuffer = await imageClone
-          .pixelate((index - 1) * 4 + 1)
-          .getBuffer("image/jpeg");
-        const uploadedImageUrl = await uploadImageToVercelBlob(
-          pixellatedImageBuffer,
-          `${name}.webp`
-        );
-
-        images.push({
-          count: 7 - index,
-          image: uploadedImageUrl,
-          character_id: existingChampion?.id,
-          level_type: 0,
-        });
-      }
-
-      for (let index = 7; index > 0; index--) {
-        const imageClone = await Jimp.read(imageBuffer);
-
-        const pixellatedImageBuffer = await imageClone
-          .pixelate((index - 1) * 4 + 1)
-          .greyscale()
-          .getBuffer("image/jpeg");
-        const uploadedImageUrl = await uploadImageToVercelBlob(
-          pixellatedImageBuffer,
-          `${name}.webp`
-        );
-
-        images.push({
-          count: 7 - index,
-          image: uploadedImageUrl,
-          character_id: existingChampion?.id,
-          level_type: 1,
-        });
-      }
-
-      if (existingChampion) {
-        await prisma.character.update({
-          where: { id: existingChampion.id },
-          data: { name, categoryId: 1 },
-        });
-
-        for (const img of images) {
-          await prisma.characterImage.upsert({
-            where: {
-              count_character_id_level_type: {
-                count: img.count,
-                character_id: existingChampion.id,
-                level_type: img.level_type,
-              },
-            },
-            update: { image: img.image },
-            create: {
-              character_id: existingChampion.id,
-              count: img.count,
-              image: img.image,
-              level_type: img.level_type,
-            },
-          });
-        }
-      } else {
+        // Veritabanına kaydet
         const newChampion = await prisma.character.create({
-          data: { name, categoryId: 1 },
+          data: {
+            name,
+            categoryId: 1,
+            characterImage: blobUrl,
+          },
         });
 
-        for (const img of images) {
-          await prisma.characterImage.create({
-            data: {
-              character_id: newChampion.id,
-              count: img.count,
-              image: img.image,
-              level_type: img.level_type,
-            },
-          });
-        }
+        console.log(
+          `Champion ${name} updated successfully with image: ${blobUrl}`
+        );
+      } catch (error) {
+        console.error(`Error processing champion ${name}:`, error);
+        // Hata durumunda devam et
+        continue;
       }
     }
 
-    console.log("Champions updated successfully!");
+    console.log("All champions updated successfully!");
   } catch (error) {
     console.error("An error occurred while updating champions:", error);
   }

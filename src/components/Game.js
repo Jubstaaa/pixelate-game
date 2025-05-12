@@ -1,8 +1,7 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import confetti from "canvas-confetti";
-import Image from "next/image";
 import {
   Command,
   CommandEmpty,
@@ -21,9 +20,9 @@ import { Button } from "./ui/button";
 import { toast } from "sonner";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useTranslations } from "next-intl";
-import { AnimatePresence, motion } from "framer-motion";
 import { Leaderboard } from "./Leaderboard";
 import Loading from "@/app/[categorySlug]/loading";
+import { AnimatePresence, motion } from "framer-motion";
 
 const GuessCharacterGame = ({
   categoryId,
@@ -76,10 +75,12 @@ const GuessCharacterGame = ({
     },
   });
 
-  const [character, setCharacter] = useState();
   const [guessedCharacters, setGuessedCharacters] = useState([]);
   const [open, setOpen] = useState(false);
+  const [localCount, setLocalCount] = useState(null);
+  const [localStreak, setLocalStreak] = useState(null);
   const t = useTranslations();
+  const canvasRef = useRef(null);
 
   const triggerConfetti = () => {
     const duration = 5 * 1000;
@@ -95,7 +96,6 @@ const GuessCharacterGame = ({
 
       if (timeLeft <= 0) {
         clearInterval(interval);
-        setIsAnimating(false);
       }
 
       const particleCount = 50 * (timeLeft / duration);
@@ -113,24 +113,122 @@ const GuessCharacterGame = ({
     }, 250);
   };
 
+  useEffect(() => {
+    if (data.count != null) {
+      setLocalCount(data.count);
+      setLocalStreak(data.streak);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (!data?.characterImage || localCount === null) return;
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    if (!ctx) return;
+
+    canvas.width = 400;
+    canvas.height = 400;
+    ctx.fillStyle = "rgb(243 244 246)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+
+    img.onerror = () => {
+      if (img.crossOrigin === "anonymous") {
+        img.crossOrigin = null;
+        img.src = data.characterImage;
+      }
+    };
+
+    img.onload = () => {
+      try {
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        // Count değerine göre block size'ı hesapla
+        const maxBlockSize = 64; // Daha az pixelleştirme için 32'den 16'ya düşürdük
+        const minBlockSize = 1;
+
+        const blockSize = Math.max(
+          minBlockSize,
+          maxBlockSize -
+            Math.floor((localCount / 6) * (maxBlockSize - minBlockSize))
+        );
+
+        if (localCount === 6) return;
+
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const { data, width, height } = imageData;
+        const newData = new Uint8ClampedArray(data.length);
+
+        for (let y = 0; y < height; y += blockSize) {
+          for (let x = 0; x < width; x += blockSize) {
+            let r = 0,
+              g = 0,
+              b = 0,
+              a = 0,
+              count = 0;
+
+            for (let dy = 0; dy < blockSize && y + dy < height; dy++) {
+              for (let dx = 0; dx < blockSize && x + dx < width; dx++) {
+                const i = ((y + dy) * width + (x + dx)) * 4;
+                r += data[i];
+                g += data[i + 1];
+                b += data[i + 2];
+                a += data[i + 3];
+                count++;
+              }
+            }
+
+            r = Math.floor(r / count);
+            g = Math.floor(g / count);
+            b = Math.floor(b / count);
+            a = Math.floor(a / count);
+
+            for (let dy = 0; dy < blockSize && y + dy < height; dy++) {
+              for (let dx = 0; dx < blockSize && x + dx < width; dx++) {
+                const i = ((y + dy) * width + (x + dx)) * 4;
+                newData[i] = r;
+                newData[i + 1] = g;
+                newData[i + 2] = b;
+                newData[i + 3] = a;
+              }
+            }
+          }
+        }
+
+        const newImageData = new ImageData(newData, width, height);
+        ctx.putImageData(newImageData, 0, 0);
+      } catch (error) {
+        console.error("Error during canvas operations:", error);
+      }
+    };
+
+    img.src = data.characterImage;
+  }, [localCount]);
+
   const selectCharacter = async (values) => {
     const toastId = toast.loading(t("Guessing"));
     mutate(values, {
       onSuccess: (data) => {
         triggerConfetti();
         toast.success(data.message, { id: toastId });
-        setCharacter(characters.find((item) => item.id === Number(values.id)));
-        refetch();
+        setLocalCount(6);
+        setLocalStreak((prev) => prev + 1);
 
         setTimeout(() => {
-          setCharacter();
+          refetch();
           setGuessedCharacters([]);
-        }, 3000);
+        }, 2000);
       },
       onError: (error) => {
         setGuessedCharacters((state) => [...state, values.id]);
         toast.error(error.message, { id: toastId });
-        refetch();
+        setLocalCount((prev) => Math.min((prev || 0) + 1, 6));
+        setLocalStreak(0);
       },
     });
   };
@@ -185,56 +283,50 @@ const GuessCharacterGame = ({
 
   return (
     <div className="w-full flex flex-col items-center justify-center gap-5">
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={character?.image || data?.characterImage}
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.8 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Image
-            width={400}
-            height={400}
-            src={character?.image || data?.characterImage}
-            className="w-96 max-w-xs h-auto aspect-square"
-            alt="Character Image"
-          />
-        </motion.div>
-      </AnimatePresence>
-      <motion.div
-        className="flex justify-center items-center gap-4 w-full max-w-[320px]"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
+      <div className="w-96 max-w-xs aspect-square bg-muted rounded-lg overflow-hidden">
+        <canvas
+          ref={canvasRef}
+          width={400}
+          height={400}
+          className="w-full h-full bg-white"
+          style={{
+            imageRendering: "pixelated",
+            display: "block",
+          }}
+        />
+      </div>
+      <div className="flex justify-center items-center gap-4 w-full max-w-[320px]">
         <AnimatePresence mode="wait">
-          <motion.div
-            key={data.streak}
-            className="flex items-center gap-2 bg-muted px-3 py-2 rounded-md"
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.8, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 500, damping: 30 }}
-          >
+          <div className="flex items-center gap-2 bg-muted px-3 py-2 rounded-md">
             <Flame className="w-5 h-5 text-orange-500" />
-            <span className="text-sm font-semibold">{data.streak}</span>
-          </motion.div>
+            <motion.span
+              key={localStreak}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 500, damping: 30 }}
+              className="text-sm font-semibold"
+            >
+              {localStreak}
+            </motion.span>
+          </div>
         </AnimatePresence>
         <AnimatePresence mode="wait">
-          <motion.div
-            key={data.highStreak}
-            className="flex items-center gap-2 bg-muted px-3 py-2 rounded-md"
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.8, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 500, damping: 30 }}
-          >
+          <div className="flex items-center gap-2 bg-muted px-3 py-2 rounded-md">
             <Trophy className="w-5 h-5 text-yellow-500" />
-            <span className="text-sm font-semibold">{data.maxStreak}</span>
-          </motion.div>
+            <motion.span
+              key={data.maxStreak}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 500, damping: 30 }}
+              className="text-sm font-semibold"
+            >
+              {data.maxStreak}
+            </motion.span>
+          </div>
         </AnimatePresence>
-      </motion.div>
+      </div>
       <div className="flex gap-2 w-[320px]">
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>

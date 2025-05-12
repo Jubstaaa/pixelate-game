@@ -10,7 +10,7 @@ export const getTotalCharacters = unstable_cache(
       select: {
         id: true,
         name: true,
-        characterImages: true,
+        characterImage: true,
       },
       orderBy: [
         {

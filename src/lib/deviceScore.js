@@ -17,8 +17,10 @@ export async function getDeviceScore(deviceId, categoryId, level_type) {
     },
   });
 
+  let character;
+
   if (!deviceScore) {
-    const character = await prisma.character.findFirst({
+    character = await prisma.character.findFirst({
       where: {
         categoryId: categoryId,
       },
@@ -34,18 +36,17 @@ export async function getDeviceScore(deviceId, categoryId, level_type) {
         character_id: character.id,
       },
     });
+  } else {
+    character = await prisma.character.findUnique({
+      where: {
+        id: deviceScore.character_id,
+      },
+    });
   }
-
-  const characterImage = await prisma.characterImage.findFirst({
-    where: {
-      character_id: deviceScore.character_id,
-      level_type: level_type,
-      count: deviceScore?.count > 6 ? 6 : deviceScore?.count || 0,
-    },
-  });
-
+  console.log(character.name);
   return {
-    characterImage: characterImage.image,
+    count: deviceScore.count,
+    characterImage: character.characterImage,
     streak: deviceScore.streak,
     maxStreak: deviceScore.maxStreak,
   };

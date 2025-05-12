@@ -21,23 +21,12 @@ model Category {
 }
 
 model Character {
-  id              Int              @id @default(autoincrement())
-  name            String
-  categoryId      Int
-  todayActive     Boolean          @default(false)
-  category        Category         @relation(fields: [categoryId], references: [id])
-  characterImages CharacterImage[]
-  DeviceScore     DeviceScore[]
-}
-
-model CharacterImage {
-  count        Int
-  character_id Int
-  image        String
-  level_type   Int       @default(0)
-  character    Character @relation(fields: [character_id], references: [id], onDelete: Cascade)
-
-  @@unique([count, character_id, level_type])
+  id             Int           @id @default(autoincrement())
+  name           String
+  categoryId     Int
+  characterImage String?
+  category       Category      @relation(fields: [categoryId], references: [id])
+  DeviceScore    DeviceScore[]
 }
 
 model Device {

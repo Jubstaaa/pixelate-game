@@ -34,10 +34,10 @@ export async function generateMetadata({ params }) {
       type: "website",
     },
     twitter: {
-      card: "summary_large_image", 
+      card: "summary_large_image",
       title: `Pixel Guess: ${category.name} Category | Fun Image Guessing Game`,
       description: `${category.name} Category: Guess hidden images in the ${category.name} category. Challenge yourself!`,
-      images: [category.icon], 
+      images: [category.icon],
     },
   };
 }
@@ -96,9 +96,7 @@ async function page({ params }) {
       characters={totalCharacters.map((item) => ({
         id: item.id,
         name: item.name,
-        image: item.characterImages.find(
-          (img) => img.count === 6 && img.level_type === 0
-        )?.image,
+        image: item.characterImage,
       }))}
       leaderboard={leaderboard}
       username={device?.username}
