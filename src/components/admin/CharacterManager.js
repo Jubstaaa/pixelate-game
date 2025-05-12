@@ -295,11 +295,28 @@ export default function CharacterManager() {
       }
 
       toast.success("Valorant agents imported successfully");
-      // Karakterleri yeniden yükle
       fetchData();
     } catch (error) {
       console.error("Error importing Valorant agents:", error);
       toast.error("Failed to import Valorant agents");
+    }
+  };
+
+  const importDemonSlayerCharacters = async () => {
+    try {
+      const response = await fetch("/api/admin/demon-slayer", {
+        method: "POST",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to import Demon Slayer characters");
+      }
+
+      toast.success("Demon Slayer characters imported successfully");
+      fetchData();
+    } catch (error) {
+      console.error("Error importing Demon Slayer characters:", error);
+      toast.error("Failed to import Demon Slayer characters");
     }
   };
 
@@ -312,6 +329,12 @@ export default function CharacterManager() {
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Characters</h2>
         <div className="space-x-2">
+          <button
+            onClick={importDemonSlayerCharacters}
+            className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+          >
+            Import Demon Slayer
+          </button>
           <button
             onClick={importValorantAgents}
             className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700"
