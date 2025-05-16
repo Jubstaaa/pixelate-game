@@ -20,6 +20,7 @@ export const getCategoryBySlug = unstable_cache(
 export const getCategories = unstable_cache(
   async (args) => {
     const categories = await prisma.category.findMany({
+      ...args,
       orderBy: [{ isActive: "desc" }],
     });
     return categories;
