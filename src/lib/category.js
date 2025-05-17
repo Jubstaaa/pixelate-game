@@ -21,7 +21,7 @@ export const getCategories = unstable_cache(
   async (args) => {
     const categories = await prisma.category.findMany({
       ...args,
-      orderBy: [{ isActive: "desc" }],
+      orderBy: [{ isActive: "desc" }, { createdAt: "asc" }],
     });
     return categories;
   },
