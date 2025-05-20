@@ -361,13 +361,13 @@ const GuessCharacterGame = ({
               aria-expanded={open}
               className="w-full justify-between"
             >
-              {t("Select character")}
+              {t("Select your guess")}
               <ChevronsUpDown className="opacity-50" />
             </Button>
           </PopoverTrigger>
           <PopoverContent align="start" className="w-[320px] p-0">
             <Command className="w-full" filter={filteredCharacters}>
-              <CommandInput placeholder={t("Search character")} />
+              <CommandInput placeholder={t("Search for your guess")} />
               <CommandList>
                 <CommandEmpty>{t("No character found")}</CommandEmpty>
                 <CommandGroup>
