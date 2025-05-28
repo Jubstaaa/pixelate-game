@@ -149,7 +149,7 @@ const GuessCharacterGame = ({
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
         // Count değerine göre block size'ı hesapla
-        const maxBlockSize = level_type === 1 ? 32 : 96;
+        const maxBlockSize = level_type === 1 ? 32 : 80;
         const minBlockSize = 1;
 
         const blockSize = Math.max(
