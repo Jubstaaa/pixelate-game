@@ -8,7 +8,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "wehcews4hiydzgdx.public.blob.vercel-storage.com",
+        hostname: process.env.DO_SPACES_URL,
       },
     ],
   },
