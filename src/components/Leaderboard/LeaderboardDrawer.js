@@ -25,19 +25,25 @@ export const LeaderboardDrawer = ({ categoryId, level_type }) => {
       <Button variant="bordered" size="lg" onPress={onOpen}>
         <BarChart2 className="h-5 w-5" />
       </Button>
-      <Drawer isOpen={isOpen} onOpenChange={onOpenChange} placement="right" size="md">
+      <Drawer
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        placement="right"
+        size="md"
+        classNames={{
+          wrapper: "z-[1200]",
+          backdrop: "z-[1100]",
+          base: "z-[1200]",
+        }}
+      >
         <DrawerContent>
-          {() => (
-            <>
-              <DrawerHeader className="justify-between">
-                LeaderboardDrawer
-                {!device.username && <LeaderboardFormModal />}
-              </DrawerHeader>
-              <DrawerBody className="px-4 pb-6">
-                <Leaderboard isOpen={isOpen} categoryId={categoryId} level_type={level_type} />
-              </DrawerBody>
-            </>
-          )}
+          <DrawerHeader className="justify-between">
+            LeaderboardDrawer
+            {!device?.username && <LeaderboardFormModal />}
+          </DrawerHeader>
+          <DrawerBody className="px-4 pb-6">
+            <Leaderboard isOpen={isOpen} categoryId={categoryId} level_type={level_type} />
+          </DrawerBody>
         </DrawerContent>
       </Drawer>
     </>

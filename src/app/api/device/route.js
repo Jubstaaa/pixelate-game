@@ -22,14 +22,18 @@ export const POST = withErrorHandling(async (req) => {
   }
 
   const body = await req.json().catch(() => ({}));
-  const username = typeof body?.username === "string" ? body.username.trim() : "";
 
-  if (!username) {
+  if (!body.username) {
     return ApiResponse.badRequest("Username is required");
   }
 
+  const existingDevice = await DeviceService.findById(deviceId);
+  if (existingDevice?.username) {
+    return ApiResponse.conflict("Device already has a username");
+  }
+
   await DeviceService.upsert(deviceId, {
-    username,
+    username: body.username,
   });
 
   return ApiResponse.success({ message: "Device saved" });

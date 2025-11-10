@@ -48,6 +48,7 @@ const baseQuery = async (args, api, extraOptions) => {
 export const gameApi = createApi({
   reducerPath: "gameApi",
   baseQuery,
+  tagTypes: ["Device"],
   endpoints: (builder) => ({
     getDevice: builder.query({
       query: () => ({
@@ -55,6 +56,7 @@ export const gameApi = createApi({
         method: "GET",
       }),
       transformResponse: (response) => response.data ?? response,
+      providesTags: ["Device"],
     }),
     saveDevice: builder.mutation({
       query: ({ username }) => ({
@@ -63,6 +65,7 @@ export const gameApi = createApi({
         body: { username },
       }),
       transformResponse: (response) => response.data ?? response,
+      invalidatesTags: ["Device"],
     }),
     getCharacters: builder.query({
       query: ({ categoryId }) => ({

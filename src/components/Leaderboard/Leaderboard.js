@@ -39,7 +39,10 @@ export const Leaderboard = ({ isOpen, categoryId, level_type }) => {
 
   const { data = [], isLoading } = useGetLeaderboardQuery(
     { categoryId, level_type },
-    { skip: !isOpen },
+    {
+      skip: !isOpen,
+      refetchOnMountOrArgChange: true,
+    },
   );
 
   if (isLoading) return <LeaderboardSkeleton />;

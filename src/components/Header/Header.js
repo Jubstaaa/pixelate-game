@@ -11,9 +11,13 @@ import LeaderboardFormModal from "../Leaderboard/LeaderboardFormModal";
 import { useGetDeviceQuery } from "@/lib/api/game-api";
 
 export default function Header({ category }) {
-  const { data: device, isLoading: isDeviceLoading } = useGetDeviceQuery();
+  const {
+    data: device,
+    isLoading: isDeviceLoading,
+    isFetching: isDeviceFetching,
+  } = useGetDeviceQuery();
 
-  if (isDeviceLoading) {
+  if (isDeviceLoading || isDeviceFetching) {
     return <HeaderSkeleton />;
   }
 
