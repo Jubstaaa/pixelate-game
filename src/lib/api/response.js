@@ -1,9 +1,5 @@
 import { NextResponse } from "next/server";
 
-/**
- * Standard API response helper
- * Provides consistent response format across all API endpoints
- */
 export class ApiResponse {
   static success(data, status = 200) {
     return NextResponse.json({ data }, { status });

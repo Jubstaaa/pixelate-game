@@ -2,10 +2,6 @@
 
 import { BlobService } from "./blob-service";
 
-/**
- * Upload Service
- * Handles file uploads to Vercel Blob Storage
- */
 export class UploadService {
   static async uploadFile(file, type) {
     if (!file) {

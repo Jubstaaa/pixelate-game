@@ -5,11 +5,9 @@ import prisma from "@/lib/prisma";
 const DEFAULT_ORDER = [{ isActive: "desc" }, { createdAt: "asc" }];
 
 export async function list(args = {}) {
-  const { orderBy, ...rest } = args ?? {};
-
   return prisma.category.findMany({
-    ...rest,
-    orderBy: orderBy ?? DEFAULT_ORDER,
+    ...args,
+    orderBy: DEFAULT_ORDER,
   });
 }
 

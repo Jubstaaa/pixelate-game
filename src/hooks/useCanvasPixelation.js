@@ -2,10 +2,6 @@
 
 import { useEffect, useRef } from "react";
 
-/**
- * Custom hook for canvas pixelation logic
- * Separates canvas manipulation from component logic
- */
 export function useCanvasPixelation(characterImage, count, levelType) {
   const canvasRef = useRef(null);
 
@@ -37,7 +33,6 @@ export function useCanvasPixelation(characterImage, count, levelType) {
       try {
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-        // Count değerine göre block size'ı hesapla
         const maxBlockSize = levelType === 1 ? 32 : 80;
         const minBlockSize = 1;
 
@@ -65,26 +60,20 @@ export function useCanvasPixelation(characterImage, count, levelType) {
   return canvasRef;
 }
 
-/**
- * Apply grayscale filter to canvas
- */
 function applyGrayscale(ctx, width, height) {
   const imageData = ctx.getImageData(0, 0, width, height);
   const { data } = imageData;
 
   for (let i = 0; i < data.length; i += 4) {
     const avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
-    data[i] = avg; // R
-    data[i + 1] = avg; // G
-    data[i + 2] = avg; // B
+    data[i] = avg;
+    data[i + 1] = avg;
+    data[i + 2] = avg;
   }
 
   ctx.putImageData(imageData, 0, 0);
 }
 
-/**
- * Apply pixelation effect to canvas
- */
 function applyPixelation(ctx, width, height, blockSize, levelType) {
   const imageData = ctx.getImageData(0, 0, width, height);
   const { data } = imageData;
@@ -98,7 +87,6 @@ function applyPixelation(ctx, width, height, blockSize, levelType) {
         a = 0,
         pixelCount = 0;
 
-      // Calculate average color for the block
       for (let dy = 0; dy < blockSize && y + dy < height; dy++) {
         for (let dx = 0; dx < blockSize && x + dx < width; dx++) {
           const i = ((y + dy) * width + (x + dx)) * 4;
@@ -115,13 +103,11 @@ function applyPixelation(ctx, width, height, blockSize, levelType) {
       b = Math.floor(b / pixelCount);
       a = Math.floor(a / pixelCount);
 
-      // Apply grayscale for level type 1
       if (levelType === 1) {
         const avg = Math.floor((r + g + b) / 3);
         r = g = b = avg;
       }
 
-      // Fill the block with average color
       for (let dy = 0; dy < blockSize && y + dy < height; dy++) {
         for (let dx = 0; dx < blockSize && x + dx < width; dx++) {
           const i = ((y + dy) * width + (x + dx)) * 4;

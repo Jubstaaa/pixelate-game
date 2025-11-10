@@ -9,11 +9,6 @@ import prisma from "@/lib/prisma";
 const CORRECT_GUESS_MESSAGE = "Correct! Let's go!";
 const INCORRECT_GUESS_MESSAGE = "Come on! Try again!";
 
-/**
- * Game Service Functions
- * Handles all business logic related to game mechanics
- */
-
 export async function getGameData(categoryId, levelType, deviceId) {
   if (!deviceId) {
     throw new Error("Device ID is required");
