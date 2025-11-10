@@ -38,7 +38,7 @@ export const LeaderboardDrawer = ({ categoryId, level_type }) => {
       >
         <DrawerContent>
           <DrawerHeader className="justify-between">
-            LeaderboardDrawer
+            Leaderboard
             {!device?.username && <LeaderboardFormModal />}
           </DrawerHeader>
           <DrawerBody className="px-4 pb-6">
