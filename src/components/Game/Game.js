@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Flame, Trophy } from "lucide-react";
 import { useState } from "react";
 
-import GameSkeleton from "../GameSkeleton";
+import GameSkeleton from "./GameSkeleton";
 import { LeaderboardDrawer } from "../Leaderboard/LeaderboardDrawer";
 
 import { useCanvasPixelation } from "@/hooks/useCanvasPixelation";

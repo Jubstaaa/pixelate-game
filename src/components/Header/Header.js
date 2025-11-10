@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-import HeaderSkeleton from "../HeaderSkeleton";
+import HeaderSkeleton from "./HeaderSkeleton";
 import LeaderboardFormModal from "../Leaderboard/LeaderboardFormModal";
 
 import { useGetDeviceQuery } from "@/lib/api/game-api";
