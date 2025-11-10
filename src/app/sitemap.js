@@ -1,10 +1,9 @@
-import { getCategories } from "@/lib/category";
-import prisma from "@/lib/prisma";
+import * as CategoryService from "@/services/category-service";
 
 export default async function sitemap() {
   const now = new Date();
   const formattedDate = now.toISOString();
-  const categories = await getCategories({
+  const categories = await CategoryService.list({
     where: {
       isActive: true,
     },

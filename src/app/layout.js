@@ -1,17 +1,11 @@
 import "./globals.css";
-import ReactQueryProvider from "./providers/ReactQueryProvider";
-import Footer from "@/components/Footer";
-import { ThemeProvider } from "./providers/ThemeProvider";
-import ProgressBarProvider from "./providers/ProgressBarProvider";
 import { GoogleAnalytics } from "@next/third-parties/google";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import { Analytics } from "@vercel/analytics/react";
-import { Toaster } from "sonner";
-import { getLocale, getMessages } from "next-intl/server";
-import { NextIntlClientProvider } from "next-intl";
-import { getLanguages } from "@/lib/language";
-import { getPatchNotes } from "@/lib/patchNote";
 import Script from "next/script";
+
+import StoreProvider from "./providers/StoreProvider";
+import { UIProvider } from "./providers/UIProvider";
+
+import Footer from "@/components/Footer";
 
 export const metadata = {
   title: "Pixel Guess: Guess Hidden Images by Pixel | Fun Image Guessing Game",
@@ -20,8 +14,7 @@ export const metadata = {
   author: "Pixel Guess",
   metadataBase: new URL("https://pixelguessgame.com"),
   openGraph: {
-    title:
-      "Pixel Guess: Guess Hidden Images by Pixel | Fun Image Guessing Game",
+    title: "Pixel Guess: Guess Hidden Images by Pixel | Fun Image Guessing Game",
     description:
       "Join Pixel Guess and challenge yourself to guess hidden images, pixel by pixel. Choose your favorite category and start guessing today. Fun and addictive image guessing game for all ages.",
     url: "https://pixelguessgame.com",
@@ -39,8 +32,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title:
-      "Pixel Guess: Guess Hidden Images by Pixel | Fun Image Guessing Game",
+    title: "Pixel Guess: Guess Hidden Images by Pixel | Fun Image Guessing Game",
     description:
       "Join Pixel Guess and challenge yourself to guess hidden images, pixel by pixel. Fun and addictive image guessing game for all ages.",
     images: ["https://pixelguessgame.com/images/pixel_guess_logo.webp"],
@@ -93,42 +85,20 @@ const jsonLd = {
   },
 };
 
-export default async function RootLayout({ children }) {
-  const locale = await getLocale();
-
-  const messages = await getMessages();
-  const locales = await getLanguages();
-  const patchNotes = await getPatchNotes(locale);
-
+export default function RootLayout({ children }) {
   return (
-    <html lang={locale}>
+    <html lang="en" className="dark">
       <GoogleAnalytics gaId="G-DP3HV72CNV" />
       <body className="bg-background">
-        <NextIntlClientProvider messages={messages}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem
-            enableColorScheme
-          >
-            <ReactQueryProvider>
-              <ProgressBarProvider>
-                <main className="mx-auto flex flex-col justify-between w-full h-full max-w-4xl px-4 py-4 lg:px-8 lg:py-12 min-h-dvh !text-foreground">
-                  {children}
-                  <Footer locales={locales} patchNotes={patchNotes} />
-                </main>
-                <Toaster
-                  position="top-center"
-                  richColors
-                  toastOptions={{ duration: 2000 }}
-                />
-              </ProgressBarProvider>
-            </ReactQueryProvider>
-          </ThemeProvider>
-        </NextIntlClientProvider>
+        <UIProvider>
+          <StoreProvider>
+            <main className="!text-foreground mx-auto flex h-full min-h-dvh w-full max-w-4xl flex-col justify-between px-4 py-4 lg:px-8 lg:py-12">
+              {children}
+              <Footer />
+            </main>
+          </StoreProvider>
+        </UIProvider>
 
-        <SpeedInsights />
-        <Analytics />
         <Script
           id="Schema"
           type="application/ld+json"

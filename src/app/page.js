@@ -1,7 +1,5 @@
-import { getCategories } from "@/lib/category";
 import CategoryCard from "@/components/CategoryCard";
-import { Badge } from "@/components/ui/badge";
-import { getTranslations } from "next-intl/server";
+import * as CategoryService from "@/services/category-service";
 
 export const metadata = {
   title: "Pixel Guess: Guess Hidden Images by Pixel | Fun Image Guessing Game",
@@ -10,24 +8,23 @@ export const metadata = {
 };
 
 export default async function Home() {
-  const categories = await getCategories();
-  const h = await getTranslations("Hero");
+  const categories = await CategoryService.list();
 
   return (
     <div className="container mx-auto px-4 py-12">
-      <div className="text-center mb-16">
-        <Badge variant="outline" className="mb-4">
-          {h("SubTitle")}
-        </Badge>
-        <h1 className="text-5xl font-bold tracking-tight mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+      <div className="mb-16 text-center">
+        <span className="border-border text-foreground mb-4 inline-flex items-center rounded-md border px-2 py-1 text-xs">
+          Open Beta!
+        </span>
+        <h1 className="from-primary to-secondary mb-6 bg-linear-to-r bg-clip-text text-5xl font-bold tracking-tight text-transparent">
           Pixel Guess
         </h1>
-        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-          {h("Description")}
+        <p className="text-muted-foreground mx-auto max-w-2xl text-xl">
+          Challenge yourself! Pick a category and guess the hidden image pixel by pixel.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {categories.map((item) => (
           <CategoryCard key={item.id} item={item} />
         ))}

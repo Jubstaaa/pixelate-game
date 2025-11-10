@@ -1,17 +1,16 @@
-import GuessCharacterGame from "@/components/Game";
-import prisma from "@/lib/prisma";
-import React from "react";
-import { cookies } from "next/headers";
-import { getCategoryBySlug } from "@/lib/category";
-import { getTotalCharacters } from "@/lib/character";
-import { getDeviceScore } from "@/lib/deviceScore";
-import { getDevice } from "@/lib/device";
-import { getLeaderboard } from "@/lib/leaderboard";
+import { notFound } from "next/navigation";
+
+import GuessCharacterGame from "@/components/Game/Game";
+import * as CategoryService from "@/services/category-service";
 
 export async function generateMetadata({ params }) {
   const categorySlug = (await params).categorySlug;
 
-  const category = await getCategoryBySlug(categorySlug);
+  const category = await CategoryService.getBySlug(categorySlug);
+
+  if (!category) {
+    notFound();
+  }
 
   return {
     title: `Pixel Guess: ${category.name} Category | Hard Mode`,
@@ -45,63 +44,13 @@ async function page({ params }) {
   const level_type = 1;
   const categorySlug = (await params).categorySlug;
 
-  const category = await getCategoryBySlug(categorySlug);
+  const category = await CategoryService.getBySlug(categorySlug);
 
-  const cookieStore = await cookies();
-  const deviceId = cookieStore.get("device-id");
-  let deviceScore;
-  let options;
-  let device;
-
-  device = await getDevice(deviceId.value);
-
-  if (!device) {
-    device = await prisma.device.create({
-      data: {
-        device_id: deviceId.value,
-      },
-    });
+  if (!category) {
+    notFound();
   }
 
-  if (cookieStore.get("options")) {
-    options = JSON.parse(cookieStore.get("options").value);
-  }
-
-  deviceScore = await getDeviceScore(deviceId.value, category.id, level_type);
-
-  const totalCharacters = await getTotalCharacters(category.id);
-
-  if (!deviceScore) {
-    const randomIndex = Math.floor(Math.random() * totalCharacters.length);
-    const character = totalCharacters[randomIndex];
-
-    deviceScore = await prisma.deviceScore.create({
-      data: {
-        device_id: device.device_id,
-        category_id: category.id,
-        level_type: level_type,
-        character_id: character.id,
-      },
-    });
-  }
-
-  const leaderboard = await getLeaderboard(category.id, level_type);
-
-  return (
-    <GuessCharacterGame
-      deviceId={device.device_id}
-      level_type={level_type}
-      categoryId={category.id}
-      characters={totalCharacters.map((item) => ({
-        id: item.id,
-        name: item.name,
-        image: item.characterImage,
-      }))}
-      currentStreak={deviceScore.streak}
-      highStreak={deviceScore.maxStreak}
-      leaderboard={leaderboard}
-    />
-  );
+  return <GuessCharacterGame level_type={level_type} categoryId={category.id} />;
 }
 
 export default page;

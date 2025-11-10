@@ -1,109 +1,37 @@
-import { getDeviceScore } from "@/lib/deviceScore";
-import prisma from "@/lib/prisma";
-import { getTranslations } from "next-intl/server";
-import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
+import { withErrorHandling } from "@/lib/api/error-handler";
+import { ApiResponse } from "@/lib/api/response";
+import * as GameService from "@/services/game-service";
 
-export async function GET(request) {
-  try {
-    const cookieStore = await cookies();
-    const searchParams = request.nextUrl.searchParams;
-    const deviceId = cookieStore.get("device-id");
-    const categoryId = searchParams.get("categoryId") || "";
-    const level_type = searchParams.get("level_type") || "";
+async function getHandler(request) {
+  const searchParams = request.nextUrl.searchParams;
+  const categoryId = searchParams.get("categoryId");
+  const levelType = searchParams.get("level_type");
+  const deviceId = request.headers.get("x-device-id");
 
-    const response = await getDeviceScore(
-      deviceId.value,
-      Number(categoryId),
-      Number(level_type)
-    );
-
-    return NextResponse.json(response);
-  } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Something went wrong";
-    return NextResponse.json({ error: errorMessage }, { status: 500 });
+  if (!deviceId) {
+    return ApiResponse.error("Device ID header missing", 400);
   }
+
+  const response = await GameService.getGameData(categoryId, levelType, deviceId);
+  return ApiResponse.success(response);
 }
 
-export async function POST(request) {
-  const g = await getTranslations("Guess");
+async function postHandler(request) {
   const { id, categoryId, level_type } = await request.json();
-  const cookieStore = await cookies();
-  const deviceId = cookieStore.get("device-id");
+  const deviceId = request.headers.get("x-device-id");
 
-  if (!deviceId.value) {
-    throw "Device ID is required.";
+  if (!deviceId) {
+    return ApiResponse.error("Device ID header missing", 400);
   }
 
-  if (!categoryId) {
-    throw "Category ID is required.";
+  const result = await GameService.submitGuess(id, categoryId, level_type, deviceId);
+
+  if (result.isError) {
+    return ApiResponse.error(result.message, 400);
   }
 
-  const device = await prisma.deviceScore.findUnique({
-    where: {
-      category_id_device_id_level_type: {
-        device_id: deviceId.value,
-        category_id: categoryId,
-        level_type: level_type,
-      },
-    },
-  });
-
-  if (!device) {
-    throw "No Device Found";
-  }
-
-  if (device.character_id == id) {
-    const charactersCount = await prisma.character.count({
-      where: {
-        categoryId: categoryId,
-      },
-    });
-
-    const character = await prisma.character.findFirst({
-      where: {
-        categoryId: categoryId,
-      },
-
-      skip: Math.floor(Math.random() * charactersCount),
-    });
-
-    await prisma.deviceScore.update({
-      where: {
-        category_id_device_id_level_type: {
-          device_id: deviceId.value,
-          category_id: categoryId,
-          level_type: level_type,
-        },
-      },
-      data: {
-        count: 0,
-        streak: device.streak + 1,
-        ...(device.streak + 1 > device.maxStreak && {
-          maxStreak: device.streak + 1,
-        }),
-        character_id: character.id,
-      },
-    });
-
-    return NextResponse.json({ message: g("ResponseMessage") });
-  } else {
-    await prisma.deviceScore.update({
-      where: {
-        category_id_device_id_level_type: {
-          device_id: deviceId.value,
-          category_id: categoryId,
-          level_type: level_type,
-        },
-      },
-      data: {
-        count: device.count + 1,
-        streak: 0,
-        ...(device.streak > device.maxStreak && { maxStreak: device.streak }),
-      },
-    });
-
-    return NextResponse.json({ message: g("ErrorMessage") }, { status: 400 });
-  }
+  return ApiResponse.success(result);
 }
+
+export const GET = withErrorHandling(getHandler);
+export const POST = withErrorHandling(postHandler);

@@ -8,19 +8,6 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
-model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String // Hashed password
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-enum Role {
-  USER
-  ADMIN
-}
-
 model Category {
   id          Int           @id @default(autoincrement())
   createdAt   DateTime      @default(now())
@@ -69,27 +56,4 @@ model Feedback {
   id       Int     @id @default(autoincrement())
   feedback String?
   rating   String?
-}
-
-model Language {
-  id                       Int                     @id @default(autoincrement())
-  name                     String
-  code                     String
-  patch_note_localizations PatchNoteLocalization[]
-}
-
-model PatchNote {
-  id                       Int                     @id @default(autoincrement())
-  version                  String
-  date                     DateTime                @default(now())
-  patch_note_localizations PatchNoteLocalization[]
-}
-
-model PatchNoteLocalization {
-  id            Int       @id @default(autoincrement())
-  change        String
-  patch_note_id Int
-  language_id   Int
-  language      Language  @relation(fields: [language_id], references: [id])
-  patch_note    PatchNote @relation(fields: [patch_note_id], references: [id])
 }
