@@ -10,7 +10,7 @@ export function useCanvasPixelation(characterImage, count, levelType) {
   const canvasRef = useRef(null);
 
   useEffect(() => {
-    if (!characterImage || count === null) return;
+    if (!characterImage) return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;

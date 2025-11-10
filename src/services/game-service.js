@@ -1,5 +1,6 @@
 "use server";
 
+import * as CharacterService from "./character-service";
 import * as DeviceScoreService from "./device-score-service";
 import * as DeviceService from "./device-service";
 
@@ -54,18 +55,10 @@ export async function submitGuess(characterId, categoryId, levelType, deviceId) 
 }
 
 export async function handleCorrectGuess(deviceScore, categoryId) {
-  const charactersCount = await prisma.character.count({
-    where: {
-      categoryId: Number(categoryId),
-    },
-  });
-
-  const character = await prisma.character.findFirst({
-    where: {
-      categoryId: Number(categoryId),
-    },
-    skip: Math.floor(Math.random() * charactersCount),
-  });
+  const character = await CharacterService.findRandomByCategory(Number(categoryId));
+  if (!character) {
+    throw new Error("No characters found for the selected category.");
+  }
 
   const newStreak = deviceScore.streak + 1;
   const updateData = {

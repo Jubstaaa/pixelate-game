@@ -1,5 +1,7 @@
 "use server";
 
+import * as CharacterService from "./character-service";
+
 import prisma from "@/lib/prisma";
 
 export async function getScore(deviceId, categoryId, levelType) {
@@ -13,25 +15,13 @@ export async function getScore(deviceId, categoryId, levelType) {
     },
   });
 
-  const charactersCount = await prisma.character.count({
-    where: {
-      categoryId: Number(categoryId),
-    },
-  });
-
-  if (charactersCount === 0) {
-    throw new Error("No characters found for the selected category.");
-  }
-
   let character;
 
   if (!deviceScore) {
-    character = await prisma.character.findFirst({
-      where: {
-        categoryId: Number(categoryId),
-      },
-      skip: Math.floor(Math.random() * charactersCount),
-    });
+    character = await CharacterService.findRandomByCategory(Number(categoryId));
+    if (!character) {
+      throw new Error("No characters found for the selected category.");
+    }
 
     deviceScore = await prisma.deviceScore.create({
       data: {
@@ -49,12 +39,7 @@ export async function getScore(deviceId, categoryId, levelType) {
     });
 
     if (!character) {
-      character = await prisma.character.findFirst({
-        where: {
-          categoryId: Number(categoryId),
-        },
-        skip: Math.floor(Math.random() * charactersCount),
-      });
+      character = await CharacterService.findRandomByCategory(Number(categoryId));
 
       if (character) {
         await prisma.deviceScore.update({

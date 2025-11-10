@@ -20,6 +20,25 @@ export async function listByCategory(categoryId) {
   });
 }
 
+export async function findRandomByCategory(categoryId) {
+  const charactersCount = await prisma.character.count({
+    where: {
+      categoryId: Number(categoryId),
+    },
+  });
+
+  if (charactersCount === 0) {
+    return null;
+  }
+
+  return prisma.character.findFirst({
+    where: {
+      categoryId: Number(categoryId),
+    },
+    skip: Math.floor(Math.random() * charactersCount),
+  });
+}
+
 export async function findAll() {
   return prisma.character.findMany({
     include: {
