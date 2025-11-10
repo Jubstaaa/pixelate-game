@@ -27,15 +27,11 @@ const CategoryCard = ({ item }) => {
         <CardFooter className="bg-secondary/10 flex justify-center gap-4 p-4">
           {item.isActive && (
             <>
-              <Button asChild size="sm" variant="bordered">
-                <Link href={`/${item.slug}/easy`}>
-                  <span className="flex items-center">Easy</span>
-                </Link>
+              <Button as={Link} href={`/${item.slug}/easy`} asChild size="sm" variant="bordered">
+                <span className="flex items-center">Easy</span>
               </Button>
-              <Button asChild size="sm" variant="bordered">
-                <Link href={`/${item.slug}/hard`}>
-                  <span className="flex items-center">Hard</span>
-                </Link>
+              <Button as={Link} href={`/${item.slug}/hard`} asChild size="sm" variant="bordered">
+                <span className="flex items-center">Hard</span>
               </Button>
             </>
           )}
