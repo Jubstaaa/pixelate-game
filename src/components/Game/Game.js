@@ -3,7 +3,7 @@
 import { Avatar, Chip, Autocomplete, AutocompleteItem } from "@heroui/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Flame, Trophy } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import GameSkeleton from "./GameSkeleton";
 import { LeaderboardDrawer } from "../Leaderboard/LeaderboardDrawer";
@@ -18,7 +18,7 @@ import {
 import { triggerConfetti } from "@/lib/confetti";
 
 const GuessCharacterGame = ({ categoryId, level_type, username }) => {
-  const defaultCharacterFilter = (textValue, inputValue) => {
+  const defaultCharacterFilter = useCallback((textValue, inputValue) => {
     const normalize = (str) => {
       return String(str || "")
         .toLowerCase()
@@ -37,7 +37,7 @@ const GuessCharacterGame = ({ categoryId, level_type, username }) => {
       return 0.5 - normalizedSearch.length / Math.max(normalizedValue.length, 1);
     }
     return 0;
-  };
+  }, []);
 
   const {
     data = {},
@@ -64,6 +64,26 @@ const GuessCharacterGame = ({ categoryId, level_type, username }) => {
     isRevealed ? 6 : data.count,
     level_type,
   );
+
+  const filteredCharacters = useMemo(() => {
+    const available = characters.filter((character) => !guessedCharacters.includes(character.id));
+
+    if (!input) {
+      return available.slice(0, 5);
+    }
+
+    const scored = available
+      .map((character) => ({
+        character,
+        score: defaultCharacterFilter(character.name, input),
+      }))
+      .filter((item) => item.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 5)
+      .map((item) => item.character);
+
+    return scored;
+  }, [characters, guessedCharacters, input, defaultCharacterFilter]);
 
   const handleSelectionChange = async (value) => {
     setGuessedCharacters((state) => [...state, Number(value)]);
@@ -157,8 +177,7 @@ const GuessCharacterGame = ({ categoryId, level_type, username }) => {
           }}
           placeholder="Type to search..."
           variant="bordered"
-          defaultItems={characters.filter((character) => !guessedCharacters.includes(character.id))}
-          defaultFilter={defaultCharacterFilter}
+          items={filteredCharacters}
         >
           {(item) => (
             <AutocompleteItem
