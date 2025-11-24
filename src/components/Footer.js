@@ -11,11 +11,12 @@ import {
 } from "@heroui/react";
 import { motion } from "framer-motion";
 import { Mail, Coffee } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
 import FeedbackModal from "./Feedback/FeedbackModal";
+
+import Image from "@/components/Image";
 
 export default function Footer() {
   return (

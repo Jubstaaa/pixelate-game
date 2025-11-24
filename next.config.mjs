@@ -4,7 +4,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: process.env.DO_SPACES_URL,
+        hostname: "lon1.digitaloceanspaces.com",
       },
     ],
   },

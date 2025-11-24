@@ -1,9 +1,10 @@
 "use client";
 import { Card, CardBody, CardFooter, Button, Chip } from "@heroui/react";
 import { motion } from "framer-motion";
-import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+
+import Image from "@/components/Image";
 
 const CategoryCard = ({ item }) => {
   return (

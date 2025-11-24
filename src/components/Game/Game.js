@@ -6,6 +6,7 @@ import { Flame, Trophy } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 
 import GameSkeleton from "./GameSkeleton";
+import { addImageResizeParams } from "../Image";
 import { LeaderboardDrawer } from "../Leaderboard/LeaderboardDrawer";
 
 import { useCanvasPixelation } from "@/hooks/useCanvasPixelation";
@@ -60,7 +61,7 @@ const GuessCharacterGame = ({ categoryId, level_type, username }) => {
   const [isRevealed, setIsRevealed] = useState(false);
 
   const canvasRef = useCanvasPixelation(
-    data.characterImage,
+    addImageResizeParams(data.characterImage, 400, 400),
     isRevealed ? 6 : data.count,
     level_type,
   );
@@ -184,7 +185,11 @@ const GuessCharacterGame = ({ categoryId, level_type, username }) => {
               key={item.id}
               textValue={item.name}
               startContent={
-                <Avatar src={item.characterImage} name={item.name} className="size-6 shrink-0" />
+                <Avatar
+                  src={addImageResizeParams(item.characterImage, 64, 64)}
+                  name={item.name}
+                  className="size-6 shrink-0"
+                />
               }
             >
               {item.name}

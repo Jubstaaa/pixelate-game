@@ -1,13 +1,13 @@
 "use client";
 
 import { Button, Card } from "@heroui/react";
-import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
 import HeaderSkeleton from "./HeaderSkeleton";
 import LeaderboardFormModal from "../Leaderboard/LeaderboardFormModal";
 
+import Image from "@/components/Image";
 import { useGetDeviceQuery } from "@/lib/api/game-api";
 
 export default function Header({ category }) {
