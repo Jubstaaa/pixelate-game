@@ -1,12 +1,16 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export function useCanvasPixelation(characterImage, count, levelType) {
   const canvasRef = useRef(null);
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   useEffect(() => {
-    if (!characterImage) return;
+    if (!characterImage) {
+      setIsImageLoaded(false);
+      return;
+    }
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -16,8 +20,8 @@ export function useCanvasPixelation(characterImage, count, levelType) {
 
     canvas.width = 400;
     canvas.height = 400;
-    ctx.fillStyle = "rgb(243 244 246)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     const img = new Image();
     img.crossOrigin = "anonymous";
@@ -45,19 +49,22 @@ export function useCanvasPixelation(characterImage, count, levelType) {
           if (levelType === 1) {
             applyGrayscale(ctx, canvas.width, canvas.height);
           }
+          setIsImageLoaded(true);
           return;
         }
 
         applyPixelation(ctx, canvas.width, canvas.height, blockSize, levelType);
+        setIsImageLoaded(true);
       } catch (error) {
         console.error("Error during canvas operations:", error);
+        setIsImageLoaded(false);
       }
     };
 
     img.src = characterImage;
   }, [characterImage, count, levelType]);
 
-  return canvasRef;
+  return { canvasRef, isImageLoaded };
 }
 
 function applyGrayscale(ctx, width, height) {

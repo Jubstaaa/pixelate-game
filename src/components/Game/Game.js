@@ -60,8 +60,8 @@ const GuessCharacterGame = ({ categoryId, level_type, username }) => {
   const [input, setInput] = useState("");
   const [isRevealed, setIsRevealed] = useState(false);
 
-  const canvasRef = useCanvasPixelation(
-    addImageResizeParams(data.characterImage, 400, 400),
+  const { canvasRef, isImageLoaded } = useCanvasPixelation(
+    addImageResizeParams(data.characterImage, 800, 800),
     isRevealed ? 6 : data.count,
     level_type,
   );
@@ -114,15 +114,22 @@ const GuessCharacterGame = ({ categoryId, level_type, username }) => {
 
   return (
     <div className="flex w-full flex-col items-center justify-center gap-5">
-      <div className="bg-muted aspect-square w-96 max-w-xs overflow-hidden rounded-lg">
+      <div className="bg-muted relative aspect-square w-96 max-w-xs overflow-hidden rounded-lg">
+        {!isImageLoaded && (
+          <div className="bg-content1 absolute inset-0 flex items-center justify-center">
+            <div className="border-primary h-12 w-12 animate-spin rounded-full border-4 border-t-transparent"></div>
+          </div>
+        )}
         <canvas
           ref={canvasRef}
           width={400}
           height={400}
-          className="h-full w-full bg-white"
+          className="h-full w-full"
           style={{
             imageRendering: "pixelated",
             display: "block",
+            opacity: isImageLoaded ? 1 : 0,
+            transition: "opacity 0.3s ease-in-out",
           }}
         />
       </div>
