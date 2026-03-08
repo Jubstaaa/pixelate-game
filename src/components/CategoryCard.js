@@ -1,6 +1,4 @@
 "use client";
-import { Card, CardBody, CardFooter, Button, Chip } from "@heroui/react";
-import { motion } from "framer-motion";
 import Link from "next/link";
 import React from "react";
 
@@ -8,43 +6,42 @@ import Image from "@/components/Image";
 
 const CategoryCard = ({ item }) => {
   return (
-    <motion.div
-      whileHover={{ scale: item.isActive && 1.05 }}
-      transition={{ type: "spring", stiffness: 300 }}
+    <div
+      className={`flex items-center gap-4 overflow-hidden rounded-2xl border border-default bg-content1 p-4${!item.isActive ? " opacity-40" : ""}`}
     >
-      <Card className={`overflow-hidden ${!item.isActive && "cursor-not-allowed opacity-40"}`}>
-        <CardBody className="flex flex-col items-center p-6">
-          <div className="relative mb-4 h-24 w-24">
-            <Image
-              src={item.icon}
-              alt={`${item.name} Logo`}
-              width={300}
-              height={300}
-              className="h-full w-full object-contain"
-            />
+      <div className="shrink-0 rounded-xl bg-primary/10 p-3">
+        <Image
+          src={item.icon}
+          alt={`${item.name} Logo`}
+          width={128}
+          height={128}
+          className="h-11 w-11 object-contain"
+        />
+      </div>
+      <div className="flex flex-1 flex-col gap-2.5">
+        <h3 className="text-[17px] font-bold text-foreground">{item.name}</h3>
+        {item.isActive ? (
+          <div className="flex gap-2">
+            <Link
+              href={`/${item.slug}/easy`}
+              className="rounded-lg border border-success/25 bg-success/10 px-4 py-1.5 text-[12px] font-semibold text-success"
+            >
+              Easy
+            </Link>
+            <Link
+              href={`/${item.slug}/hard`}
+              className="rounded-lg border border-warning/25 bg-warning/10 px-4 py-1.5 text-[12px] font-semibold text-warning"
+            >
+              Hard
+            </Link>
           </div>
-          <h3 className="mb-2 text-lg font-semibold">{item.name}</h3>
-        </CardBody>
-        <CardFooter className="bg-secondary/10 flex justify-center gap-4 p-4">
-          {item.isActive && (
-            <>
-              <Button as={Link} href={`/${item.slug}/easy`} asChild size="sm" variant="bordered">
-                <span className="flex items-center">Easy</span>
-              </Button>
-              <Button as={Link} href={`/${item.slug}/hard`} asChild size="sm" variant="bordered">
-                <span className="flex items-center">Hard</span>
-              </Button>
-            </>
-          )}
-
-          {!item.isActive && (
-            <Chip variant="bordered" className="mb-2">
-              Coming Soon
-            </Chip>
-          )}
-        </CardFooter>
-      </Card>
-    </motion.div>
+        ) : (
+          <span className="self-start rounded-lg border border-default px-3 py-1.5 text-[12px] text-muted-foreground">
+            Coming Soon
+          </span>
+        )}
+      </div>
+    </div>
   );
 };
 

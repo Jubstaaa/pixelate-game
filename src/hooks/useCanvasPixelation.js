@@ -35,14 +35,19 @@ export function useCanvasPixelation(characterImage, count, levelType) {
 
     img.onload = () => {
       try {
+        const maxSize = 400;
+        const aspect = img.width / img.height;
+        canvas.width = aspect >= 1 ? maxSize : Math.round(maxSize * aspect);
+        canvas.height = aspect >= 1 ? Math.round(maxSize / aspect) : maxSize;
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
         const maxBlockSize = levelType === 1 ? 32 : 80;
         const minBlockSize = 1;
+        const shortSide = Math.min(canvas.width, canvas.height);
 
         const blockSize = Math.max(
           minBlockSize,
-          maxBlockSize - Math.floor((count / 6) * (maxBlockSize - minBlockSize)),
+          Math.round((maxBlockSize - Math.floor((count / 6) * (maxBlockSize - minBlockSize))) * (shortSide / 400)),
         );
 
         if (count === 6) {

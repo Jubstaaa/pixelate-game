@@ -1,7 +1,15 @@
 import React from "react";
 
+const PROXY_HOSTS = ['cdn.cloudflare.steamstatic.com', 'cdn.akamai.steamstatic.com']
+
 export function addImageResizeParams(imageUrl, width, height) {
   try {
+    const urlObj = new URL(imageUrl)
+
+    if (PROXY_HOSTS.includes(urlObj.hostname)) {
+      return `/api/proxy-image?url=${encodeURIComponent(imageUrl)}`
+    }
+
     let url;
     if (imageUrl.startsWith("/")) {
       url = new URL(imageUrl, "http://dummy-base");
@@ -12,7 +20,6 @@ export function addImageResizeParams(imageUrl, width, height) {
     url.searchParams.set("height", height.toString());
     url.searchParams.set("quality", "75");
     url.searchParams.set("resize", "contain");
-    // For relative urls, strip out the origin
     if (imageUrl.startsWith("/")) {
       return url.pathname + url.search;
     }

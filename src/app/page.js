@@ -12,19 +12,19 @@ export default async function Home() {
 
   return (
     <div className="container mx-auto px-4 py-12">
-      <div className="mb-16 text-center">
-        <span className="border-border text-foreground mb-4 inline-flex items-center rounded-md border px-2 py-1 text-xs">
-          Open Beta!
-        </span>
-        <h1 className="from-primary to-secondary mb-6 bg-linear-to-r bg-clip-text text-5xl font-bold tracking-tight text-transparent">
-          Pixel Guess
+      <div className="mb-12 text-center">
+        <h1 className="mb-3 text-[48px] font-[900] tracking-[-2px] text-foreground">
+          Pixel<span className="text-primary"> Guess</span>
         </h1>
-        <p className="text-muted-foreground mx-auto max-w-2xl text-xl">
-          Challenge yourself! Pick a category and guess the hidden image pixel by pixel.
+        <p className="text-muted-foreground mx-auto mt-2 max-w-[280px] text-[14px] leading-[21px]">
+          Pick a category and guess the hidden character pixel by pixel.
         </p>
+        <div className="mt-4 inline-flex items-center rounded-full border border-primary/30 bg-primary/10 px-3 py-[5px]">
+          <span className="text-[11px] font-[700] tracking-[1px] text-primary">OPEN BETA</span>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         {categories.map((item) => (
           <CategoryCard key={item.id} item={item} />
         ))}
