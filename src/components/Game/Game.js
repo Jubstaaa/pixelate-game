@@ -1,7 +1,6 @@
 "use client";
 
-import { Avatar, Chip, Autocomplete, AutocompleteItem } from "@heroui/react";
-import { AnimatePresence, motion } from "framer-motion";
+import { Avatar, Autocomplete, AutocompleteItem } from "@heroui/react";
 import { Flame, Trophy } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 
@@ -40,11 +39,7 @@ const GuessCharacterGame = ({ categoryId, level_type, username }) => {
     return 0;
   }, []);
 
-  const {
-    data = {},
-    isLoading,
-    refetch,
-  } = useGetGameDataQuery({
+  const { data = {}, isLoading, refetch } = useGetGameDataQuery({
     categoryId,
     levelType: level_type,
   });
@@ -113,8 +108,8 @@ const GuessCharacterGame = ({ categoryId, level_type, username }) => {
   }
 
   return (
-    <div className="flex w-full flex-col items-center justify-center gap-5">
-      <div className="bg-muted relative aspect-square w-96 max-w-xs overflow-hidden rounded-lg">
+    <div className="flex w-full flex-col items-center justify-center gap-4">
+      <div className="relative w-96 max-w-xs overflow-hidden rounded-2xl border border-default">
         {!isImageLoaded && (
           <div className="bg-content1 absolute inset-0 flex items-center justify-center">
             <div className="border-primary h-12 w-12 animate-spin rounded-full border-4 border-t-transparent"></div>
@@ -133,44 +128,18 @@ const GuessCharacterGame = ({ categoryId, level_type, username }) => {
           }}
         />
       </div>
-      <div className="flex w-full max-w-[320px] items-center justify-center gap-3">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={`streak-${data.streak}`}
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.9, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 500, damping: 30 }}
-          >
-            <Chip
-              size="lg"
-              variant="flat"
-              color="warning"
-              startContent={<Flame className="h-4 w-4" />}
-            >
-              {data.streak}
-            </Chip>
-          </motion.div>
-        </AnimatePresence>
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={`max-${data.maxStreak}`}
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.9, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 500, damping: 30 }}
-          >
-            <Chip
-              size="lg"
-              variant="flat"
-              color="success"
-              startContent={<Trophy className="h-4 w-4" />}
-            >
-              {data.maxStreak}
-            </Chip>
-          </motion.div>
-        </AnimatePresence>
+
+      <div className="flex w-full max-w-[320px] items-center justify-center gap-2">
+        <div className="flex items-center gap-2 rounded-xl border border-warning/25 bg-warning/10 px-4 py-2">
+          <Flame className="h-[15px] w-[15px] text-warning" />
+          <span className="text-[15px] font-bold text-warning">{data.streak}</span>
+        </div>
+        <div className="flex items-center gap-2 rounded-xl border border-success/25 bg-success/10 px-4 py-2">
+          <Trophy className="h-[15px] w-[15px] text-success" />
+          <span className="text-[15px] font-bold text-success">{data.maxStreak}</span>
+        </div>
       </div>
+
       <div className="flex w-[320px] gap-2">
         <Autocomplete
           inputValue={input}
