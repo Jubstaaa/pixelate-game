@@ -80,6 +80,54 @@ export async function handleCorrectGuess(deviceScore, categoryId) {
   return { message: CORRECT_GUESS_MESSAGE, isError: false };
 }
 
+export async function handleSkip(categoryId, levelType, deviceId) {
+  if (!deviceId) {
+    throw new Error("Device ID is required");
+  }
+
+  const deviceScore = await prisma.deviceScore.findUnique({
+    where: {
+      category_id_device_id_level_type: {
+        device_id: deviceId,
+        category_id: Number(categoryId),
+        level_type: Number(levelType),
+      },
+    },
+  });
+
+  if (!deviceScore) {
+    throw new Error("No Device Found");
+  }
+
+  const character = await CharacterService.findRandomByCategory(Number(categoryId));
+  if (!character) {
+    throw new Error("No characters found for the selected category.");
+  }
+
+  const updateData = {
+    count: 0,
+    streak: 0,
+    character_id: character.id,
+  };
+
+  if (deviceScore.streak > deviceScore.maxStreak) {
+    updateData.maxStreak = deviceScore.streak;
+  }
+
+  await prisma.deviceScore.update({
+    where: {
+      category_id_device_id_level_type: {
+        device_id: deviceScore.device_id,
+        category_id: deviceScore.category_id,
+        level_type: deviceScore.level_type,
+      },
+    },
+    data: updateData,
+  });
+
+  return { message: "Skipped!", isError: false };
+}
+
 export async function handleIncorrectGuess(deviceScore) {
   const updateData = {
     count: deviceScore.count + 1,
