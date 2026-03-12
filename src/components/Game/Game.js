@@ -1,7 +1,7 @@
 "use client";
 
 import { Avatar, Autocomplete, AutocompleteItem } from "@heroui/react";
-import { Flame, Trophy } from "lucide-react";
+import { Flame, SkipForward, Trophy } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 
 import GameSkeleton from "./GameSkeleton";
@@ -12,6 +12,7 @@ import { useCanvasPixelation } from "@/hooks/useCanvasPixelation";
 import {
   useGetGameDataQuery,
   useSubmitGuessMutation,
+  useSkipCharacterMutation,
   useGetCharactersQuery,
   useGetDeviceQuery,
 } from "@/lib/api/game-api";
@@ -45,6 +46,7 @@ const GuessCharacterGame = ({ categoryId, level_type, username }) => {
   });
 
   const [submitGuess] = useSubmitGuessMutation();
+  const [skipCharacter, { isLoading: isSkipping }] = useSkipCharacterMutation();
 
   const { data: characters = [], isLoading: isCharsLoading } = useGetCharactersQuery({
     categoryId,
@@ -103,6 +105,25 @@ const GuessCharacterGame = ({ categoryId, level_type, username }) => {
     }
   };
 
+  const handleSkip = async () => {
+    setIsRevealed(true);
+    try {
+      await skipCharacter({
+        categoryId,
+        level_type: level_type,
+      }).unwrap();
+
+      setTimeout(async () => {
+        await refetch();
+        setIsRevealed(false);
+        setGuessedCharacters([]);
+      }, 2000);
+    } catch {
+      setIsRevealed(false);
+      refetch();
+    }
+  };
+
   if (isLoading || isCharsLoading || isDeviceLoading) {
     return <GameSkeleton />;
   }
@@ -127,6 +148,14 @@ const GuessCharacterGame = ({ categoryId, level_type, username }) => {
             transition: "opacity 0.3s ease-in-out",
           }}
         />
+        <button
+          onClick={handleSkip}
+          disabled={isSkipping || isRevealed}
+          className="absolute right-2 top-2 flex items-center gap-1.5 rounded-xl border border-default/50 bg-background/80 px-3 py-1.5 text-xs font-medium text-default-500 backdrop-blur-sm transition-opacity hover:opacity-80 disabled:opacity-50"
+        >
+          <SkipForward className="h-3.5 w-3.5" />
+          Skip
+        </button>
       </div>
 
       <div className="flex w-full max-w-[320px] items-center justify-center gap-2">

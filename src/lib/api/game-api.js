@@ -99,6 +99,14 @@ export const gameApi = createApi({
       }),
       transformResponse: (response) => response.data ?? response,
     }),
+    skipCharacter: builder.mutation({
+      query: ({ categoryId, level_type }) => ({
+        url: "api/game/skip",
+        method: "POST",
+        body: { categoryId, level_type },
+      }),
+      transformResponse: (response) => response.data ?? response,
+    }),
     sendFeedback: builder.mutation({
       query: ({ feedback, rating }) => ({
         url: "api/feedback",
@@ -113,6 +121,7 @@ export const gameApi = createApi({
 export const {
   useGetGameDataQuery,
   useSubmitGuessMutation,
+  useSkipCharacterMutation,
   useGetCharactersQuery,
   useGetLeaderboardQuery,
   useGetDeviceQuery,
