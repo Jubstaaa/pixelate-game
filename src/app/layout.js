@@ -47,6 +47,9 @@ export const metadata = {
     "favicon.ico": "/favicon.ico",
   },
   manifest: "/site.webmanifest",
+  other: {
+    "apple-itunes-app": "app-id=6760237625",
+  },
 };
 
 export const viewport = {
